@@ -1,3 +1,5 @@
 /initial_data
 .idea/
 __pycache__/
+desktop.ini
+/mysite/recommender/brudnopis.py
