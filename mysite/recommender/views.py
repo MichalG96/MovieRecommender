@@ -1,16 +1,15 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 
 # Create your views here.
 
 def homepage(request):
-    return HttpResponse('Strona domowa')
+    return render(request, 'recommender/homepage.html')
 
 def register(request):
-    return HttpResponse('Rejestracja nowego użytkownika')
+    return render(request, 'recommender/register.html')
 
 def new_user(request):
-    return HttpResponse('Filmy do ocenienia dla nowego użytkownika')
+    return render(request, 'recommender/new_user.html')
 
 def recommend(request):
-    return HttpResponse('Rekomendacje')
+    return render(request, 'recommender/recommend.html')
