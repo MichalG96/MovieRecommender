@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.contrib import messages
 from .forms import UserRegisterForm
+from django.contrib.auth.decorators import login_required
 
 import pandas as pd
 # Create your views here.
@@ -22,6 +23,12 @@ def register(request):
         form = UserRegisterForm()
     return render(request, 'recommender/register.html', {'form': form})
     # return render(request, 'recommender/register.html')
+
+@login_required
+def profile(request):
+    return render(request, 'recommender/profile.html')
+
+
 
 def new_user(request):
     return render(request, 'recommender/new_user.html')
