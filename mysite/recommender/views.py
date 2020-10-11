@@ -24,6 +24,8 @@ def register(request):
     return render(request, 'recommender/register.html', {'form': form})
     # return render(request, 'recommender/register.html')
 
+
+# TODO: part of a profile (photo, username) has to be visible by any other LOGGED IN user
 @login_required
 def profile(request):
     return render(request, 'recommender/profile.html')

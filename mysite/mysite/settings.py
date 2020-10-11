@@ -126,3 +126,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'homepage'
 
 LOGIN_URL = 'login'
+
+MEDIA_ROOT = BASE_DIR / 'media'    # where the files updated by users are being stored in file system
+
+MEDIA_URL = '/media/'       # how does the browser get the files

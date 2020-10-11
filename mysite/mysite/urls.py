@@ -18,5 +18,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('recommender.urls')),
+    path('', include('recommender.urls')),  # tutaj moglbym zmienic pierwszy argument np. na 'recommend',
+                                            # a na glownej stronie dac swoje portfolio (dane kontaktowe itp.)
 ]
