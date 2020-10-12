@@ -25,7 +25,7 @@ SECRET_KEY = '!tzcc_y$g5ll85mwsbe3a_^5r9u^p$eio+5ogo&dd85z&t(ush'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '192.168.1.20']    # TODO: REMOVE THIS ADDRES WHEN YOU'RE NOT IN HOME
 
 
 # Application definition
@@ -106,6 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'pl'
 
 TIME_ZONE = 'Europe/Warsaw'
 

@@ -1,6 +1,8 @@
 {% extends 'recommender/base.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <h1>Filmy ocenione przez {{user.username}}:</h1>
-    <h3>Pary ocena-film dla danego użytkownika</h3>
+   <h1>Oceny uzytkownika {{user.username}}:</h1>
+    {% for rating in ratings %}
+    <h3>{{rating.movielens_id.title}} - {{rating.rating}}</h3>
+    {% endfor %}
 {% endblock content %}

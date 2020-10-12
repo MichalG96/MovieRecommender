@@ -1,0 +1,11 @@
+{% extends 'recommender/base.html' %}
+{% block title %}
+   Wszystkie filmy
+{% endblock title %}
+
+{% block content %}
+   <h1>Wszystkie filmy w bazie:</h1>
+    {% for movie in movies %}
+    <h3>{{movie.title}} - {{movie.director}}</h3>
+    {% endfor %}
+{% endblock content %}

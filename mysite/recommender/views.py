@@ -4,9 +4,9 @@ from django.http import HttpResponse
 from django.contrib import messages
 from .forms import UserRegisterForm
 from django.contrib.auth.decorators import login_required
-
-import pandas as pd
-# Create your views here.
+from django.views.generic import ListView
+from .models import Movie, Rating
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def homepage(request):
     return render(request, 'recommender/homepage.html')
@@ -26,11 +26,20 @@ def register(request):
 
 
 # TODO: part of a profile (photo, username) has to be visible by any other LOGGED IN user
+#                 {% if user.is_authenticated %} in template
 @login_required
 def profile(request):
     return render(request, 'recommender/profile.html')
 
+class RatingListView(LoginRequiredMixin, ListView):
+    model = Rating
+    template_name = 'recommender/profile.html'
+    context_object_name = 'ratings'
+    # paginate_by = 50
 
+    # TODO: filter query so that it only returns active user's ratings
+    def get_queryset(self):
+        return Rating.objects.filter(who_rated_id=self.request.user)
 
 def new_user(request):
     return render(request, 'recommender/new_user.html')
@@ -41,19 +50,16 @@ def recommend(request):
 def users_list(request):
     return render(request, 'recommender/users_list.html')
 
-
-
-
-# TODO: redo this view, find out why only 416 out of 422 users where added
-# one-time view for addding mockup users from csv file
-# users = pd.read_csv('users.csv')
 def add_user(request):
-#     for i, row in users.iterrows():
-#         user = User.objects.create_user(
-#             username=row['username'],
-#             first_name=row['first_name'],
-#             last_name=row['last_name'],
-#             password=row['password'],
-#             email=row['email'],
-#             date_joined=row['date_joined'])
-    return HttpResponse('elo')
+    return render(request, 'recommender/add_user.html')
+
+
+class MoviesListView(ListView):
+    model = Movie
+    template_name = 'recommender/all_movies.html'
+    context_object_name = 'movies'
+    # paginate_by = 50
+
+    # filtering check
+    def get_queryset(self):
+        return Movie.objects.filter(director__startswith='Paul')
