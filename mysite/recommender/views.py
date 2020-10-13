@@ -35,7 +35,7 @@ class RatingListView(LoginRequiredMixin, ListView):
     model = Rating
     template_name = 'recommender/profile.html'
     context_object_name = 'ratings'
-    # paginate_by = 50
+    paginate_by = 5
 
     # filter query so that it only returns current user's ratings
     def get_queryset(self):
