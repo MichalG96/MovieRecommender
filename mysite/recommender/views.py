@@ -37,7 +37,7 @@ class RatingListView(LoginRequiredMixin, ListView):
     context_object_name = 'ratings'
     # paginate_by = 50
 
-    # TODO: filter query so that it only returns active user's ratings
+    # filter query so that it only returns current user's ratings
     def get_queryset(self):
         return Rating.objects.filter(who_rated_id=self.request.user)
 
@@ -61,5 +61,5 @@ class MoviesListView(ListView):
     # paginate_by = 50
 
     # filtering check
-    def get_queryset(self):
-        return Movie.objects.filter(director__startswith='Paul')
+    # def get_queryset(self):
+    #     return Movie.objects.filter(director__startswith='Paul')

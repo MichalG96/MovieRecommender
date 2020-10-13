@@ -3,6 +3,6 @@
 {% block content %}
    <h1>Oceny uzytkownika {{user.username}}:</h1>
     {% for rating in ratings %}
-    <h3>{{rating.movielens_id.title}} - {{rating.rating}}</h3>
+    <h3>{{rating.movielens_id.title}} - {{rating.value}}</h3>
     {% endfor %}
 {% endblock content %}

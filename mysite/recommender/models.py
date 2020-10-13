@@ -19,13 +19,16 @@ class Movie(models.Model):
 
 
 class Rating(models.Model):
-    movielens_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    # movielens_id = models.OneToOneField(Movie, on_delete=models.CASCADE)
+    movielens_id = models.ForeignKey(Movie,  on_delete=models.CASCADE)
     who_rated = models.ForeignKey(User, on_delete=models.CASCADE)
-    # TODO: one user has to give only one rating to one movie
-    rating = models.PositiveSmallIntegerField(default=5, validators=[MinValueValidator(1), MaxValueValidator(10)])
+    value = models.PositiveSmallIntegerField(default=5, validators=[MinValueValidator(1), MaxValueValidator(10)])
     date_rated = models.DateTimeField(default=timezone.now())
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['movielens_id', 'who_rated'], name='One ratings has to be given to a film by a user')
+        ]
+        # unique_together = ('movielens_id', 'who_rated')
 
     def __str__(self):
         return f'user_{self.who_rated}_movie_{self.movielens_id}' #added Movie to f-string
