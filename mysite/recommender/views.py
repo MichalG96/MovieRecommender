@@ -56,9 +56,9 @@ def add_user(request):
 
 class MoviesListView(ListView):
     model = Movie
-    template_name = 'recommender/all_movies.html'
+    template_name = 'recommender/movies_list.html'
     context_object_name = 'movies'
-    # paginate_by = 50
+    paginate_by = 10
 
     # filtering check
     # def get_queryset(self):

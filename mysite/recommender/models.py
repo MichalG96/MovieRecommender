@@ -5,9 +5,9 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Create your models here.
 
-
 class Movie(models.Model):
     movielens_id = models.IntegerField()
+    # TODO: assign imdb_id and timdb_id automatically, based on Links model
     imdb_id = models.IntegerField()
     tmdb_id = models.IntegerField()
     title = models.CharField(max_length=200)
@@ -17,7 +17,6 @@ class Movie(models.Model):
     def __str__(self):
         return f'{self.movielens_id}_{self.title}'
 
-
 class Rating(models.Model):
     movielens_id = models.ForeignKey(Movie,  on_delete=models.CASCADE)
     who_rated = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -25,12 +24,9 @@ class Rating(models.Model):
     date_rated = models.DateTimeField(default=timezone.now())
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['movielens_id', 'who_rated'], name='One ratings has to be given to a film by a user')
-        ]
-        # unique_together = ('movielens_id', 'who_rated')
+        constraints = [models.UniqueConstraint(fields=['movielens_id', 'who_rated'], name='No multiple ratings')]
 
     def __str__(self):
-        return f'user_{self.who_rated}_movie_{self.movielens_id}' #added Movie to f-string
+        return f'user_{self.who_rated}_movie_{self.movielens_id}'
 
 
