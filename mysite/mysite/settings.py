@@ -131,3 +131,10 @@ LOGIN_URL = 'login'
 MEDIA_ROOT = BASE_DIR / 'media'    # where the files updated by users are being stored in file system
 
 MEDIA_URL = '/media/'       # how does the browser get the files
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'movierecommender2020'
+EMAIL_HOST_PASSWORD = 'ethhknljwxopqoqj'    # TODO: hide this in enviromental variables
