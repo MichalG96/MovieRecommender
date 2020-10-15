@@ -1,0 +1,20 @@
+{% extends 'recommender/base.html' %}
+{% block content %}
+    <h1>{{movie.title}}</h1>
+    <p>Id: {{movie.id}}</p>
+    <p>MovieLens Id: {{movie.movielens_id}}</p>
+    <p>IMdB Id:{{movie.imdb_id}}</p>
+    <p>tMdB Id: {{movie.tmdb_id}}</p>
+    <p>Year: {{movie.year_released}}</p>
+    <p>Director: {{movie.director}}</p>
+
+    <h3>Genres:</h3>
+    {% for genre in genres %}
+    {{genre.genre}}
+    {% endfor %}
+    <h3>Actors:</h3>
+    {% for actor in actors reversed %}
+    {{actor.actor}}
+    {% endfor %}
+
+{% endblock content %}

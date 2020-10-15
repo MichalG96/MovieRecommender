@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 #from users import views as user_views
 from django.contrib.auth import views as auth_views
-from .views import MoviesListView, RatingListView
+from .views import MoviesListView, RatingListView, MovieDetailView
 
 urlpatterns = [
     path('', views.homepage, name='homepage'),
@@ -12,6 +12,7 @@ urlpatterns = [
     path('add_user/', views.add_user, name='add_user'),
     path('all_movies/', MoviesListView.as_view(), name='all_movies'),
     path('profile/', RatingListView.as_view(), name='profile'),
+    path('movie/<int:pk>/', MovieDetailView.as_view(), name='movie_detail'),
 
 
     # path('login/', auth_views.LoginView.as_view(template_name='recommender/login.html'), name='login'),

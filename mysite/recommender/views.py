@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.contrib import messages
 from .forms import UserRegisterForm
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView
-from .models import Movie, Rating
+from django.views.generic import ListView, DetailView
+from .models import Movie, Rating, MovieGenre, MovieActor
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 def homepage(request):
@@ -53,13 +53,21 @@ def users_list(request):
 def add_user(request):
     return render(request, 'recommender/add_user.html')
 
-
 class MoviesListView(ListView):
     model = Movie
     template_name = 'recommender/movies_list.html'
     context_object_name = 'movies'
     paginate_by = 10
 
-    # filtering check
-    # def get_queryset(self):
-    #     return Movie.objects.filter(director__startswith='Paul')
+
+class MovieDetailView(DetailView):
+    model = Movie
+    template_name = 'recommender/movie_detail.html'
+    context_object_name = 'movie'
+
+    def get_context_data(self, **kwargs):
+        context = super(MovieDetailView, self).get_context_data(**kwargs)
+        print(Movie.objects.get(pk=self.kwargs.get('pk')))
+        context['genres'] = MovieGenre.objects.filter(movie_id=Movie.objects.get(pk=self.kwargs.get('pk')).pk)
+        context['actors'] = MovieActor.objects.filter(movie_id=Movie.objects.get(pk=self.kwargs.get('pk')).pk)
+        return context

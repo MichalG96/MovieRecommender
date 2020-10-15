@@ -16,10 +16,10 @@
         {% for rating in ratings %}
         <tr>
             <th scope="row">{{rating.movielens_id.movielens_id}}</th>
-            <td>{{rating.movielens_id.title}}</td>
+            <td><a href="{% url 'movie_detail' rating.movielens_id.id %}">{{rating.movielens_id.title}}</a></td>
             <td>{{rating.movielens_id.year_released}}</td>
             <td>{{rating.movielens_id.director}}</td>
-            <td class="bold-row">{{rating.value}}</td>
+            <td class="font-weight-bold">{{rating.value}}</td>
         </tr>
 <!--        <h3>{{movie.title}} - {{movie.director}}</h3>-->
         {% endfor %}

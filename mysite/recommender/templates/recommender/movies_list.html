@@ -25,7 +25,7 @@
             <td>{{movie.movielens_id}}</td>
             <td>{{movie.imdb_id}}</td>
             <td>{{movie.tmdb_id}}</td>
-            <td>{{movie.title}}</td>
+            <td><a href="{% url 'movie_detail' movie.id %}">{{movie.title}}</a></td>
             <td>{{movie.year_released}}</td>
             <td>{{movie.director}}</td>
         </tr>
