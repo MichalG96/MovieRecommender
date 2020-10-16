@@ -19,7 +19,11 @@
 
     <h1>=======The Movie DataBase INFO=======</h1>
     {% for genre in genres_tmdb %}
-    {{genre}},
+        {{genre}},
+    {% endfor %}
+        <p> </p>
+    {% for actor in cast_tmdb %}
+        <p>{{actor.name}} as {{actor.character}}</p>
     {% endfor %}
 
     <p><img src="{{img_url}}"></p>

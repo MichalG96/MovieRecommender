@@ -73,13 +73,19 @@ class MovieDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(MovieDetailView, self).get_context_data(**kwargs)
-        url = f'{base_tmbd_url}{Movie.objects.get(pk=self.kwargs.get("pk")).tmdb_id}?api_key={api_key}'
+        tmdb_id = Movie.objects.get(pk=self.kwargs.get("pk")).tmdb_id
+        url = f'{base_tmbd_url}{tmdb_id}?api_key={api_key}'
+        url_credits = f'{base_tmbd_url}{tmdb_id}/credits?api_key={api_key}'
         r = requests.get(url).json()
+        r_credits = requests.get(url_credits).json()
         genres = [genre_dict['name'] for genre_dict in r['genres']]
         img_url = f'{base_img_url}{img_size}{r["poster_path"]}'
+        cast = [{'name': person['name'], 'character': person['character']} for person in r_credits['cast'][:8]]
+
         # print(Movie.objects.get(pk=self.kwargs.get('pk')).tmdb_id)
         context['genres'] = MovieGenre.objects.filter(movie_id=Movie.objects.get(pk=self.kwargs.get('pk')).pk)
         context['actors'] = MovieActor.objects.filter(movie_id=Movie.objects.get(pk=self.kwargs.get('pk')).pk)
         context['genres_tmdb'] = genres
+        context['cast_tmdb'] = cast
         context['img_url'] = img_url
         return context
