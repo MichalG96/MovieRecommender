@@ -7,11 +7,14 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView
 from .models import Movie, Rating, MovieGenre, MovieActor
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ObjectDoesNotExist
+
 import requests
 
 base_tmbd_url = 'https://api.themoviedb.org/3/movie/'
 api_key = 'bef647566a5b4968a35cd34a79dc3dce'
 base_img_url = 'https://image.tmdb.org/t/p/'
+# available sizes :"w92", "w154"," w185", "w342", "w500", "w780", "original"
 img_size = 'w342/'
 
 def homepage(request):
@@ -63,7 +66,7 @@ class MoviesListView(ListView):
     model = Movie
     template_name = 'recommender/movies_list.html'
     context_object_name = 'movies'
-    paginate_by = 10
+    paginate_by = 15
 
 
 class MovieDetailView(DetailView):
@@ -73,19 +76,32 @@ class MovieDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(MovieDetailView, self).get_context_data(**kwargs)
-        tmdb_id = Movie.objects.get(pk=self.kwargs.get("pk")).tmdb_id
+        # current_movie = Movie.objects.get(pk=self.kwargs.get("pk"))
+        current_movie = self.object     # self.get_object() returns the same result
+        tmdb_id = current_movie.tmdb_id
         url = f'{base_tmbd_url}{tmdb_id}?api_key={api_key}'
         url_credits = f'{base_tmbd_url}{tmdb_id}/credits?api_key={api_key}'
+
         r = requests.get(url).json()
-        r_credits = requests.get(url_credits).json()
         genres = [genre_dict['name'] for genre_dict in r['genres']]
+        overview = r['overview']
         img_url = f'{base_img_url}{img_size}{r["poster_path"]}'
+
+        r_credits = requests.get(url_credits).json()
         cast = [{'name': person['name'], 'character': person['character']} for person in r_credits['cast'][:8]]
 
-        # print(Movie.objects.get(pk=self.kwargs.get('pk')).tmdb_id)
         context['genres'] = MovieGenre.objects.filter(movie_id=Movie.objects.get(pk=self.kwargs.get('pk')).pk)
         context['actors'] = MovieActor.objects.filter(movie_id=Movie.objects.get(pk=self.kwargs.get('pk')).pk)
+        print(self.request.user.id)
+        try:
+            print(current_movie.movielens_id)
+            # context['rating'] = Rating.objects.get(who_rated=self.request.user.id, movie=current_movie.id)
+            context['rating'] = Rating.objects.get(who_rated=self.request.user.id, movielens_id_id=current_movie.movielens_id)
+            print(context['rating'])
+        except ObjectDoesNotExist:
+            context['rating'] = None
         context['genres_tmdb'] = genres
+        context['overview'] = overview
         context['cast_tmdb'] = cast
         context['img_url'] = img_url
         return context

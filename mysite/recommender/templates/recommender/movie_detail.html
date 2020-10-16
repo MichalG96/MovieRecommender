@@ -1,30 +1,113 @@
 {% extends 'recommender/base.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
-    <h1>{{movie.title}}</h1>
+<div class="container.fluid">
+    <div class="row justify-content-md-center">
+           <h1>{{movie.title}}</h1>
+    </div>
+    <div class="row">
+        <div class="col-3">
+          <img src="{{img_url}}" class="img-fluid">
+        </div>
+        <div class="col-6">
+            <table class="table  table-borderless">
+              <thead>
+                </thead>
+              <tbody>
+                <tr>
+                  <td>Director</td>
+                  <td>{{movie.director}}</td>
+                </tr>
+                <tr>
+                  <td>Genres</td>
+                  <td>
+                      {{genres_tmdb|join:', '}}
+                  </td>
+                </tr>
+                <tr>
+                    <td>Released</td>
+                    <td>{{movie.year_released}}</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+        <div class="col-3">
+            {% if user.is_authenticated %}
+                {% if rating %}
+                    <h3>Your rating:</h3>
+                    <h3>{{rating.value}}</h3>
+
+                {% else %}
+                    <h3>Rate this movie</h3>
+            <form method="POST">
+            {%csrf_token%}
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Rate</button>
+            </div>
+        </form>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    <div class = "col-9">
+        <div class="row justify-content-md-center">
+            <h1>Overview</h1>
+        </div>
+        <div class="row justify-content-md-center">
+            {{overview}}
+        </div>
+        <div class="row justify-content-md-center">
+            <h1>Cast</h1>
+        </div>
+        <div class="row">
+            <table class="table  table-borderless">
+              <thead>
+              </thead>
+              <tbody>
+                {% for actor in cast_tmdb %}
+                    <tr>
+                        <td>{{actor.name}}</td>
+                        <td>as</td>
+                        <td>{{actor.character}}</td>
+                    </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h5>= My DataBase INFO =</h5>
     <p>Id: {{movie.id}}</p>
     <p>MovieLens Id: {{movie.movielens_id}}</p>
     <p>IMdB Id:{{movie.imdb_id}}</p>
     <p>tMdB Id: {{movie.tmdb_id}}</p>
     <p>Year: {{movie.year_released}}</p>
     <p>Director: {{movie.director}}</p>
+    <p>Genres:
+        {% for genre in genres %}
+            {% if not forloop.last %}
+                {{ genre.genre }},
+            {% else %}
+                {{ genre.genre }}
+            {% endif %}
+        {% endfor %}
+    </p>
 
-    <h3>Genres:</h3>
-    {% for genre in genres %}
-    {{genre.genre}},
-    {% endfor %}
-    <h3>Actors:</h3>
-    {% for actor in actors reversed %}
-    {{actor.actor}},
-    {% endfor %}
-
-    <h1>=======The Movie DataBase INFO=======</h1>
-    {% for genre in genres_tmdb %}
-        {{genre}},
-    {% endfor %}
-        <p> </p>
-    {% for actor in cast_tmdb %}
-        <p>{{actor.name}} as {{actor.character}}</p>
-    {% endfor %}
-
-    <p><img src="{{img_url}}"></p>
+    <p>Actors:
+        {% for actor in actors reversed %}
+            {% if not forloop.last %}
+                {{actor.actor}},
+            {% else %}
+                {{actor.actor}}
+            {% endif %}
+        {% endfor %}
+    </p>
+    <h5>= The Movie DataBase INFO =</h5>
+    <p>Genres: {{genres_tmdb|join:', '}}</p>
+    <p>Overview: {{overview}}</p>
+    <p>Cast:
+        {% for actor in cast_tmdb %}
+            {{actor.name}} as {{actor.character}},
+        {% endfor %}</p>
+    </div>
 {% endblock content %}
