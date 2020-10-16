@@ -7,6 +7,12 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView
 from .models import Movie, Rating, MovieGenre, MovieActor
 from django.contrib.auth.mixins import LoginRequiredMixin
+import requests
+
+base_tmbd_url = 'https://api.themoviedb.org/3/movie/'
+api_key = 'bef647566a5b4968a35cd34a79dc3dce'
+base_img_url = 'https://image.tmdb.org/t/p/'
+img_size = 'w342/'
 
 def homepage(request):
     return render(request, 'recommender/homepage.html')
@@ -67,7 +73,13 @@ class MovieDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(MovieDetailView, self).get_context_data(**kwargs)
-        print(Movie.objects.get(pk=self.kwargs.get('pk')))
+        url = f'{base_tmbd_url}{Movie.objects.get(pk=self.kwargs.get("pk")).tmdb_id}?api_key={api_key}'
+        r = requests.get(url).json()
+        genres = [genre_dict['name'] for genre_dict in r['genres']]
+        img_url = f'{base_img_url}{img_size}{r["poster_path"]}'
+        # print(Movie.objects.get(pk=self.kwargs.get('pk')).tmdb_id)
         context['genres'] = MovieGenre.objects.filter(movie_id=Movie.objects.get(pk=self.kwargs.get('pk')).pk)
         context['actors'] = MovieActor.objects.filter(movie_id=Movie.objects.get(pk=self.kwargs.get('pk')).pk)
+        context['genres_tmdb'] = genres
+        context['img_url'] = img_url
         return context
