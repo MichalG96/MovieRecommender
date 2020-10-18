@@ -3,3 +3,4 @@
 __pycache__/
 desktop.ini
 /mysite/recommender/brudnopis.py
+/mysite/recommender/templates/recommender/add_rating.html

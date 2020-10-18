@@ -36,15 +36,14 @@
                 {% if rating %}
                     <h3>Your rating:</h3>
                     <h3>{{rating.value}}</h3>
-
                 {% else %}
                     <h3>Rate this movie</h3>
-            <form method="POST">
-            {%csrf_token%}
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Rate</button>
-            </div>
-        </form>
+                        <form method="POST">{%csrf_token%}
+                            <div class="form-group">
+                            {{form|crispy}}
+                                <button class="btn btn-outline-info" type="submit">Rate</button>
+                            </div>
+                        </form>
                 {% endif %}
             {% endif %}
         </div>

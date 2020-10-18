@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
-
+from django.urls import reverse
 # Create your models here.
 
 class Movie(models.Model):
@@ -16,6 +16,9 @@ class Movie(models.Model):
 
     def __str__(self):
         return f'{self.movielens_id}_{self.title}'
+    #
+    # def get_absolute_url(self):
+    #     return reverse('movie_detail', kwargs={'pk': self.pk})
 
 class Rating(models.Model):
     movielens_id = models.ForeignKey(Movie, to_field='movielens_id', on_delete=models.CASCADE)
