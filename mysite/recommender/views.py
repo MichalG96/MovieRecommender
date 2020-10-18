@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.urls import reverse
 from .forms import UserRegisterForm
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView, FormView
+from django.views.generic import ListView, DetailView, FormView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import CreateView
 from django.views import View
@@ -22,9 +22,6 @@ api_key = 'bef647566a5b4968a35cd34a79dc3dce'
 base_img_url = 'https://image.tmdb.org/t/p/'
 # available sizes :"w92", "w154"," w185", "w342", "w500", "w780", "original"
 img_size = 'w342/'
-
-def homepage(request):
-    return render(request, 'recommender/homepage.html')
 
 def register(request):
     # TODO: try the same logic with adding ratings
@@ -79,7 +76,28 @@ class MovieDetailView(DetailView):
     template_name = 'recommender/movie_detail.html'
     context_object_name = 'movie'
 
+    # try this
+    # def handle_form(self):
+    #     if self.request.method == 'POST':
+    #
+    #         # Create a form instance and populate it with data from the request (binding):
+    #         form = RenewBookForm(self.request.POST)
+    #
+    #         if form.is_valid():
+    #             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
+    #             book_instance.due_back = form.cleaned_data['renewal_date']
+    #             book_instance.save()
+    #
+    #             # redirect to a new URL:
+    #             return HttpResponseRedirect(reverse('all-borrowed'))
+    #
+    #         # If this is a GET (or any other method) create the default form.
+    #     else:
+    #         proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
+    #         form = RenewBookForm(initial={'renewal_date': proposed_renewal_date})
+
     def get_context_data(self, **kwargs):
+        print(self.request)
         context = super(MovieDetailView, self).get_context_data(**kwargs)
         # current_movie = Movie.objects.get(pk=self.kwargs.get("pk"))
         current_movie = self.get_object()     # self.object returns the same result
@@ -97,9 +115,7 @@ class MovieDetailView(DetailView):
 
         context['genres'] = MovieGenre.objects.filter(movie_id=Movie.objects.get(pk=self.kwargs.get('pk')).pk)
         context['actors'] = MovieActor.objects.filter(movie_id=Movie.objects.get(pk=self.kwargs.get('pk')).pk)
-        print(self.request.user.id)
         try:
-            print(current_movie.movielens_id)
             # context['rating'] = Rating.objects.get(who_rated=self.request.user.id, movie=current_movie.id)
             context['rating'] = Rating.objects.get(who_rated=self.request.user.id, movielens_id_id=current_movie.movielens_id)
             print(context['rating'])
@@ -110,15 +126,6 @@ class MovieDetailView(DetailView):
         context['cast_tmdb'] = cast
         context['img_url'] = img_url
         context['form'] = UserRatingForm()
-
-        # if self.request.method == 'POST':
-        #     print('form gitaras')
-        #
-        #     form = RatingForm(self.request.POST)
-        #     if form.is_valid():
-        #         form.save()
-        # else:
-        #     form = RatingForm()
 
         return context
 
@@ -132,7 +139,6 @@ class UserRating(LoginRequiredMixin, SingleObjectMixin, FormView):
             return HttpResponseForbidden()
         self.object = self.get_object()
         return super().post(request, *args, **kwargs)
-
 
     def form_valid(self, form):     # if form is valid then do this
         form.instance.who_rated = self.request.user
@@ -149,28 +155,32 @@ class UserRating(LoginRequiredMixin, SingleObjectMixin, FormView):
         return reverse('movie_detail', kwargs={'pk': self.object.pk})
 
 class MovieDetailTestView(View):
+    # Do this if you received GET request
     def get(self, request, *args, **kwargs):
+        print(args)
+        print(kwargs)
         print('movie detail test view get')
         view = MovieDetailView.as_view()
         return view(request, *args, **kwargs)
 
+    # Do this if you received POST request
     def post(self, request, *args, **kwargs):
-        # rate_movie(request)       #ostatnio probowalem tego
-        # print('movie detail test view  post')
-        view = UserRating.as_view()
-        # view = MovieDetailView.as_view()
+        print(args)
+        print(kwargs)
 
+        print('movie detail test view post')
+        view = UserRating.as_view()
         return view(request, *args, **kwargs)
 
 
 class RatingCreateView(CreateView):
     model = Rating
-    fields = ['value', 'movielens_id']
-    template_name = 'recommender/add_rating.html'
+    fields = ['value']
+    template_name = 'recommender/movie_detail.html'
     success_url = '/'
     def form_valid(self, form):
         print(self.request)
         form.instance.who_rated = self.request.user
-        # form.instance.movielens_id = 5
+        form.instance.movielens_id = Movie.objects.get(pk=self.kwargs['pk'])
         #form.instance.movielens_id = jakoś z url
         return super().form_valid(form)
