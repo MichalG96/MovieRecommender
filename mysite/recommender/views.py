@@ -187,9 +187,9 @@ class RatingUpdateView(UpdateView):
     template_name = 'recommender/movie_detail.html'
     form_class = UserRatingForm
     pk_url_kwarg = 'rat_pk'
+    print('change')
     # initial = {'value': 5}
     def form_valid(self, form):
-        print(self.object)
         print('update view')
         print(self.request)
         print(self.kwargs)
