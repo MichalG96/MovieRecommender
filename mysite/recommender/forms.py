@@ -17,6 +17,7 @@ class UserRatingForm(forms.ModelForm):
         self.fields['value'].widget.attrs['min'] = 1
         self.fields['value'].widget.attrs['max'] = 10
 
+
     class Meta:
         model = Rating
         fields = ['value']

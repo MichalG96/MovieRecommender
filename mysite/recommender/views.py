@@ -7,7 +7,7 @@ from .forms import UserRegisterForm
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, FormView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views import View
 from .models import Movie, Rating, MovieGenre, MovieActor
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -51,7 +51,7 @@ class RatingListView(LoginRequiredMixin, ListView):
 
     # filter query so that it only returns current user's ratings
     def get_queryset(self):
-        return Rating.objects.filter(who_rated_id=self.request.user)
+        return self.request.user.rating_set.all()
 
 def new_user(request):
     return render(request, 'recommender/new_user.html')
@@ -71,30 +71,11 @@ class MoviesListView(ListView):
     context_object_name = 'movies'
     paginate_by = 15
 
+# TODO: pass Movie and Rating objects betweeen views so that you don't have to keep looking them up in the database
 class MovieDetailView(DetailView):
     model = Movie
     template_name = 'recommender/movie_detail.html'
     context_object_name = 'movie'
-
-    # try this
-    # def handle_form(self):
-    #     if self.request.method == 'POST':
-    #
-    #         # Create a form instance and populate it with data from the request (binding):
-    #         form = RenewBookForm(self.request.POST)
-    #
-    #         if form.is_valid():
-    #             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
-    #             book_instance.due_back = form.cleaned_data['renewal_date']
-    #             book_instance.save()
-    #
-    #             # redirect to a new URL:
-    #             return HttpResponseRedirect(reverse('all-borrowed'))
-    #
-    #         # If this is a GET (or any other method) create the default form.
-    #     else:
-    #         proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
-    #         form = RenewBookForm(initial={'renewal_date': proposed_renewal_date})
 
     def get_context_data(self, **kwargs):
         print(self.request)
@@ -154,33 +135,75 @@ class UserRating(LoginRequiredMixin, SingleObjectMixin, FormView):
     def get_success_url(self):
         return reverse('movie_detail', kwargs={'pk': self.object.pk})
 
-class MovieDetailTestView(View):
+class MovieDetailDispatcherView(View):
     # Do this if you received GET request
     def get(self, request, *args, **kwargs):
-        print(args)
-        print(kwargs)
         print('movie detail test view get')
         view = MovieDetailView.as_view()
         return view(request, *args, **kwargs)
 
     # Do this if you received POST request
     def post(self, request, *args, **kwargs):
-        print(args)
-        print(kwargs)
-
         print('movie detail test view post')
-        view = UserRating.as_view()
+        current_movie = Movie.objects.get(pk=self.kwargs['pk'])
+        try:
+            # update view
+            rat = Rating.objects.get(who_rated=self.request.user.id, movielens_id_id=current_movie.movielens_id)
+            print('lecimy z apdejtem')
+            view = RatingUpdateView.as_view()
+
+        except ObjectDoesNotExist:
+            # create view
+            print('no such rating')
+            view = RatingCreateView.as_view()
+
         return view(request, *args, **kwargs)
 
 
 class RatingCreateView(CreateView):
     model = Rating
-    fields = ['value']
     template_name = 'recommender/movie_detail.html'
-    success_url = '/'
+    form_class = UserRatingForm
+
     def form_valid(self, form):
+        print('create view')
         print(self.request)
+        print(self.kwargs)
         form.instance.who_rated = self.request.user
-        form.instance.movielens_id = Movie.objects.get(pk=self.kwargs['pk'])
-        #form.instance.movielens_id = jakoś z url
+        self.movie_object = Movie.objects.get(pk=self.kwargs['pk'])
+        print(Movie.objects.get(pk=self.kwargs['pk']))
+        form.instance.movielens_id = self.movie_object
         return super().form_valid(form)
+
+    def get_success_url(self):
+        print(Rating.objects.get(who_rated=self.request.user.id, movielens_id_id=self.movie_object.movielens_id).pk)
+        return reverse('movie_detail_update_rating', kwargs={'pk': self.kwargs['pk'], 'rat_pk': Rating.objects.get(who_rated=self.request.user.id,
+                                                                                                                   movielens_id_id=self.movie_object.movielens_id).pk})
+
+class RatingUpdateView(UpdateView):
+
+    # Error - szuka ratingu o pk podanym w URL (a to pk jest dla filmu)
+    model = Rating
+    template_name = 'recommender/movie_detail.html'
+    form_class = UserRatingForm
+    pk_url_kwarg = 'rat_pk'
+    # initial = {'value': 5}
+    def form_valid(self, form):
+        print(self.object)
+        print('update view')
+        print(self.request)
+        print(self.kwargs)
+        print(self.get_object())
+        form.instance.who_rated = self.request.user
+        movie_object = Movie.objects.get(pk=self.kwargs['pk'])
+        form.instance.movielens_id = movie_object
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        print(vars(self))
+        return reverse('movie_detail_update_rating', kwargs={'pk': self.kwargs['pk'], 'rat_pk': self.kwargs['rat_pk']})
+    #
+    # def get_initial(self):
+    #     return {
+    #         'value': 5,
+    #     }
