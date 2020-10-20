@@ -9,7 +9,7 @@ from django.views.generic import ListView, DetailView, FormView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import CreateView, UpdateView
 from django.views import View
-from .models import Movie, Rating, MovieGenre, MovieActor
+from .models import Movie, Rating, Actor, Genre
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import UserRatingForm
@@ -93,11 +93,10 @@ class MovieDetailView(DetailView):
 
         r_credits = requests.get(url_credits).json()
         cast = [{'name': person['name'], 'character': person['character']} for person in r_credits['cast'][:8]]
-
-        context['genres'] = MovieGenre.objects.filter(movie_id=Movie.objects.get(pk=self.kwargs.get('pk')).pk)
-        context['actors'] = MovieActor.objects.filter(movie_id=Movie.objects.get(pk=self.kwargs.get('pk')).pk)
+        print(current_movie.actor_set.all())
+        context['actors'] = current_movie.actor_set.all()
+        context['genres'] = current_movie.genre_set.all()
         try:
-            # context['rating'] = Rating.objects.get(who_rated=self.request.user.id, movie=current_movie.id)
             context['rating'] = Rating.objects.get(who_rated=self.request.user.id, movielens_id_id=current_movie.movielens_id)
             print(context['rating'])
         except ObjectDoesNotExist:
@@ -106,7 +105,11 @@ class MovieDetailView(DetailView):
         context['overview'] = overview
         context['cast_tmdb'] = cast
         context['img_url'] = img_url
-        context['form'] = UserRatingForm()
+        if context['rating']:
+            initial_value = context['rating'].value
+        else:
+            initial_value = None
+        context['form'] = UserRatingForm(initial={'value': initial_value})
 
         return context
 

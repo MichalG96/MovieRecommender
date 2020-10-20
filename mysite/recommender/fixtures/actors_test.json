@@ -1,0 +1,6 @@
+[{"model": "recommender.Actor", "pk": 1, "fields": {"name": "(no actors listed)", "movies": [162, 246, 556, 720, 1147, 1189, 1191, 1289, 2064, 3159, 5669, 5785, 6003, 6331, 6380, 7156, 8464, 8622, 34338, 44788, 47999, 48322, 53894, 54881, 60766, 71282, 77455, 80906, 81156, 85774, 86345, 86347, 86377, 92535]}}, 
+{"model": "recommender.Actor", "pk": 2, "fields": {"name": "'Weird Al' Yankovic", "movies": [4678]}}, 
+{"model": "recommender.Actor", "pk": 3, "fields": {"name": "A. Michael Baldwin", "movies": [2901]}}, 
+{"model": "recommender.Actor", "pk": 4, "fields": {"name": "A.J. Cook", "movies": [6058]}}, 
+{"model": "recommender.Actor", "pk": 5, "fields": {"name": "AJ Michalka", "movies": [87306]}}, 
+{"model": "recommender.Actor", "pk": 6, "fields": {"name": "Aaliyah", "movies": [3452, 5128]}}]

@@ -28,37 +28,22 @@ class Rating(models.Model):
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=['movielens_id', 'who_rated'], name='No multiple ratings')]
-
+        # unique_together = [['movielens_id', 'who_rated']]
     def __str__(self):
         return f'user_{self.who_rated}_movie_{self.movielens_id}'
 
 class Genre(models.Model):
     name = models.CharField(max_length=20)
+    movies = models.ManyToManyField(Movie)
 
     def __str__(self):
         return self.name
 
+# https://docs.djangoproject.com/en/3.1/topics/db/examples/many_to_many/
+# TODO: when using Postgres, try List field, or JSON field
 class Actor(models.Model):
     name = models.CharField(max_length=60)
+    movies = models.ManyToManyField(Movie)
 
     def __str__(self):
         return self.name
-
-
-# Junction tables that store one row for each distinct ID of the Movie object and the ID of the Genre/Actor.
-# Existence of such a row means the genre/actor is in that list for the Movie.
-# TODO: when using Postgres, try List field, or JSON field
-
-class MovieGenre(models.Model):
-    movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'movie_{self.movie_id}_genre_{self.genre}'
-
-class MovieActor(models.Model):
-    movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    actor = models.ForeignKey(Actor, on_delete=models.CASCADE, null=True)
-
-    def __str__(self):
-        return f'movie_{self.movie_id}_actor_{self.actor}'

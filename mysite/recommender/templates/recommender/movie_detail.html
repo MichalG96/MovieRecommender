@@ -87,19 +87,18 @@
     <p>Genres:
         {% for genre in genres %}
             {% if not forloop.last %}
-                {{ genre.genre }},
+                {{ genre.name }},
             {% else %}
-                {{ genre.genre }}
+                {{ genre.name }}
             {% endif %}
         {% endfor %}
     </p>
-
     <p>Actors:
         {% for actor in actors reversed %}
             {% if not forloop.last %}
-                {{actor.actor}},
+                {{actor.name}},
             {% else %}
-                {{actor.actor}}
+                {{actor.name}}
             {% endif %}
         {% endfor %}
     </p>

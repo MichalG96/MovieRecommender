@@ -1,0 +1,11 @@
+[{"model": "recommender.ActorTest", 
+"pk": 1, 
+"fields": {
+	"name": "(no actors listed)",
+	"movies": [1,2,3]
+	}
+}, 
+{"model": "recommender.ActorTest", 
+"pk": 2, 
+"fields": {
+	"name": "'Weird Al' Yankovic"}}]
