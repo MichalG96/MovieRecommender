@@ -5,3 +5,4 @@ desktop.ini
 /mysite/recommender/brudnopis.py
 /mysite/recommender/templates/recommender/add_rating.html
 /mysite/recommender/fixtures/movies_test.json
+/mysite/recommender/fixtures/actors_old.json
