@@ -11,8 +11,8 @@ from django.views import View
 from .models import Movie, Rating, Actor, Genre
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
-from .forms import UserRatingForm
-
+from .forms import UserRatingForm, MovieSortForm, MovieRatingSortForm
+from django.utils.datastructures import MultiValueDictKeyError
 import requests
 
 base_tmbd_url = 'https://api.themoviedb.org/3/movie/'
@@ -34,20 +34,57 @@ def register(request):
     return render(request, 'recommender/register.html', {'form': form})
 
 # TODO: part of a profile (photo, username) has to be visible by any other LOGGED IN user
-#                 {% if user.is_authenticated %} in template
-@login_required
-def profile(request):
-    return render(request, 'recommender/profile.html')
+# ({% if user.is_authenticated %} in template)
 
 class RatingListView(LoginRequiredMixin, ListView):
-    model = Rating
+    model = Movie
     template_name = 'recommender/profile.html'
     context_object_name = 'ratings'
     paginate_by = 7
 
     # Filter query so that it only returns current user's ratings
     def get_queryset(self):
-        return self.request.user.rating_set.all()
+        ordering = self.get_ordering()
+        print(ordering)
+        if ordering:
+            if 'value' in ordering or 'date_rated' in ordering:
+                return self.request.user.rating_set.all().order_by(ordering)
+            else:
+                if ordering.startswith('-'):
+                    return self.request.user.rating_set.all().order_by(f'-movielens_id__{self.get_ordering()[1:]}')
+                else:
+                    return self.request.user.rating_set.all().order_by(f'movielens_id__{self.get_ordering()}')
+        else:
+            return self.request.user.rating_set.all()
+
+    def get_ordering(self):
+        try:
+            ordering = self.request.GET['sort_by']
+        except MultiValueDictKeyError:
+            ordering = super().get_ordering()
+        return ordering
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        form = MovieRatingSortForm(self.request.GET)
+        return super().get_context_data(form=form, **kwargs)
+
+class MoviesListView(ListView):
+    model = Movie
+    context_object_name = 'movies'
+    paginate_by = 15
+
+    def get_ordering(self):
+        try:
+            ordering = self.request.GET['sort_by']
+        except MultiValueDictKeyError:
+            ordering = super().get_ordering()
+        print(ordering)
+
+        return ordering
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        form = MovieSortForm(self.request.GET)
+        return super().get_context_data(form=form, **kwargs)
 
 def new_user(request):
     return render(request, 'recommender/new_user.html')
@@ -61,11 +98,6 @@ def users_list(request):
 def add_user(request):
     return render(request, 'recommender/add_user.html')
 
-class MoviesListView(ListView):
-    model = Movie
-    template_name = 'recommender/movies_list.html'
-    context_object_name = 'movies'
-    paginate_by = 15
 
 class MovieDetailView(DetailView):
     model = Movie
@@ -123,7 +155,6 @@ class MovieDetailDispatcherView(View):
             view = RatingCreateView.as_view()
         return view(request, *args, **kwargs)
 
-
 class RatingCreateView(CreateView):
     model = Movie
     template_name = 'recommender/movie_detail.html'
@@ -132,7 +163,6 @@ class RatingCreateView(CreateView):
     def form_valid(self, form):
         form.instance.who_rated = self.request.user
         self.movie_object = Movie.objects.get(pk=self.kwargs['pk'])
-        print(f'RatingCreateView, self.movie_object = {self.movie_object}')
         form.instance.movielens_id = self.movie_object
         return super().form_valid(form)
 
@@ -172,14 +202,9 @@ class RatingUpdateView(UserPassesTestMixin, UpdateView):
 class RatingDeleteView(UserPassesTestMixin, DeleteView):
     model = Movie
     # template_name = 'recommender/movie_detail.html'
-    success_url = '/'
 
     def get_object(self, *args, **kwargs):
         obj = super().get_object()
-        print(f'obj: {obj}')
-        # This should not throw MultipleObjectsReturned error, because there is UniqueConstraint
-        # asserting that there is only one rating per movie-user pair,
-        # nor should it throw ObjectDoesNotExist because this view is executed only when the Rating object exists
         new_obj = obj.rating_set.get(who_rated=self.request.user.id)
         return new_obj
 

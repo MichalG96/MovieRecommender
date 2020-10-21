@@ -2,6 +2,12 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <h1>Oceny uzytkownika {{user.username}}:</h1>
+    <div class="row">
+            <form method="get" action="">
+                {{form|crispy}}
+              <button class="btn btn-info" type="submit">Sort</button>
+            </form>
+    </div>
     <table class="table table-hover">
       <thead class="thead-dark">
         <tr>
@@ -10,6 +16,7 @@
           <th scope="col">Year</th>
           <th scope="col">Director</th>
           <th scope="col">Rating</th>
+          <th scope="col">Date rated</th>
         </tr>
       </thead>
       <tbody>
@@ -20,6 +27,7 @@
             <td>{{rating.movielens_id.year_released}}</td>
             <td>{{rating.movielens_id.director}}</td>
             <td class="font-weight-bold">{{rating.value}}</td>
+            <td> {{rating.date_rated | date:"d-m-Y H:i:s" }}</td>
         </tr>
         {% endfor %}
       </tbody>
