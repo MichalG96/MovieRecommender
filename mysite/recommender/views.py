@@ -1,19 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.contrib import messages
 from django.urls import reverse
 from .forms import UserRegisterForm
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView, FormView, TemplateView
-from django.views.generic.detail import SingleObjectMixin
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic import ListView, DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views import View
 from .models import Movie, Rating, Actor, Genre
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import UserRatingForm
-from django.utils import timezone
 
 import requests
 
@@ -24,7 +22,6 @@ base_img_url = 'https://image.tmdb.org/t/p/'
 img_size = 'w342/'
 
 def register(request):
-    # TODO: try the same logic with adding ratings
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
@@ -35,7 +32,6 @@ def register(request):
     else:
         form = UserRegisterForm()
     return render(request, 'recommender/register.html', {'form': form})
-    # return render(request, 'recommender/register.html')
 
 # TODO: part of a profile (photo, username) has to be visible by any other LOGGED IN user
 #                 {% if user.is_authenticated %} in template
@@ -49,7 +45,7 @@ class RatingListView(LoginRequiredMixin, ListView):
     context_object_name = 'ratings'
     paginate_by = 7
 
-    # filter query so that it only returns current user's ratings
+    # Filter query so that it only returns current user's ratings
     def get_queryset(self):
         return self.request.user.rating_set.all()
 
@@ -71,17 +67,13 @@ class MoviesListView(ListView):
     context_object_name = 'movies'
     paginate_by = 15
 
-
-# TODO: pass Movie and Rating objects betweeen views so that you don't have to keep looking them up in the database
 class MovieDetailView(DetailView):
     model = Movie
     template_name = 'recommender/movie_detail.html'
     context_object_name = 'movie'
 
     def get_context_data(self, **kwargs):
-        print(self.request)
         context = super().get_context_data(**kwargs)
-        # context = super(MovieDetailView, self).get_context_data(**kwargs)
         tmdb_id = self.object.tmdb_id
         url = f'{base_tmbd_url}{tmdb_id}?api_key={api_key}'
         url_credits = f'{base_tmbd_url}{tmdb_id}/credits?api_key={api_key}'
@@ -103,118 +95,100 @@ class MovieDetailView(DetailView):
         context['img_url'] = img_url
         if context['rating']:
             initial_value = context['rating'].value
+            context['rating_exists'] = True
         else:
             initial_value = None
+            context['rating_exists'] = False
+
         context['form'] = UserRatingForm(initial={'value': initial_value})
 
         return context
 
-class UserRating(LoginRequiredMixin, SingleObjectMixin, FormView):
-    template_name = 'recommender/movie_detail.html'
-    form_class = UserRatingForm
-    model = Movie
-
-    def post(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return HttpResponseForbidden()
-        self.object = self.get_object()
-        return super().post(request, *args, **kwargs)
-
-    def form_valid(self, form):     # if form is valid then do this
-        form.instance.who_rated = self.request.user
-        # form.instance.movielens_id = Movie.objects.get(pk=self.kwargs['pk'])
-        form.instance.movielens_id = self.object
-        form.save()
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        print(form.is_valid())
-        return super().form_invalid(form)
-
-    def get_success_url(self):
-        return reverse('movie_detail', kwargs={'pk': self.object.pk})
-
 class MovieDetailDispatcherView(View):
     # Do this if you received GET request
     def get(self, request, *args, **kwargs):
-        print('movie detail test view get')
         view = MovieDetailView.as_view()
         return view(request, *args, **kwargs)
 
     # Do this if you received POST request
     def post(self, request, *args, **kwargs):
-        print('movie detail test view post')
         current_movie = Movie.objects.get(pk=self.kwargs['pk'])
         try:
-            # update view
-            rat = Rating.objects.get(who_rated=self.request.user.id, movielens_id_id=current_movie.movielens_id)
-            print('lecimy z apdejtem')
+            # Update view
+            Rating.objects.get(who_rated=self.request.user.id, movielens_id_id=current_movie.movielens_id)
             view = RatingUpdateView.as_view()
 
         except ObjectDoesNotExist:
-            # create view
-            print('no such rating')
+            # Create view
             view = RatingCreateView.as_view()
-
         return view(request, *args, **kwargs)
 
 
 class RatingCreateView(CreateView):
-    model = Rating
+    model = Movie
     template_name = 'recommender/movie_detail.html'
     form_class = UserRatingForm
 
-    def get_object(self):
-        obj = super().get_object()
-        print(f'obj: {obj}')
-        return obj
-
     def form_valid(self, form):
-        print('create view')
-        print(self.request)
-        print(self.kwargs)
-        # print(self.get_object())
         form.instance.who_rated = self.request.user
         self.movie_object = Movie.objects.get(pk=self.kwargs['pk'])
-        print(Movie.objects.get(pk=self.kwargs['pk']))
+        print(f'RatingCreateView, self.movie_object = {self.movie_object}')
         form.instance.movielens_id = self.movie_object
         return super().form_valid(form)
 
     def get_success_url(self):
-        print(Rating.objects.get(who_rated=self.request.user.id, movielens_id_id=self.movie_object.movielens_id).pk)
-        return reverse('movie_detail_update_rating', kwargs={'pk': self.kwargs['pk'], 'rat_pk': Rating.objects.get(who_rated=self.request.user.id,
-                                                                                                                   movielens_id_id=self.movie_object.movielens_id).pk})
+        return reverse('movie_detail', kwargs={'pk': self.kwargs['pk']})
 
-class RatingUpdateView(UpdateView):
-
-    # Error - szuka ratingu o pk podanym w URL (a to pk jest dla filmu)
-    model = Rating
+class RatingUpdateView(UserPassesTestMixin, UpdateView):
+    model = Movie
     template_name = 'recommender/movie_detail.html'
     form_class = UserRatingForm
-    pk_url_kwarg = 'rat_pk'
-    print('change')
-    # initial = {'value': 5}
 
-    def get_object(self):
+    # Tell the view, that you do not want to modify the Movie object, but rather Rating object related to this movie
+    def get_object(self, *args, **kwargs):
         obj = super().get_object()
-        print(f'obj: {obj}')
-        return obj
+        # This should not throw MultipleObjectsReturned error, because there is UniqueConstraint
+        # asserting that there is only one rating per movie-user pair,
+        # nor should it throw ObjectDoesNotExist because this view is executed only when the Rating object exists
+        new_obj = obj.rating_set.get(who_rated=self.request.user.id)
+        return new_obj
 
     def form_valid(self, form):
-        print('update view')
-        print(self.request)
-        print(self.kwargs)
-        # print(self.get_object())
         form.instance.who_rated = self.request.user
-        movie_object = Movie.objects.get(pk=self.kwargs['pk'])
+        movie_object = self.get_object().movielens_id
         form.instance.movielens_id = movie_object
         return super().form_valid(form)
 
+    def test_func(self):
+        rating = self.get_object()
+        if self.request.user == rating.who_rated:
+            return True
+        else:
+            return False
+
     def get_success_url(self):
-        print(vars(self))
-        return reverse('movie_detail_update_rating', kwargs={'pk': self.kwargs['pk'], 'rat_pk': self.kwargs['rat_pk']})
-    #
-    # def get_initial(self):
-    #     return {
-    #         'value': 5,
-    #     }
+        return reverse('movie_detail', kwargs={'pk': self.kwargs['pk']})
+
+class RatingDeleteView(UserPassesTestMixin, DeleteView):
+    model = Movie
+    # template_name = 'recommender/movie_detail.html'
+    success_url = '/'
+
+    def get_object(self, *args, **kwargs):
+        obj = super().get_object()
+        print(f'obj: {obj}')
+        # This should not throw MultipleObjectsReturned error, because there is UniqueConstraint
+        # asserting that there is only one rating per movie-user pair,
+        # nor should it throw ObjectDoesNotExist because this view is executed only when the Rating object exists
+        new_obj = obj.rating_set.get(who_rated=self.request.user.id)
+        return new_obj
+
+    def test_func(self):
+        rating = self.get_object()
+        if self.request.user == rating.who_rated:
+            return True
+        else:
+            return False
+
+    def get_success_url(self):
+        return reverse('movie_detail', kwargs={'pk': self.kwargs['pk']})

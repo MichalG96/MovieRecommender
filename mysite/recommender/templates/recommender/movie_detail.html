@@ -1,5 +1,9 @@
 {% extends 'recommender/base.html' %}
 {% load crispy_forms_tags %}
+{% block title %}
+   {{movie.title}} ({{movie.year_released}})
+{% endblock title %}
+
 {% block content %}
 <div class="container.fluid">
     <div class="row justify-content-md-center">
@@ -33,20 +37,25 @@
         </div>
         <div class="col-3">
             {% if user.is_authenticated %}
+                <h3>Your rating:</h3>
+                <h3>{{rating.value}}</h3>
+                <h3>Rate this movie</h3>
+                    <form method="POST">{%csrf_token%}
+                        <div class="form-group">
+                        {{form|crispy}}
+                            <button class="btn btn-outline-info" type="submit">Rate</button>
+                        </div>
+                    </form>
+                {% if rating_exists %}
+                    <a class="btn btn-danger" href="{% url 'delete_rating' movie.id %}">Delete</a>
 
-                    <h3>Your rating:</h3>
-
-                    <h3>{{rating.value}}</h3>
-
-
-                    <h3>Rate this movie</h3>
-                        <form method="POST">{%csrf_token%}
-                            <div class="form-group">
-                            {{form|crispy}}
-                                <button class="btn btn-outline-info" type="submit">Rate</button>
-                            </div>
-                        </form>
-
+<!--               <form method="POST">-->
+<!--                    {%csrf_token%}-->
+<!--                    <div class="form-group">-->
+<!--                        <button class="btn btn-danger" type="submit">Yes, Delete</button>-->
+<!--                    </div>-->
+<!--                </form>-->
+                {% endif %}
             {% endif %}
         </div>
     </div>
