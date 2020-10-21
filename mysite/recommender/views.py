@@ -47,7 +47,7 @@ class RatingListView(LoginRequiredMixin, ListView):
     model = Rating
     template_name = 'recommender/profile.html'
     context_object_name = 'ratings'
-    paginate_by = 5
+    paginate_by = 7
 
     # filter query so that it only returns current user's ratings
     def get_queryset(self):
@@ -71,6 +71,7 @@ class MoviesListView(ListView):
     context_object_name = 'movies'
     paginate_by = 15
 
+
 # TODO: pass Movie and Rating objects betweeen views so that you don't have to keep looking them up in the database
 class MovieDetailView(DetailView):
     model = Movie
@@ -79,26 +80,21 @@ class MovieDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         print(self.request)
-        context = super(MovieDetailView, self).get_context_data(**kwargs)
-        # current_movie = Movie.objects.get(pk=self.kwargs.get("pk"))
-        current_movie = self.get_object()     # self.object returns the same result
-        tmdb_id = current_movie.tmdb_id
+        context = super().get_context_data(**kwargs)
+        # context = super(MovieDetailView, self).get_context_data(**kwargs)
+        tmdb_id = self.object.tmdb_id
         url = f'{base_tmbd_url}{tmdb_id}?api_key={api_key}'
         url_credits = f'{base_tmbd_url}{tmdb_id}/credits?api_key={api_key}'
-
         r = requests.get(url).json()
         genres = [genre_dict['name'] for genre_dict in r['genres']]
         overview = r['overview']
         img_url = f'{base_img_url}{img_size}{r["poster_path"]}'
-
         r_credits = requests.get(url_credits).json()
         cast = [{'name': person['name'], 'character': person['character']} for person in r_credits['cast'][:8]]
-        print(current_movie.actor_set.all())
-        context['actors'] = current_movie.actor_set.all()
-        context['genres'] = current_movie.genre_set.all()
+        context['actors'] = self.object.actor_set.all()
+        context['genres'] = self.object.genre_set.all()
         try:
-            context['rating'] = Rating.objects.get(who_rated=self.request.user.id, movielens_id_id=current_movie.movielens_id)
-            print(context['rating'])
+            context['rating'] = self.object.rating_set.all().get(who_rated=self.request.user.id)
         except ObjectDoesNotExist:
             context['rating'] = None
         context['genres_tmdb'] = genres
@@ -168,10 +164,16 @@ class RatingCreateView(CreateView):
     template_name = 'recommender/movie_detail.html'
     form_class = UserRatingForm
 
+    def get_object(self):
+        obj = super().get_object()
+        print(f'obj: {obj}')
+        return obj
+
     def form_valid(self, form):
         print('create view')
         print(self.request)
         print(self.kwargs)
+        # print(self.get_object())
         form.instance.who_rated = self.request.user
         self.movie_object = Movie.objects.get(pk=self.kwargs['pk'])
         print(Movie.objects.get(pk=self.kwargs['pk']))
@@ -192,11 +194,17 @@ class RatingUpdateView(UpdateView):
     pk_url_kwarg = 'rat_pk'
     print('change')
     # initial = {'value': 5}
+
+    def get_object(self):
+        obj = super().get_object()
+        print(f'obj: {obj}')
+        return obj
+
     def form_valid(self, form):
         print('update view')
         print(self.request)
         print(self.kwargs)
-        print(self.get_object())
+        # print(self.get_object())
         form.instance.who_rated = self.request.user
         movie_object = Movie.objects.get(pk=self.kwargs['pk'])
         form.instance.movielens_id = movie_object

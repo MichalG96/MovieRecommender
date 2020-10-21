@@ -30,7 +30,7 @@ class Rating(models.Model):
         constraints = [models.UniqueConstraint(fields=['movielens_id', 'who_rated'], name='No multiple ratings')]
         # unique_together = [['movielens_id', 'who_rated']]
     def __str__(self):
-        return f'user_{self.who_rated}_movie_{self.movielens_id}'
+        return f'user_{self.who_rated.pk}_movie_{self.movielens_id.movielens_id}'
 
 class Genre(models.Model):
     name = models.CharField(max_length=20)
