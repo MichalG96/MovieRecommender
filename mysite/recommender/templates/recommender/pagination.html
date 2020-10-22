@@ -1,17 +1,20 @@
 {% if is_paginated %}
+<h1>{{group_by}}</h1>
+{% for decade in group_by %}&group_by_decades={{decade}}{% endfor %}
+
     {% if page_obj.has_previous %}
-        <a class="btn btn-outline-info mb-4" href="?sort_by={{sort_by}}&page=1">First</a>
-        <a class="btn btn-outline-info mb-4" href="?sort_by={{sort_by}}&page={{ page_obj.previous_page_number }}">Previous</a>
+        <a class="btn btn-outline-info mb-4" href="?sort_by={{sort_by}}{% for decade in group_by %}&group_by_decades={{decade}}{% endfor %}&page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?sort_by={{sort_by}}{% for decade in group_by %}&group_by_decades={{decade}}{% endfor %}&page={{ page_obj.previous_page_number }}">Previous</a>
     {% endif %}
     {% for num in page_obj.paginator.page_range %}
         {% if page_obj.number == num %}
-            <a class="btn btn-info mb-4" href="?sort_by={{sort_by}}&page={{num}}">{{num}}</a>
+            <a class="btn btn-info mb-4" href="?sort_by={{sort_by}}{% for decade in group_by %}&group_by_decades={{decade}}{% endfor %}&page={{num}}">{{num}}</a>
         {% elif  num > page_obj.number|add:'-5' and num < page_obj.number|add:'5' %}
-            <a class="btn btn-outline-info mb-4" href="?sort_by={{sort_by}}&page={{ num }}">{{num}}</a>
+            <a class="btn btn-outline-info mb-4" href="?sort_by={{sort_by}}{% for decade in group_by %}&group_by_decades={{decade}}{% endfor %}&page={{ num }}">{{num}}</a>
         {% endif %}
     {% endfor %}
     {% if page_obj.has_next %}
-        <a class="btn btn-outline-info mb-4" href="?sort_by={{sort_by}}&page={{ page_obj.paginator.num_pages }}">Last</a>
-        <a class="btn btn-outline-info mb-4" href="?sort_by={{sort_by}}&page={{ page_obj.next_page_number }}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?sort_by={{sort_by}}{% for decade in group_by %}&group_by_decades={{decade}}{% endfor %}&page={{ page_obj.paginator.num_pages }}">Last</a>
+        <a class="btn btn-outline-info mb-4" href="?sort_by={{sort_by}}{% for decade in group_by %}&group_by_decades={{decade}}{% endfor %}&page={{ page_obj.next_page_number }}">Next</a>
     {% endif %}
 {% endif %}

@@ -80,10 +80,9 @@ class MoviesListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        grouping = self.get_grouping()
-        if grouping:
-            print(grouping)
-            upper_decades_limits = list(map(int,grouping))
+        upper_decades_limits = self.get_grouping()
+        if upper_decades_limits:
+            print(upper_decades_limits)
             movies_from_decades = queryset.filter(year_released__gte=(upper_decades_limits[0]-9),
                                                  year_released__lte=(upper_decades_limits[0]))
             for limit in upper_decades_limits[1:]:
@@ -93,34 +92,31 @@ class MoviesListView(ListView):
         else:
             return queryset
 
-
-
     def get_grouping(self):
         if self.request.GET.__contains__('group_by_decades'):
-            self.request.GET.getlist('group_by_decades')
-            return self.request.GET.getlist('group_by_decades')
+            decades = list(map(int, self.request.GET.getlist('group_by_decades')))
+            self.extra_context = {'group_by': decades}
+
+            return decades
         else:
             return None
 
-
     def get_ordering(self):
-        try:
-            ordering = self.request.GET['sort_by']
-        except MultiValueDictKeyError:
-            ordering = super().get_ordering()
-        return ordering
+        if self.request.GET.__contains__('sort_by'):
+            return self.request.GET['sort_by']
+        else:
+            return super().get_ordering()
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form_sorting'] = MovieSortForm(self.request.GET)
+        context['form_sorting_grouping'] = MovieSortForm(self.request.GET)
         context['sort_by'] = self.get_ordering()
-        context['form_grouping'] = MovieGroupForm(self.request.GET)
-        self.get_grouping()
+        # context['form_grouping'] = MovieGroupForm(self.request.GET)
 
         # context['movies']=(self.object_list.filter(year_released__gt=2010))
         # print(context['movies'].filter(year_released__gt=2010))
         # print()
-        # print(context)
+        print(context)
 
         return context
 

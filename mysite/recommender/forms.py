@@ -37,12 +37,18 @@ SORTING_OPTIONS= (
     ('year_released', 'Year of release \u25B2'),
     ('-year_released', 'Year of release \u25BC'))
 
+decades_upper = ([1889 + 10 * i for i in range(15)])
+decades_ranges = ['- 1889'] + [f'{1890 + 10 * i} - {1899 + 10 * i}' for i in range(14)]
+DECADE_CHOICES = (tuple(zip(decades_upper, decades_ranges)))
+
 class MovieSortForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['sort_by'].label = 'Sort by:'
     sort_by = forms.ChoiceField(choices=SORTING_OPTIONS, required=False)
                                       # widget=forms.Select(attrs={'onclick': "alert('foo !');"}))
+    group_by_decades = forms.MultipleChoiceField(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple, required=False)
+
 
 class MovieRatingSortForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -56,9 +62,6 @@ class MovieRatingSortForm(forms.Form):
     ('-date_rated', 'Date rated \u25BC'))
     sort_by = forms.ChoiceField(choices=SORTING_OPTIONS, required=False)
 
-decades_upper = ([1889 + 10 * i for i in range(15)])
-decades_ranges = ['- 1889'] + [f'{1890 + 10 * i} - {1899 + 10 * i}' for i in range(14)]
-DECADE_CHOICES = (tuple(zip(decades_upper, decades_ranges)))
 
 # TODO: merge with sort form
 class MovieGroupForm(forms.Form):
