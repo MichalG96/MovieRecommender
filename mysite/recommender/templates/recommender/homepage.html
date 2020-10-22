@@ -1,10 +1,12 @@
 {% extends 'recommender/base.html' %}
+{%load static%}
 {% block title %}
-   Strona domowa
+   Homepage
 {% endblock title %}
 
 {% block content %}
    <div class="media-body">
      <h1>Strona domowa HALO</h1>
+       <img src="{% static 'images/ja.jpg' %}" class="img-fluid">
    </div>
 {% endblock content %}

@@ -78,26 +78,11 @@ class MoviesListView(ListView):
             ordering = self.request.GET['sort_by']
         except MultiValueDictKeyError:
             ordering = super().get_ordering()
-        print(ordering)
-
         return ordering
 
     def get_context_data(self, *, object_list=None, **kwargs):
         form = MovieSortForm(self.request.GET)
         return super().get_context_data(form=form, **kwargs)
-
-def new_user(request):
-    return render(request, 'recommender/new_user.html')
-
-def recommend(request):
-    return render(request, 'recommender/recommend.html')
-
-def users_list(request):
-    return render(request, 'recommender/users_list.html')
-
-def add_user(request):
-    return render(request, 'recommender/add_user.html')
-
 
 class MovieDetailView(DetailView):
     model = Movie
@@ -217,3 +202,15 @@ class RatingDeleteView(UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('movie_detail', kwargs={'pk': self.kwargs['pk']})
+
+def new_user(request):
+    return render(request, 'recommender/new_user.html')
+
+def recommend(request):
+    return render(request, 'recommender/recommend.html')
+
+def users_list(request):
+    return render(request, 'recommender/users_list.html')
+
+def add_user(request):
+    return render(request, 'recommender/add_user.html')

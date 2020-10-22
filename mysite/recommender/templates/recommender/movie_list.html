@@ -32,8 +32,8 @@
         <tr>
             <th scope="row">{{movie.id}}</th>
             <td>{{movie.movielens_id}}</td>
-            <td>{{movie.imdb_id}}</td>
             <td>{{movie.tmdb_id}}</td>
+            <td>{{movie.imdb_id}}</td>
             <td><a href="{% url 'movie_detail' movie.id %}">{{movie.title}}</a></td>
             <td>{{movie.year_released}}</td>
             <td>{{movie.director}}</td>
@@ -50,7 +50,7 @@
         {% for num in page_obj.paginator.page_range %}
             {% if page_obj.number == num %}
                 <a class="btn btn-info mb-4" href="?page={{num}}">{{num}}</a>
-            {% elif  num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            {% elif  num > page_obj.number|add:'-5' and num < page_obj.number|add:'5' %}
                 <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{num}}</a>
             {% endif %}
         {% endfor %}

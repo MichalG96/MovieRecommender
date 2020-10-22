@@ -26,15 +26,15 @@ class UserRatingForm(forms.ModelForm):
 
 SORTING_OPTIONS= (
     ('id', ''),
-    ('-id', 'ID, descending'),
-    ('imdb_id', 'IMDb ID, ascending'),
-    ('-imdb_id', 'IMDb ID, descending'),
-    ('tmdb_id', 'tMDb ID, ascending'),
-    ('-tmdb_id', 'tMDb ID, descending'),
-    ('title', 'Title, ascending'),
-    ('-title', 'Title, descending'),
-    ('year_released', 'Year of release, ascending'),
-    ('-year_released', 'Year of release, descending'))
+    ('-id', 'ID \u25BC'),
+    ('imdb_id', 'IMDb ID \u25B2'),
+    ('-imdb_id', 'IMDb ID \u25BC'),
+    ('tmdb_id', 'tMDb ID \u25B2'),
+    ('-tmdb_id', 'tMDb ID \u25BC'),
+    ('title', 'Title \u25B2'),
+    ('-title', 'Title \u25BC'),
+    ('year_released', 'Year of release \u25B2'),
+    ('-year_released', 'Year of release \u25BC'))
 
 class MovieSortForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -51,10 +51,10 @@ class MovieRatingSortForm(forms.Form):
 
 
     SORTING_OPTIONS = SORTING_OPTIONS[:2] + SORTING_OPTIONS[6:] + (
-    ('value', 'Rating, ascending'),
-    ('-value', 'Rating, descending'),
-    ('date_rated', 'Date rated, ascending'),
-    ('-date_rated', 'Date rated, descending'))
+    ('value', 'Rating \u25B2'),
+    ('-value', 'Rating \u25BC'),
+    ('date_rated', 'Date rated \u25B2'),
+    ('-date_rated', 'Date rated \u25BC'))
 
     sort_by = forms.ChoiceField(choices=SORTING_OPTIONS, required=False)
 
