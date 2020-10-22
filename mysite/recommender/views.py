@@ -11,7 +11,7 @@ from django.views import View
 from .models import Movie, Rating, Actor, Genre
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
-from .forms import UserRatingForm, MovieSortForm, MovieRatingSortForm, MovieGroupForm, MovieRatingGroupForm
+from .forms import UserRatingForm, MovieSortForm, MovieRatingSortForm, MovieRatingGroupForm
 from django.utils.datastructures import MultiValueDictKeyError
 import requests
 
@@ -41,10 +41,13 @@ class RatingListView(LoginRequiredMixin, ListView):
     template_name = 'recommender/profile.html'
     context_object_name = 'ratings'
     paginate_by = 7
-    ordering = 'id'
+    ordering = '-date_rated'
 
     # Filter query so that it only returns current user's ratings
     def get_queryset(self):
+        #first group, then order
+        self.get_grouping()
+        print(self.extra_context)
         ordering = self.get_ordering()
         if ordering:
             if 'value' in ordering or 'date_rated' in ordering:
@@ -57,18 +60,32 @@ class RatingListView(LoginRequiredMixin, ListView):
         else:
             return self.request.user.rating_set.all()
 
+    def get_grouping(self):
+        #loop over this dict
+        # print(self.request.GET.dict())
+        # print(self.request.GET)
+        if self.request.GET.__contains__('group_by_decades'):
+            decades = list(map(int, self.request.GET.getlist('group_by_decades')))
+            self.extra_context = {'group_by_decades': decades}
+            return decades
+        if self.request.GET.__contains__('group_by_ratings'):
+            pass
+        else:
+            return None
+
     def get_ordering(self):
-        try:
+        if self.request.GET.__contains__('sort_by'):
             ordering = self.request.GET['sort_by']
-        except MultiValueDictKeyError:
+        else:
             ordering = super().get_ordering()
         return ordering
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form_sorting'] = MovieRatingSortForm(self.request.GET)
+        context['form_sorting_grouping'] = MovieRatingSortForm(self.request.GET)
         context['sort_by'] = self.get_ordering()
-        context['form_grouping'] = MovieRatingGroupForm(self.request.GET)
+        self.get_grouping()
+        # context['form_grouping'] = MovieRatingGroupForm(self.request.GET)
         return context
 
 
@@ -93,17 +110,19 @@ class MoviesListView(ListView):
             return queryset
 
     def get_grouping(self):
+        # If request.GET contains 'group_by_decades', sorting-grouping form has been used
+        # (otherwise, QueryDict will be empty, or it will contain only 'sort_by' and 'page'
         if self.request.GET.__contains__('group_by_decades'):
             decades = list(map(int, self.request.GET.getlist('group_by_decades')))
-            self.extra_context = {'group_by': decades}
-
+            self.extra_context = {'group_by_decades': decades}
             return decades
         else:
             return None
 
     def get_ordering(self):
         if self.request.GET.__contains__('sort_by'):
-            return self.request.GET['sort_by']
+            ordering = self.request.GET['sort_by']
+            return ordering
         else:
             return super().get_ordering()
 
@@ -111,13 +130,6 @@ class MoviesListView(ListView):
         context = super().get_context_data(**kwargs)
         context['form_sorting_grouping'] = MovieSortForm(self.request.GET)
         context['sort_by'] = self.get_ordering()
-        # context['form_grouping'] = MovieGroupForm(self.request.GET)
-
-        # context['movies']=(self.object_list.filter(year_released__gt=2010))
-        # print(context['movies'].filter(year_released__gt=2010))
-        # print()
-        print(context)
-
         return context
 
 class MovieDetailView(DetailView):

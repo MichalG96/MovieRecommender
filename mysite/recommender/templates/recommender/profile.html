@@ -1,27 +1,33 @@
 {% extends 'recommender/base.html' %}
 {% load crispy_forms_tags %}
+
+{% block title %}
+   Your ratings
+{% endblock title %}
+
 {% block content %}
     <h1>Oceny uzytkownika {{user.username}}:</h1>
     <div class="row">
         <div class="col">
-            <form method="get" action="">
-                {{form_sorting|crispy}}
-              <button class="btn btn-info" type="submit">Sort</button>
-            </form>
+            <form method="get">
+            {{form_sorting_grouping.sort_by|as_crispy_field}}
         </div>
         <div class="col">
-            <form method="get" action="">
-                {{form_grouping.group_by_decades|as_crispy_field }}
+            {{form_sorting_grouping.group_by_decades|as_crispy_field }}
+        </div>
+        <div class="col">
+            {{form_sorting_grouping.group_by_ratings|as_crispy_field }}
+        </div>
+        <div class="col">
+            {{form_sorting_grouping.date_from|as_crispy_field }}
+        </div>
+        <div class="col">
+            {{form_sorting_grouping.date_to|as_crispy_field }}
+        </div>
               <button class="btn btn-info" type="submit">Sort</button>
+                <a class="btn btn-info" href="{%url 'profile'%}">Clear</a>
             </form>
         </div>
-         <div class="col">
-            <form method="get" action="">
-                {{form_grouping.group_by_ratings|as_crispy_field }}
-              <button class="btn btn-info" type="submit">Sort</button>
-            </form>
-        </div>
-    </div>
     <table class="table table-hover">
       <thead class="thead-dark">
         <tr>

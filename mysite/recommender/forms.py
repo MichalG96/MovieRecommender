@@ -26,7 +26,7 @@ class UserRatingForm(forms.ModelForm):
         }
 
 SORTING_OPTIONS= (
-    ('id', ''),
+    ('id', 'ID \u25B2'),
     ('-id', 'ID \u25BC'),
     ('imdb_id', 'IMDb ID \u25B2'),
     ('-imdb_id', 'IMDb ID \u25BC'),
@@ -60,16 +60,19 @@ class MovieRatingSortForm(forms.Form):
     ('-value', 'Rating \u25BC'),
     ('date_rated', 'Date rated \u25B2'),
     ('-date_rated', 'Date rated \u25BC'))
+    possible_ratings = [i for i in range(1, 11)]
+    RATING_CHOICES = (tuple(zip(possible_ratings, possible_ratings)))
+
     sort_by = forms.ChoiceField(choices=SORTING_OPTIONS, required=False)
-
-
-# TODO: merge with sort form
-class MovieGroupForm(forms.Form):
+    group_by_ratings = forms.MultipleChoiceField(choices=RATING_CHOICES, widget=forms.CheckboxSelectMultiple, required=False)
     group_by_decades = forms.MultipleChoiceField(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple, required=False)
+    date_from = forms.DateField(widget=forms.SelectDateWidget, required=False)
+    date_to = forms.DateField(widget=forms.SelectDateWidget, required=False)
 
 class MovieRatingGroupForm(forms.Form):
     possible_ratings = [i for i in range(1,11)]
     RATING_CHOICES = (tuple(zip(possible_ratings, possible_ratings)))
     group_by_ratings = forms.MultipleChoiceField(choices=RATING_CHOICES, widget=forms.CheckboxSelectMultiple, required=False)
     group_by_decades = forms.MultipleChoiceField(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple, required=False)
-
+    date_from = forms.DateField(widget=forms.SelectDateWidget, required=False)
+    date_to = forms.DateField(widget=forms.SelectDateWidget, required=False)
