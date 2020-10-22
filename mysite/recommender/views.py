@@ -41,11 +41,11 @@ class RatingListView(LoginRequiredMixin, ListView):
     template_name = 'recommender/profile.html'
     context_object_name = 'ratings'
     paginate_by = 7
+    ordering = 'id'
 
     # Filter query so that it only returns current user's ratings
     def get_queryset(self):
         ordering = self.get_ordering()
-        print(ordering)
         if ordering:
             if 'value' in ordering or 'date_rated' in ordering:
                 return self.request.user.rating_set.all().order_by(ordering)
@@ -65,13 +65,17 @@ class RatingListView(LoginRequiredMixin, ListView):
         return ordering
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        form = MovieRatingSortForm(self.request.GET)
-        return super().get_context_data(form=form, **kwargs)
+        context = super().get_context_data(**kwargs)
+        context['form'] = MovieRatingSortForm(self.request.GET)
+        context['sort_by'] = self.get_ordering()
+        return context
+
 
 class MoviesListView(ListView):
     model = Movie
     context_object_name = 'movies'
     paginate_by = 15
+    ordering = 'id'
 
     def get_ordering(self):
         try:
@@ -81,8 +85,10 @@ class MoviesListView(ListView):
         return ordering
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        form = MovieSortForm(self.request.GET)
-        return super().get_context_data(form=form, **kwargs)
+        context = super().get_context_data(**kwargs)
+        context['form'] = MovieRatingSortForm(self.request.GET)
+        context['sort_by'] = self.get_ordering()
+        return context
 
 class MovieDetailView(DetailView):
     model = Movie
