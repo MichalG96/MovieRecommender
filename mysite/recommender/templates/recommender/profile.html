@@ -3,10 +3,24 @@
 {% block content %}
     <h1>Oceny uzytkownika {{user.username}}:</h1>
     <div class="row">
+        <div class="col">
             <form method="get" action="">
-                {{form|crispy}}
+                {{form_sorting|crispy}}
               <button class="btn btn-info" type="submit">Sort</button>
             </form>
+        </div>
+        <div class="col">
+            <form method="get" action="">
+                {{form_grouping.group_by_decades|as_crispy_field }}
+              <button class="btn btn-info" type="submit">Sort</button>
+            </form>
+        </div>
+         <div class="col">
+            <form method="get" action="">
+                {{form_grouping.group_by_ratings|as_crispy_field }}
+              <button class="btn btn-info" type="submit">Sort</button>
+            </form>
+        </div>
     </div>
     <table class="table table-hover">
       <thead class="thead-dark">

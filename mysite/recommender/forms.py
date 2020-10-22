@@ -2,7 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import Rating
-from django.forms.widgets import NumberInput
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -40,7 +41,6 @@ class MovieSortForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['sort_by'].label = 'Sort by:'
-
     sort_by = forms.ChoiceField(choices=SORTING_OPTIONS, required=False)
                                       # widget=forms.Select(attrs={'onclick': "alert('foo !');"}))
 
@@ -49,12 +49,24 @@ class MovieRatingSortForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields['sort_by'].label = 'Sort by:'
 
-
     SORTING_OPTIONS = SORTING_OPTIONS[:2] + SORTING_OPTIONS[6:] + (
     ('value', 'Rating \u25B2'),
     ('-value', 'Rating \u25BC'),
     ('date_rated', 'Date rated \u25B2'),
     ('-date_rated', 'Date rated \u25BC'))
-
     sort_by = forms.ChoiceField(choices=SORTING_OPTIONS, required=False)
+
+decades_upper = ([1889 + 10 * i for i in range(15)])
+decades_ranges = ['- 1889'] + [f'{1890 + 10 * i} - {1899 + 10 * i}' for i in range(14)]
+DECADE_CHOICES = (tuple(zip(decades_upper, decades_ranges)))
+
+# TODO: merge with sort form
+class MovieGroupForm(forms.Form):
+    group_by_decades = forms.MultipleChoiceField(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple, required=False)
+
+class MovieRatingGroupForm(forms.Form):
+    possible_ratings = [i for i in range(1,11)]
+    RATING_CHOICES = (tuple(zip(possible_ratings, possible_ratings)))
+    group_by_ratings = forms.MultipleChoiceField(choices=RATING_CHOICES, widget=forms.CheckboxSelectMultiple, required=False)
+    group_by_decades = forms.MultipleChoiceField(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple, required=False)
 

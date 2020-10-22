@@ -11,7 +11,7 @@ from django.views import View
 from .models import Movie, Rating, Actor, Genre
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
-from .forms import UserRatingForm, MovieSortForm, MovieRatingSortForm
+from .forms import UserRatingForm, MovieSortForm, MovieRatingSortForm, MovieGroupForm, MovieRatingGroupForm
 from django.utils.datastructures import MultiValueDictKeyError
 import requests
 
@@ -66,8 +66,9 @@ class RatingListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = MovieRatingSortForm(self.request.GET)
+        context['form_sorting'] = MovieRatingSortForm(self.request.GET)
         context['sort_by'] = self.get_ordering()
+        context['form_grouping'] = MovieRatingGroupForm(self.request.GET)
         return context
 
 
@@ -76,6 +77,31 @@ class MoviesListView(ListView):
     context_object_name = 'movies'
     paginate_by = 15
     ordering = 'id'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        grouping = self.get_grouping()
+        if grouping:
+            print(grouping)
+            upper_decades_limits = list(map(int,grouping))
+            movies_from_decades = queryset.filter(year_released__gte=(upper_decades_limits[0]-9),
+                                                 year_released__lte=(upper_decades_limits[0]))
+            for limit in upper_decades_limits[1:]:
+                movies_from_decades |= queryset.filter(year_released__gte=(limit-9),
+                                                 year_released__lte=(limit))
+            return movies_from_decades
+        else:
+            return queryset
+
+
+
+    def get_grouping(self):
+        if self.request.GET.__contains__('group_by_decades'):
+            self.request.GET.getlist('group_by_decades')
+            return self.request.GET.getlist('group_by_decades')
+        else:
+            return None
+
 
     def get_ordering(self):
         try:
@@ -86,8 +112,16 @@ class MoviesListView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = MovieRatingSortForm(self.request.GET)
+        context['form_sorting'] = MovieSortForm(self.request.GET)
         context['sort_by'] = self.get_ordering()
+        context['form_grouping'] = MovieGroupForm(self.request.GET)
+        self.get_grouping()
+
+        # context['movies']=(self.object_list.filter(year_released__gt=2010))
+        # print(context['movies'].filter(year_released__gt=2010))
+        # print()
+        # print(context)
+
         return context
 
 class MovieDetailView(DetailView):
