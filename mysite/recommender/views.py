@@ -46,13 +46,7 @@ class RatingListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         queryset = self.request.user.rating_set.all()
-        if self.request.method == 'GET':
-            self.form = MovieRatingSortGroupForm(self.request.GET)
-        else:
-            self.form = MovieRatingSortGroupForm()
-
-        # weird bug: sometimes the page throws an error
-        # 'MovieRatingSortGroupForm object has na attribute 'cleaned_data''
+        self.form = MovieRatingSortGroupForm(self.request.GET)
 
         if self.form.is_valid():
             decades_grouping = self.form.cleaned_data['group_by_decades']
@@ -108,7 +102,6 @@ class RatingListView(LoginRequiredMixin, ListView):
         context['form_sorting_grouping'] = self.form
         return context
 
-# TODO: redo all of this using data from from rather then separate GET requests
 class MoviesListView(ListView):
     model = Movie
     context_object_name = 'movies'
@@ -116,40 +109,27 @@ class MoviesListView(ListView):
     ordering = 'id'
 
     def get_queryset(self):
-        self.form = MovieSortGroupForm(self.request.GET)
         queryset = super().get_queryset()
-        upper_decades_limits = self.get_grouping()
-        if upper_decades_limits:
-            movies_from_decades = queryset.filter(movielens_id__year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
-            for limit in upper_decades_limits[1:]:
-                movies_from_decades |= queryset.filter(movielens_id__year_released__range=[(limit - 9), (limit)])
-            return movies_from_decades
-        else:
-            return queryset
+        self.form = MovieSortGroupForm(self.request.GET)
+        if self.form.is_valid():
+            decades_grouping = self.form.cleaned_data['group_by_decades']
+            if decades_grouping:
+                upper_decades_limits = list(map(int, decades_grouping))
+                movies_from_decades = queryset.filter(year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
+                for limit in upper_decades_limits[1:]:
+                    movies_from_decades |= queryset.filter(year_released__range=[(limit - 9), (limit)])
+                queryset = movies_from_decades
 
-    def get_grouping(self):
-        # If request.GET contains 'group_by_decades', sorting-grouping form has been used
-        # (otherwise, QueryDict will be empty, or it will contain only 'sort_by' and 'page'
-        if self.request.GET.__contains__('group_by_decades'):
-            decades = list(map(int, self.request.GET.getlist('group_by_decades')))
-            self.extra_context = {'group_by_decades': decades}
-            return decades
+        self.extra_context = self.form.cleaned_data
+        ordering = self.form.cleaned_data['sort_by']
+        if ordering:
+            return queryset.order_by(ordering)
         else:
-            return None
-
-    def get_ordering(self):
-        if self.request.GET.__contains__('sort_by'):
-            ordering = self.request.GET['sort_by']
-            return ordering
-        else:
-            return super().get_ordering()
+            return queryset.order_by(self.ordering)
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        # context['form_sorting_grouping'] = MovieSortGroupForm(self.request.GET)
         context['form_sorting_grouping'] = self.form
-        # można to przenieść do get queryset za pomoca extra context
-        context['sort_by'] = self.get_ordering()
         return context
 
 class MovieDetailView(DetailView):
