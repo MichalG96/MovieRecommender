@@ -11,9 +11,10 @@ from django.views import View
 from .models import Movie, Rating, Actor, Genre
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
-from .forms import UserRatingForm, MovieSortForm, MovieRatingSortForm, MovieRatingGroupForm
+from .forms import UserRatingForm, MovieSortGroupForm, MovieRatingSortGroupForm
 from django.utils.datastructures import MultiValueDictKeyError
 import requests
+from datetime import timedelta
 
 base_tmbd_url = 'https://api.themoviedb.org/3/movie/'
 api_key = 'bef647566a5b4968a35cd34a79dc3dce'
@@ -45,35 +46,84 @@ class RatingListView(LoginRequiredMixin, ListView):
 
     # Filter query so that it only returns current user's ratings
     def get_queryset(self):
-        #first group, then order
-        self.get_grouping()
-        print(self.extra_context)
-        ordering = self.get_ordering()
+        queryset = self.request.user.rating_set.all()
+        self.form = MovieRatingSortGroupForm(self.request.GET)
+        print(f'valid? {self.form.is_valid()}')
+        print(self.form.cleaned_data)
+        decades_grouping = self.form.cleaned_data['group_by_decades']
+        ratings_grouping = self.form.cleaned_data['group_by_ratings']
+
+        if decades_grouping:
+            upper_decades_limits = list(map(int, decades_grouping))
+            movies_from_decades = queryset.filter(movielens_id__year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
+            for limit in upper_decades_limits[1:]:
+                movies_from_decades |= queryset.filter(movielens_id__year_released__range=[(limit - 9), (limit)])
+            # Consists only of movies from decades defined by the user
+            queryset = movies_from_decades
+
+        if ratings_grouping:
+            possible_ratings = list(map(int, ratings_grouping))
+            movies_with_ratings = queryset.filter(value=possible_ratings[0])
+            for rating in possible_ratings[1:]:
+                movies_with_ratings |= queryset.filter(value=rating)
+            # Consists only of movies from decades and with ratings defined by the user
+            queryset = movies_with_ratings
+
+        # TODO: add validation: date_from can't be later than date_to
+        if self.form.is_valid():
+            date_from_grouping = self.form.cleaned_data['date_from']
+            # When filtering, it is neccesary to add one day do 'date_to', to make this day inclusive
+            # Otherwise, the last day showing would be te previous day of date_to_grouping
+            date_to_grouping = self.form.cleaned_data['date_to']
+            if date_from_grouping:
+                if date_to_grouping:
+                    queryset = queryset.filter(date_rated__range=[date_from_grouping, date_to_grouping+timedelta(days=1)])
+                else:
+                    queryset = queryset.filter(date_rated__gte=date_from_grouping)
+            elif date_to_grouping:
+                queryset = queryset.filter(date_rated__lte=date_to_grouping+timedelta(days=1))
+
+        # Add form data to the context (needed to keep sorting and grouping
+        # consistent across pagination
+        self.extra_context = self.form.cleaned_data
+
+        # GROUPING DONE, NOW SORT THE DATA THAT IS LEFT
+        ordering = self.form.cleaned_data['sort_by']
+        print(ordering)
         if ordering:
             if 'value' in ordering or 'date_rated' in ordering:
-                return self.request.user.rating_set.all().order_by(ordering)
+                return queryset.order_by(ordering)
             else:
                 if ordering.startswith('-'):
-                    return self.request.user.rating_set.all().order_by(f'-movielens_id__{self.get_ordering()[1:]}')
+                    return queryset.order_by(f'-movielens_id__{self.get_ordering()[1:]}')
                 else:
-                    return self.request.user.rating_set.all().order_by(f'movielens_id__{self.get_ordering()}')
+                    return queryset.order_by(f'movielens_id__{self.get_ordering()}')
         else:
-            return self.request.user.rating_set.all()
+            return queryset
 
-    def get_grouping(self):
-        #loop over this dict
-        # print(self.request.GET.dict())
-        # print(self.request.GET)
-        if self.request.GET.__contains__('group_by_decades'):
-            decades = list(map(int, self.request.GET.getlist('group_by_decades')))
-            self.extra_context = {'group_by_decades': decades}
-            return decades
-        if self.request.GET.__contains__('group_by_ratings'):
-            pass
-        else:
-            return None
 
+    # def get_grouping(self):
+    #     print('get_grouping')
+    #
+    #     #loop over this dict
+    #     # print(self.request.GET.dict())
+    #     # print(self.request.GET)
+    #     if self.request.GET.__contains__('group_by_decades'):
+    #     # if 'group_by_decades' in self.sorting_grouping_data: - ZLE, KLUCZE ZAWSZE SA, SPRAWDZAJ, CZY ZAWIERAJA WARTOSCI
+    #         decades = list(map(int, self.request.GET.getlist('group_by_decades')))
+    #         self.extra_context = {'group_by_decades': decades}
+    #         # add to dict instead of returning
+    #         return decades
+    #     if self.request.GET.__contains__('group_by_ratings'):
+    #         ratings = list(map(int, self.request.GET.getlist('group_by_ratings')))
+    #
+    #     if self.request.GET.__contains__('group_by_ratings'):
+    #                 ratings = list(map(int, self.request.GET.getlist('group_by_ratings')))
+    #     else:
+    #         return None
     def get_ordering(self):
+        print('get_ordering executing?')
+
         if self.request.GET.__contains__('sort_by'):
             ordering = self.request.GET['sort_by']
         else:
@@ -81,14 +131,13 @@ class RatingListView(LoginRequiredMixin, ListView):
         return ordering
 
     def get_context_data(self, *, object_list=None, **kwargs):
+        print('get context data')
         context = super().get_context_data(**kwargs)
-        context['form_sorting_grouping'] = MovieRatingSortForm(self.request.GET)
-        context['sort_by'] = self.get_ordering()
-        self.get_grouping()
-        # context['form_grouping'] = MovieRatingGroupForm(self.request.GET)
+        context['form_sorting_grouping'] = self.form
         return context
 
-
+# TODO: redo all of this using data from from rather then separate GET requests
+# maybe just rating list view
 class MoviesListView(ListView):
     model = Movie
     context_object_name = 'movies'
@@ -96,15 +145,13 @@ class MoviesListView(ListView):
     ordering = 'id'
 
     def get_queryset(self):
+        self.form = MovieSortGroupForm(self.request.GET)
         queryset = super().get_queryset()
         upper_decades_limits = self.get_grouping()
         if upper_decades_limits:
-            print(upper_decades_limits)
-            movies_from_decades = queryset.filter(year_released__gte=(upper_decades_limits[0]-9),
-                                                 year_released__lte=(upper_decades_limits[0]))
+            movies_from_decades = queryset.filter(movielens_id__year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
             for limit in upper_decades_limits[1:]:
-                movies_from_decades |= queryset.filter(year_released__gte=(limit-9),
-                                                 year_released__lte=(limit))
+                movies_from_decades |= queryset.filter(movielens_id__year_released__range=[(limit - 9), (limit)])
             return movies_from_decades
         else:
             return queryset
@@ -128,7 +175,9 @@ class MoviesListView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form_sorting_grouping'] = MovieSortForm(self.request.GET)
+        # context['form_sorting_grouping'] = MovieSortGroupForm(self.request.GET)
+        context['form_sorting_grouping'] = self.form
+        # można to przenieść do get queryset za pomoca extra context
         context['sort_by'] = self.get_ordering()
         return context
 

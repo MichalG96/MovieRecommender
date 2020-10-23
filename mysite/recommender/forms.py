@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import Rating
+from django.core.exceptions import ValidationError
+
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit
 
@@ -41,7 +43,7 @@ decades_upper = ([1889 + 10 * i for i in range(15)])
 decades_ranges = ['- 1889'] + [f'{1890 + 10 * i} - {1899 + 10 * i}' for i in range(14)]
 DECADE_CHOICES = (tuple(zip(decades_upper, decades_ranges)))
 
-class MovieSortForm(forms.Form):
+class MovieSortGroupForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['sort_by'].label = 'Sort by:'
@@ -50,7 +52,7 @@ class MovieSortForm(forms.Form):
     group_by_decades = forms.MultipleChoiceField(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple, required=False)
 
 
-class MovieRatingSortForm(forms.Form):
+class MovieRatingSortGroupForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['sort_by'].label = 'Sort by:'
@@ -69,10 +71,15 @@ class MovieRatingSortForm(forms.Form):
     date_from = forms.DateField(widget=forms.SelectDateWidget, required=False)
     date_to = forms.DateField(widget=forms.SelectDateWidget, required=False)
 
-class MovieRatingGroupForm(forms.Form):
-    possible_ratings = [i for i in range(1,11)]
-    RATING_CHOICES = (tuple(zip(possible_ratings, possible_ratings)))
-    group_by_ratings = forms.MultipleChoiceField(choices=RATING_CHOICES, widget=forms.CheckboxSelectMultiple, required=False)
-    group_by_decades = forms.MultipleChoiceField(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple, required=False)
-    date_from = forms.DateField(widget=forms.SelectDateWidget, required=False)
-    date_to = forms.DateField(widget=forms.SelectDateWidget, required=False)
+    def clean(self):
+        cleaned_data = super().clean()
+        date_from = cleaned_data.get('date_from')
+        date_to = cleaned_data.get('date_to')
+
+        if date_from and date_to:
+            if date_from > date_to:
+                msg = "'Date from' cannot be later than 'Date to"
+                self.add_error('date_from', msg)
+                raise ValidationError(
+                    "'Date from' cannot be later than 'Date to"
+                )
