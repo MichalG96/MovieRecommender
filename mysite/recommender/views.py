@@ -44,30 +44,35 @@ class RatingListView(LoginRequiredMixin, ListView):
     paginate_by = 7
     ordering = '-date_rated'
 
+    def group_by_decade(self, queryset, decades_grouping):
+        upper_decades_limits = list(map(int, decades_grouping))
+        movies_from_decades = queryset.filter(
+            movielens_id__year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
+        for limit in upper_decades_limits[1:]:
+            movies_from_decades |= queryset.filter(movielens_id__year_released__range=[(limit - 9), (limit)])
+        # Consists only of movies from decades defined by the user
+        return movies_from_decades
+
+    def group_by_rating(self, queryset, ratings_grouping):
+        possible_ratings = list(map(int, ratings_grouping))
+        movies_with_ratings = queryset.filter(value=possible_ratings[0])
+        for rating in possible_ratings[1:]:
+            movies_with_ratings |= queryset.filter(value=rating)
+        # Consists only of movies from decades and with ratings defined by the user
+        return movies_with_ratings
+
     def get_queryset(self):
         queryset = self.request.user.rating_set.all()
         self.form = MovieRatingSortGroupForm(self.request.GET)
 
         if self.form.is_valid():
+            print(f'valid?')
             decades_grouping = self.form.cleaned_data['group_by_decades']
             ratings_grouping = self.form.cleaned_data['group_by_ratings']
-
             if decades_grouping:
-                upper_decades_limits = list(map(int, decades_grouping))
-                movies_from_decades = queryset.filter(movielens_id__year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
-                for limit in upper_decades_limits[1:]:
-                    movies_from_decades |= queryset.filter(movielens_id__year_released__range=[(limit - 9), (limit)])
-                # Consists only of movies from decades defined by the user
-                queryset = movies_from_decades
-
+                queryset = self.group_by_decade(queryset, decades_grouping)
             if ratings_grouping:
-                possible_ratings = list(map(int, ratings_grouping))
-                movies_with_ratings = queryset.filter(value=possible_ratings[0])
-                for rating in possible_ratings[1:]:
-                    movies_with_ratings |= queryset.filter(value=rating)
-                # Consists only of movies from decades and with ratings defined by the user
-                queryset = movies_with_ratings
-
+                queryset = self.group_by_rating(queryset, ratings_grouping)
             date_from_grouping = self.form.cleaned_data['date_from']
             # When filtering, it is neccesary to add one day do 'date_to', to make this day inclusive
             # Otherwise, the last day showing would be te previous day of date_to_grouping
@@ -79,10 +84,17 @@ class RatingListView(LoginRequiredMixin, ListView):
                     queryset = queryset.filter(date_rated__gte=date_from_grouping)
             elif date_to_grouping:
                 queryset = queryset.filter(date_rated__lte=date_to_grouping+timedelta(days=1))
-
-        # Add form data to the context
-        # (needed to keep sorting and grouping consistent across pagination)
-        self.extra_context = self.form.cleaned_data
+            # Add form data to the context
+            # (needed to keep sorting and grouping consistent across pagination)
+            self.extra_context = self.form.cleaned_data
+        else:
+            decades_grouping = self.form.cleaned_data['group_by_decades']
+            ratings_grouping = self.form.cleaned_data['group_by_ratings']
+            if decades_grouping:
+                queryset = self.group_by_decade(queryset, decades_grouping)
+            if ratings_grouping:
+                queryset = self.group_by_rating(queryset, ratings_grouping)
+            self.extra_context = self.form.cleaned_data
 
         # GROUPING DONE, NOW SORT THE DATA THAT IS LEFT
         ordering = self.form.cleaned_data['sort_by']
@@ -164,9 +176,7 @@ class MovieDetailView(DetailView):
         else:
             initial_value = None
             context['rating_exists'] = False
-
         context['form'] = UserRatingForm(initial={'value': initial_value})
-
         return context
 
 class MovieDetailDispatcherView(View):
@@ -234,7 +244,6 @@ class RatingUpdateView(UserPassesTestMixin, UpdateView):
 
 class RatingDeleteView(UserPassesTestMixin, DeleteView):
     model = Movie
-    # template_name = 'recommender/movie_detail.html'
 
     def get_object(self, *args, **kwargs):
         obj = super().get_object()
