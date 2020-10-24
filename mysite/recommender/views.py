@@ -47,9 +47,11 @@ class RatingListView(LoginRequiredMixin, ListView):
     def group_by_decade(self, queryset, decades_grouping):
         upper_decades_limits = list(map(int, decades_grouping))
         movies_from_decades = queryset.filter(
-            movielens_id__year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
+            # movielens_id__year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
+            movie__year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
         for limit in upper_decades_limits[1:]:
-            movies_from_decades |= queryset.filter(movielens_id__year_released__range=[(limit - 9), (limit)])
+            # movies_from_decades |= queryset.filter(movielens_id__year_released__range=[(limit - 9), (limit)])
+            movies_from_decades |= queryset.filter(movie__year_released__range=[(limit - 9), (limit)])
         # Consists only of movies from decades defined by the user
         return movies_from_decades
 
@@ -103,15 +105,18 @@ class RatingListView(LoginRequiredMixin, ListView):
                 return queryset.order_by(ordering)
             else:
                 if ordering.startswith('-'):
-                    return queryset.order_by(f'-movielens_id__{ordering[1:]}')
+                    # return queryset.order_by(f'-movielens_id__{ordering[1:]}')
+                    return queryset.order_by(f'-movie__{ordering[1:]}')
                 else:
-                    return queryset.order_by(f'movielens_id__{ordering}')
+                    # return queryset.order_by(f'movielens_id__{ordering}')
+                    return queryset.order_by(f'movie__{ordering}')
         else:
             return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form_sorting_grouping'] = self.form
+        print(context)
         return context
 
 class MoviesListView(ListView):
@@ -193,7 +198,8 @@ class MovieDetailDispatcherView(View):
         current_movie = Movie.objects.get(pk=self.kwargs['pk'])
         try:
             # Update view
-            Rating.objects.get(who_rated=self.request.user.id, movielens_id_id=current_movie.movielens_id)
+            # Rating.objects.get(who_rated=self.request.user.id, movielens_id_id=current_movie.movielens_id)
+            Rating.objects.get(who_rated=self.request.user.id, movie_id=current_movie.id)
             view = RatingUpdateView.as_view()
 
         except ObjectDoesNotExist:
@@ -209,7 +215,8 @@ class RatingCreateView(CreateView):
     def form_valid(self, form):
         form.instance.who_rated = self.request.user
         self.movie_object = Movie.objects.get(pk=self.kwargs['pk'])
-        form.instance.movielens_id = self.movie_object
+        # form.instance.movielens_id = self.movie_object
+        form.instance.movie = self.movie_object
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -231,8 +238,10 @@ class RatingUpdateView(UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         form.instance.who_rated = self.request.user
-        movie_object = self.get_object().movielens_id
-        form.instance.movielens_id = movie_object
+        # movie_object = self.get_object().movielens_id
+        movie_object = self.get_object().movie
+        # form.instance.movielens_id = movie_object
+        form.instance.movie = movie_object
         return super().form_valid(form)
 
     def test_func(self):

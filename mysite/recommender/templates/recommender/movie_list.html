@@ -25,8 +25,8 @@
         <tr>
           <th scope="col">ID</th>
           <th scope="col">MovieLens ID</th>
-          <th scope="col">tMdB ID</th>
           <th scope="col">IMdB ID</th>
+          <th scope="col">tMdB ID</th>
           <th scope="col">Title</th>
           <th scope="col">Year</th>
           <th scope="col">Director</th>
@@ -37,8 +37,8 @@
         <tr>
             <th scope="row">{{movie.id}}</th>
             <td>{{movie.movielens_id}}</td>
-            <td>{{movie.tmdb_id}}</td>
             <td>{{movie.imdb_id}}</td>
+            <td>{{movie.tmdb_id}}</td>
             <td><a href="{% url 'movie_detail' movie.id %}">{{movie.title}}</a></td>
             <td>{{movie.year_released}}</td>
             <td>{{movie.director}}</td>

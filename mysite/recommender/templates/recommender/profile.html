@@ -42,10 +42,10 @@
       <tbody>
         {% for rating in ratings %}
         <tr>
-            <th scope="row">{{rating.movielens_id.movielens_id}}</th>
-            <td><a href="{% url 'movie_detail' rating.movielens_id.id %}">{{rating.movielens_id.title}}</a></td>
-            <td>{{rating.movielens_id.year_released}}</td>
-            <td>{{rating.movielens_id.director}}</td>
+            <th scope="row">{{rating.movie.movielens_id}}</th>
+            <td><a href="{% url 'movie_detail' rating.movie.id %}">{{rating.movie.title}}</a></td>
+            <td>{{rating.movie.year_released}}</td>
+            <td>{{rating.movie.director}}</td>
             <td class="font-weight-bold">{{rating.value}}</td>
             <td> {{rating.date_rated | date:"d-m-Y H:i:s" }}</td>
         </tr>
