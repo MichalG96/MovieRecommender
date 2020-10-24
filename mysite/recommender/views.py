@@ -121,7 +121,8 @@ class MoviesListView(ListView):
     ordering = 'id'
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        # queryset = super().get_queryset()
+        queryset = Movie.objects.all()
         self.form = MovieSortGroupForm(self.request.GET)
         if self.form.is_valid():
             decades_grouping = self.form.cleaned_data['group_by_decades']
@@ -187,6 +188,8 @@ class MovieDetailDispatcherView(View):
 
     # Do this if you received POST request
     def post(self, request, *args, **kwargs):
+        print(vars(self.request).keys())
+        print((self.request.POST))
         current_movie = Movie.objects.get(pk=self.kwargs['pk'])
         try:
             # Update view

@@ -20,6 +20,7 @@ class Movie(models.Model):
         return reverse('movie_detail', kwargs={'pk': self.pk})
 
 class Rating(models.Model):
+    # TODO: this should be 'movie' and refer to pk of Movie
     movielens_id = models.ForeignKey(Movie, to_field='movielens_id', on_delete=models.CASCADE)
     who_rated = models.ForeignKey(User, on_delete=models.CASCADE)
     value = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
@@ -31,7 +32,7 @@ class Rating(models.Model):
         # unique_together = [['movielens_id', 'who_rated']]
 
     def __str__(self):
-        return f'user_{self.who_rated.pk}_movie_{self.movielens_id.movielens_id}'
+        return f'user_{self.who_rated.pk}_movie_{self.movielens_id.movielens_id}_value_{self.value}'
 
 class Genre(models.Model):
     name = models.CharField(max_length=40)
