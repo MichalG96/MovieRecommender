@@ -193,16 +193,12 @@ class MovieDetailDispatcherView(View):
 
     # Do this if you received POST request
     def post(self, request, *args, **kwargs):
-        print(vars(self.request).keys())
-        print((self.request.POST))
         current_movie = Movie.objects.get(pk=self.kwargs['pk'])
-        try:
-            # Update view
-            # Rating.objects.get(who_rated=self.request.user.id, movielens_id_id=current_movie.movielens_id)
-            Rating.objects.get(who_rated=self.request.user.id, movie_id=current_movie.id)
-            view = RatingUpdateView.as_view()
 
-        except ObjectDoesNotExist:
+        if Rating.objects.filter(who_rated=self.request.user.id, movie_id=current_movie.id).exists():
+            # Update view
+            view = RatingUpdateView.as_view()
+        else:
             # Create view
             view = RatingCreateView.as_view()
         return view(request, *args, **kwargs)
@@ -238,9 +234,7 @@ class RatingUpdateView(UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         form.instance.who_rated = self.request.user
-        # movie_object = self.get_object().movielens_id
         movie_object = self.get_object().movie
-        # form.instance.movielens_id = movie_object
         form.instance.movie = movie_object
         return super().form_valid(form)
 
