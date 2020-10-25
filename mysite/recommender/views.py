@@ -20,7 +20,7 @@ base_tmbd_url = 'https://api.themoviedb.org/3/movie/'
 api_key = 'bef647566a5b4968a35cd34a79dc3dce'
 base_img_url = 'https://image.tmdb.org/t/p/'
 # available sizes :"w92", "w154"," w185", "w342", "w500", "w780", "original"
-img_size = 'w342/'
+img_size = 'w185/'
 
 def register(request):
     if request.method == 'POST':
@@ -47,10 +47,8 @@ class RatingListView(LoginRequiredMixin, ListView):
     def group_by_decade(self, queryset, decades_grouping):
         upper_decades_limits = list(map(int, decades_grouping))
         movies_from_decades = queryset.filter(
-            # movielens_id__year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
             movie__year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
         for limit in upper_decades_limits[1:]:
-            # movies_from_decades |= queryset.filter(movielens_id__year_released__range=[(limit - 9), (limit)])
             movies_from_decades |= queryset.filter(movie__year_released__range=[(limit - 9), (limit)])
         # Consists only of movies from decades defined by the user
         return movies_from_decades
@@ -105,10 +103,8 @@ class RatingListView(LoginRequiredMixin, ListView):
                 return queryset.order_by(ordering)
             else:
                 if ordering.startswith('-'):
-                    # return queryset.order_by(f'-movielens_id__{ordering[1:]}')
                     return queryset.order_by(f'-movie__{ordering[1:]}')
                 else:
-                    # return queryset.order_by(f'movielens_id__{ordering}')
                     return queryset.order_by(f'movie__{ordering}')
         else:
             return queryset
@@ -166,8 +162,8 @@ class MovieDetailView(DetailView):
         img_url = f'{base_img_url}{img_size}{r["poster_path"]}'
         r_credits = requests.get(url_credits).json()
         cast = [{'name': person['name'], 'character': person['character']} for person in r_credits['cast'][:8]]
-        context['actors'] = self.object.actor_set.all()
-        context['genres'] = self.object.genre_set.all()
+        context['actors'] = self.object.actors.all()
+        context['genres'] = self.object.genres.all()
         try:
             context['rating'] = self.object.rating_set.all().get(who_rated=self.request.user.id)
         except ObjectDoesNotExist:
@@ -211,7 +207,6 @@ class RatingCreateView(CreateView):
     def form_valid(self, form):
         form.instance.who_rated = self.request.user
         self.movie_object = Movie.objects.get(pk=self.kwargs['pk'])
-        # form.instance.movielens_id = self.movie_object
         form.instance.movie = self.movie_object
         return super().form_valid(form)
 

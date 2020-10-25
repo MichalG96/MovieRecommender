@@ -49,12 +49,6 @@
                 {% if rating_exists %}
                     <a class="btn btn-danger" href="{% url 'delete_rating' movie.id %}">Delete</a>
 
-<!--               <form method="POST">-->
-<!--                    {%csrf_token%}-->
-<!--                    <div class="form-group">-->
-<!--                        <button class="btn btn-danger" type="submit">Yes, Delete</button>-->
-<!--                    </div>-->
-<!--                </form>-->
                 {% endif %}
             {% else %}
                 <h3>Log in to rate</h3>
