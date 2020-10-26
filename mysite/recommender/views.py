@@ -62,11 +62,11 @@ class RatingListView(LoginRequiredMixin, ListView):
         return movies_with_ratings
 
     def get_queryset(self):
+        print(f'\n{self.request}\n')
         queryset = self.request.user.rating_set.all()
         self.form = MovieRatingSortGroupForm(self.request.GET)
 
         if self.form.is_valid():
-            print(f'valid?')
             decades_grouping = self.form.cleaned_data['group_by_decades']
             ratings_grouping = self.form.cleaned_data['group_by_ratings']
             if decades_grouping:
