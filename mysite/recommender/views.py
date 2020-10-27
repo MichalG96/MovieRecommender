@@ -244,14 +244,18 @@ class RatingUpdateView(UserPassesTestMixin, UpdateView):
 
 class RatingDeleteView(UserPassesTestMixin, DeleteView):
     model = Movie
+    template_name = 'recommender/delete_rating.html'
 
     def get_object(self, *args, **kwargs):
         obj = super().get_object()
+        print(f'obj:{obj}')
         new_obj = obj.rating_set.get(who_rated=self.request.user.id)
+        print(f'new obj: {new_obj}')
         return new_obj
 
     def test_func(self):
         rating = self.get_object()
+        print(f'test func: {rating}')
         if self.request.user == rating.who_rated:
             return True
         else:

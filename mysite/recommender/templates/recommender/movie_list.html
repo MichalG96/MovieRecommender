@@ -12,13 +12,13 @@
     <div class="col-2">
          <form method="get">
             {{form_sorting_grouping|crispy}}
-                             <button class="btn btn-primary" type="submit">Sort</button>
-                <a class="btn btn-primary" href="{%url 'all_movies'%}">Clear</a>
-
+            <button class="btn btn-primary btn-block" type="submit">Sort</button>
+            <a class="btn btn-outline-primary btn-block" href="{%url 'all_movies'%}">Clear</a>
+         </form>
     </div>
     <div class="col-10">
     <table class="table table-hover">
-      <thead class="thead-dark">
+      <thead>
         <tr>
           <th scope="col">ID</th>
           <th scope="col">MovieLens ID</th>

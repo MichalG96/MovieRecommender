@@ -38,16 +38,23 @@
         <div class="col-3">
             {% if user.is_authenticated %}
                 <h3>Your rating:</h3>
-                <h3>{{rating.value}}</h3>
+                {% if rating_exists %}
+                    {% with ''|center:rating.value as range %}
+                        {% for _ in range %}
+                            <i class="fa fa-star"></i>
+                        {% endfor %}
+                    {% endwith %}
+                {% endif %}
+                <hr/>
                 <h3>Rate this movie</h3>
                     <form method="POST">{%csrf_token%}
                         <div class="form-group">
                         {{form|crispy}}
-                            <button class="btn btn-outline-info" type="submit">Rate</button>
+                            <button class="btn btn-outline-primary btn-block" type="submit">Rate</button>
                         </div>
                     </form>
                 {% if rating_exists %}
-                    <a class="btn btn-danger" href="{% url 'delete_rating' movie.id %}">Delete</a>
+                    <a class="btn btn-danger btn-block" href="{% url 'delete_rating' movie.id %}">Delete</a>
 
                 {% endif %}
             {% else %}

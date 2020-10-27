@@ -1,18 +1,25 @@
 {% if is_paginated %}
+<hr/>
+
+<div class="row">
+<div class="col-3"></div>
+<div class="col-9 d-flex justify-content-center">
     {% if page_obj.has_previous %}
-        <a class="btn btn-outline-info mb-4" href="?sort_by={{sort_by}}{% for decade in group_by_decades %}&group_by_decades={{decade}}{% endfor %}{% for rating in group_by_ratings %}&group_by_ratings={{rating}}{% endfor %}&date_from_month={{date_from.month}}&date_from_day={{date_from.day}}&date_from_year={{date_from.year}}&date_to_month={{date_to.month}}&date_to_day={{date_to.day}}&date_to_year={{date_to.year}}&page=1">First</a>
-        <a class="btn btn-outline-info mb-4" href="?sort_by={{sort_by}}{% for decade in group_by_decades %}&group_by_decades={{decade}}{% endfor %}{% for rating in group_by_ratings %}&group_by_ratings={{rating}}{% endfor %}&date_from_month={{date_from.month}}&date_from_day={{date_from.day}}&date_from_year={{date_from.year}}&date_to_month={{date_to.month}}&date_to_day={{date_to.day}}&date_to_year={{date_to.year}}&page={{ page_obj.previous_page_number }}">Previous</a>
+        <a class="btn btn-outline-primary mb-4" href="?sort_by={{sort_by}}{% for decade in group_by_decades %}&group_by_decades={{decade}}{% endfor %}{% for rating in group_by_ratings %}&group_by_ratings={{rating}}{% endfor %}&date_from_month={{date_from.month}}&date_from_day={{date_from.day}}&date_from_year={{date_from.year}}&date_to_month={{date_to.month}}&date_to_day={{date_to.day}}&date_to_year={{date_to.year}}&page=1">First</a>
+        <a class="btn btn-outline-primary mb-4" href="?sort_by={{sort_by}}{% for decade in group_by_decades %}&group_by_decades={{decade}}{% endfor %}{% for rating in group_by_ratings %}&group_by_ratings={{rating}}{% endfor %}&date_from_month={{date_from.month}}&date_from_day={{date_from.day}}&date_from_year={{date_from.year}}&date_to_month={{date_to.month}}&date_to_day={{date_to.day}}&date_to_year={{date_to.year}}&page={{ page_obj.previous_page_number }}">Previous</a>
     {% endif %}
     {% for num in page_obj.paginator.page_range %}
 
         {% if page_obj.number == num %}
-            <a class="btn btn-info mb-4" href="?sort_by={{sort_by}}{% for decade in group_by_decades %}&group_by_decades={{decade}}{% endfor %}{% for rating in group_by_ratings %}&group_by_ratings={{rating}}{% endfor %}&date_from_month={{date_from.month}}&date_from_day={{date_from.day}}&date_from_year={{date_from.year}}&date_to_month={{date_to.month}}&date_to_day={{date_to.day}}&date_to_year={{date_to.year}}&page={{num}}">{{num}}</a>
+            <a class="btn btn-primary mb-4" href="?sort_by={{sort_by}}{% for decade in group_by_decades %}&group_by_decades={{decade}}{% endfor %}{% for rating in group_by_ratings %}&group_by_ratings={{rating}}{% endfor %}&date_from_month={{date_from.month}}&date_from_day={{date_from.day}}&date_from_year={{date_from.year}}&date_to_month={{date_to.month}}&date_to_day={{date_to.day}}&date_to_year={{date_to.year}}&page={{num}}">{{num}}</a>
         {% elif  num > page_obj.number|add:'-5' and num < page_obj.number|add:'5' %}
-            <a class="btn btn-outline-info mb-4" href="?sort_by={{sort_by}}{% for decade in group_by_decades %}&group_by_decades={{decade}}{% endfor %}{% for rating in group_by_ratings %}&group_by_ratings={{rating}}{% endfor %}&date_from_month={{date_from.month}}&date_from_day={{date_from.day}}&date_from_year={{date_from.year}}&date_to_month={{date_to.month}}&date_to_day={{date_to.day}}&date_to_year={{date_to.year}}&page={{ num }}">{{num}}</a>
+            <a class="btn btn-outline-primary mb-4" href="?sort_by={{sort_by}}{% for decade in group_by_decades %}&group_by_decades={{decade}}{% endfor %}{% for rating in group_by_ratings %}&group_by_ratings={{rating}}{% endfor %}&date_from_month={{date_from.month}}&date_from_day={{date_from.day}}&date_from_year={{date_from.year}}&date_to_month={{date_to.month}}&date_to_day={{date_to.day}}&date_to_year={{date_to.year}}&page={{ num }}">{{num}}</a>
         {% endif %}
     {% endfor %}
     {% if page_obj.has_next %}
-        <a class="btn btn-outline-info mb-4" href="?sort_by={{sort_by}}{% for decade in group_by_decades %}&group_by_decades={{decade}}{% endfor %}{% for rating in group_by_ratings %}&group_by_ratings={{rating}}{% endfor %}&date_from_month={{date_from.month}}&date_from_day={{date_from.day}}&date_from_year={{date_from.year}}&date_to_month={{date_to.month}}&date_to_day={{date_to.day}}&date_to_year={{date_to.year}}&page={{ page_obj.paginator.num_pages }}">Last</a>
-        <a class="btn btn-outline-info mb-4" href="?sort_by={{sort_by}}{% for decade in group_by_decades %}&group_by_decades={{decade}}{% endfor %}{% for rating in group_by_ratings %}&group_by_ratings={{rating}}{% endfor %}&date_from_month={{date_from.month}}&date_from_day={{date_from.day}}&date_from_year={{date_from.year}}&date_to_month={{date_to.month}}&date_to_day={{date_to.day}}&date_to_year={{date_to.year}}&page={{ page_obj.next_page_number }}">Next</a>
+        <a class="btn btn-outline-primary mb-4" href="?sort_by={{sort_by}}{% for decade in group_by_decades %}&group_by_decades={{decade}}{% endfor %}{% for rating in group_by_ratings %}&group_by_ratings={{rating}}{% endfor %}&date_from_month={{date_from.month}}&date_from_day={{date_from.day}}&date_from_year={{date_from.year}}&date_to_month={{date_to.month}}&date_to_day={{date_to.day}}&date_to_year={{date_to.year}}&page={{ page_obj.next_page_number }}">Next</a>
+        <a class="btn btn-outline-primary mb-4" href="?sort_by={{sort_by}}{% for decade in group_by_decades %}&group_by_decades={{decade}}{% endfor %}{% for rating in group_by_ratings %}&group_by_ratings={{rating}}{% endfor %}&date_from_month={{date_from.month}}&date_from_day={{date_from.day}}&date_from_year={{date_from.year}}&date_to_month={{date_to.month}}&date_to_day={{date_to.day}}&date_to_year={{date_to.year}}&page={{ page_obj.paginator.num_pages }}">Last</a>
     {% endif %}
+    </div>
+   </div>
 {% endif %}

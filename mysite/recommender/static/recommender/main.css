@@ -1,6 +1,6 @@
 body {
   background: #090c1a;
-  color: #ffd373;
+  color: #fffbd1;
   margin-top: 5rem;
    /*text-shadow:0px 0px 15px #fff*/
 
@@ -84,9 +84,15 @@ a.article-title:hover {
 }
 
 .table{
-    color: #ffd373;
+      color: #fffbd1;
 }
 
 .table .table-row:hover{
-    color: #ffffff;
+    color: #fffbd1;
+    text-shadow:0px 0px 15px #52d9ff, 0px 0px 5px #ffffff;
+}
+
+.fa-star{
+    color: #ffe100;
+    text-shadow:0px 0px 25px #ffefbd, 0px 0px 10px #ffe285;
 }
