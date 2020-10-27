@@ -42,7 +42,6 @@ class RatingListView(LoginRequiredMixin, ListView):
     template_name = 'recommender/profile.html'
     context_object_name = 'ratings'
     paginate_by = 7
-    ordering = '-date_rated'
 
     def group_by_decade(self, queryset, decades_grouping):
         upper_decades_limits = list(map(int, decades_grouping))

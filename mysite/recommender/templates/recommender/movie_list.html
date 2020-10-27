@@ -6,20 +6,17 @@
 
 {% block content %}
 <div class="container.fluid">
-   <h1>All movies in the database:</h1>
-    <div class="row">
-        <div class="col">
-            <form method="get">
-            {{form_sorting_grouping.sort_by|as_crispy_field }}
-        </div>
-        <div class="col">
-            {{form_sorting_grouping.group_by_decades|as_crispy_field }}
-        </div>
-        <button class="btn btn-info" type="submit">Sort</button>
-        <a class="btn btn-info" href="{%url 'all_movies'%}">Clear</a>
-            </form>
-    </div>
 
+    <div class="row">
+
+    <div class="col-2">
+         <form method="get">
+            {{form_sorting_grouping|crispy}}
+                             <button class="btn btn-primary" type="submit">Sort</button>
+                <a class="btn btn-primary" href="{%url 'all_movies'%}">Clear</a>
+
+    </div>
+    <div class="col-10">
     <table class="table table-hover">
       <thead class="thead-dark">
         <tr>
@@ -34,7 +31,7 @@
       </thead>
       <tbody>
         {% for movie in movies %}
-        <tr>
+        <tr class="table-row">
             <th scope="row">{{movie.id}}</th>
             <td>{{movie.movielens_id}}</td>
             <td>{{movie.imdb_id}}</td>
@@ -47,6 +44,8 @@
         {% endfor %}
       </tbody>
     </table>
+        </div>
+        </div>
     {% include 'recommender/pagination.html' %}
 </div>
 {% endblock content %}

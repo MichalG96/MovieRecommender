@@ -1,11 +1,9 @@
 body {
-  background: #fafafa;
-  color: #333333;
+  background: #090c1a;
+  color: #ffd373;
   margin-top: 5rem;
-}
+   /*text-shadow:0px 0px 15px #fff*/
 
-h1, h2, h3, h4, h5, h6 {
-  color: #444444;
 }
 
 ul {
@@ -16,16 +14,18 @@ ul {
   background-color: #5f788a;
 }
 
-.site-header .navbar-nav .nav-link {
+.site-header .navbar-nav .nav-item {
   color: #cbd5db;
 }
+
+
 
 .site-header .navbar-nav .nav-link:hover {
   color: #ffffff;
 }
 
 .site-header .navbar-nav .nav-link.active {
-  font-weight: 500;
+  font-weight: 1000;
 }
 
 .content-section {
@@ -34,10 +34,6 @@ ul {
   border: 1px solid #dddddd;
   border-radius: 3px;
   margin-bottom: 20px;
-}
-
-.article-title {
-  color: #444444;
 }
 
 a.article-title:hover {
@@ -85,4 +81,12 @@ a.article-title:hover {
 
 .bold-row{
     font-weight:bold;
+}
+
+.table{
+    color: #ffd373;
+}
+
+.table .table-row:hover{
+    color: #ffffff;
 }

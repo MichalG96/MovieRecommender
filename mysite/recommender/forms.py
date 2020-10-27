@@ -5,7 +5,8 @@ from .models import Rating
 from django.core.exceptions import ValidationError
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit
+from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, HTML
+from crispy_forms.bootstrap import InlineCheckboxes
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -46,6 +47,21 @@ DECADE_CHOICES = (tuple(zip(decades_upper, decades_ranges)))
 class MovieSortGroupForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Fieldset(
+                'first arg is the legend of the fieldset',
+                'group_by_decades',
+                'sort_by',
+            ),
+            HTML("""
+                       <p>We use notes to get better, <strong>please help us {{ username }}</strong></p>
+                   """),
+
+            InlineCheckboxes('group_by_decades')
+        )
+
         self.fields['sort_by'].label = 'Sort by:'
     sort_by = forms.ChoiceField(choices=SORTING_OPTIONS, required=False)
                                       # widget=forms.Select(attrs={'onclick': "alert('foo !');"}))

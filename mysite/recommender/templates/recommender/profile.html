@@ -41,7 +41,7 @@
       </thead>
       <tbody>
         {% for rating in ratings %}
-        <tr>
+        <tr class="table-row">
             <th scope="row">{{rating.movie.movielens_id}}</th>
             <td><a href="{% url 'movie_detail' rating.movie.id %}">{{rating.movie.title}}</a></td>
             <td>{{rating.movie.year_released}}</td>
