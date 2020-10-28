@@ -32,13 +32,13 @@
       <tbody>
         {% for movie in movies %}
         <tr class="table-row">
-            <th scope="row">{{movie.id}}</th>
-            <td>{{movie.movielens_id}}</td>
-            <td>{{movie.imdb_id}}</td>
-            <td>{{movie.tmdb_id}}</td>
-            <td><a href="{% url 'movie_detail' movie.id %}">{{movie.title}}</a></td>
-            <td>{{movie.year_released}}</td>
-            <td>{{movie.director}}</td>
+            <th class="row-glow" scope="row">{{movie.id}}</th>
+            <td class="row-glow">{{movie.movielens_id}}</td>
+            <td class="row-glow">{{movie.imdb_id}}</td>
+            <td class="row-glow">{{movie.tmdb_id}}</td>
+            <td><a href="{% url 'movie_detail' movie.id %}" class="link-glow">{{movie.title}}</a></td>
+            <td class="row-glow">{{movie.year_released}}</td>
+            <td class="row-glow">{{movie.director}}</td>
         </tr>
 <!--        <h3>{{movie.title}} - {{movie.director}}</h3>-->
         {% endfor %}

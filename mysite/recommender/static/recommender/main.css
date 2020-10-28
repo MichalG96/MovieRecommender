@@ -87,12 +87,29 @@ a.article-title:hover {
       color: #fffbd1;
 }
 
+
 .table .table-row:hover{
     color: #fffbd1;
+    text-shadow:0px 0px 1px #52d9ff;
+
+}
+
+.row-glow:hover{
+    color: #ffffff;
     text-shadow:0px 0px 15px #52d9ff, 0px 0px 5px #ffffff;
 }
 
 .fa-star{
     color: #ffe100;
     text-shadow:0px 0px 25px #ffefbd, 0px 0px 10px #ffe285;
+}
+
+.star-glow:hover{
+    color: #ffe100;
+        text-shadow:0px 0px 25px #ffefbd, 0px 0px 10px #ffe285;
+}
+
+.link-glow:hover{
+    color:#007bff;
+    text-shadow:0px 0px 3px #6bb3ff;
 }
