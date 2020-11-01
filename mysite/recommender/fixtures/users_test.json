@@ -1,0 +1,1 @@
+[{"model": "auth.user", "pk": 2, "fields": {"password": "good", "username": "silverladybug709", "first_name": "Herbert", "last_name": "Nguyen", "email": "herbert.nguyen@example.com", "date_joined": "2015-08-13T15:23:35+01:00"}}]

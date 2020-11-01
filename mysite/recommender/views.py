@@ -12,9 +12,9 @@ from .models import Movie, Rating, Actor, Genre
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import UserRatingForm, MovieSortGroupForm, MovieRatingSortGroupForm
-from django.utils.datastructures import MultiValueDictKeyError
 import requests
 from datetime import timedelta
+import pandas as pd
 
 base_tmbd_url = 'https://api.themoviedb.org/3/movie/'
 api_key = 'bef647566a5b4968a35cd34a79dc3dce'
@@ -41,7 +41,7 @@ class RatingListView(LoginRequiredMixin, ListView):
     model = Movie
     template_name = 'recommender/profile.html'
     context_object_name = 'ratings'
-    paginate_by = 7
+    paginate_by = 10
 
     def group_by_decade(self, queryset, decades_grouping):
         upper_decades_limits = list(map(int, decades_grouping))
@@ -61,8 +61,11 @@ class RatingListView(LoginRequiredMixin, ListView):
         return movies_with_ratings
 
     def get_queryset(self):
+        # print(self.kwargs['username'])
         print(f'\n{self.request}\n')
-        queryset = self.request.user.rating_set.all()
+        # queryset = self.request.user.rating_set.all()
+        self.profile_owner = User.objects.get(username=self.kwargs['username'])
+        queryset = self.profile_owner.rating_set.all()
         self.form = MovieRatingSortGroupForm(self.request.GET)
 
         if self.form.is_valid():
@@ -111,6 +114,8 @@ class RatingListView(LoginRequiredMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form_sorting_grouping'] = self.form
+        context['profile_owner'] = self.profile_owner
+        print('context:')
         print(context)
         return context
 
@@ -263,6 +268,35 @@ class RatingDeleteView(UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('movie_detail', kwargs={'pk': self.kwargs['pk']})
+
+class EstablishPreferencesView(ListView):
+    # After user is created, select n(20? 30? 40?) movies to provide initial
+    # recommendations for him
+
+    model = Movie
+    template_name = 'recommender/preferences.html'
+    context_object_name = 'movies'
+
+    def get_queryset(self):
+        print('losu losu')
+        # TODO: first draw top 400 most rated movies, then out of those 400,
+        # draw n with the biggest variance in ratings
+        # For testing: ensure that user has not rated any of these movies
+        return Movie.objects.all().order_by('?')[:10]
+        # return Movie.objects.all()[:10]
+
+    # def get_context_data(self, *, object_list=None, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+
+def recommendation(request):
+
+
+    context = {
+
+    }
+    return render(request, 'recommender/recommend.html')
+
+
 
 def new_user(request):
     return render(request, 'recommender/new_user.html')

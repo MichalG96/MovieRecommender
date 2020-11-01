@@ -4,6 +4,16 @@ from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.urls import reverse
 
+# TODO: assign movielens Id automatically on registration
+# https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    movielens_id = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.user.username}_movielens_id_{self.movielens_id}'
+
+
 class Genre(models.Model):
     name = models.CharField(max_length=40)
 

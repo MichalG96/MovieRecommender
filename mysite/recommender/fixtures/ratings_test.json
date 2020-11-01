@@ -1,0 +1,1 @@
+[{"model": "recommender.Rating", "pk": 2, "fields": {"movie": 3, "who_rated": 1, "value": 1, "date_rated": "2009-03-25T09:34:24+01:00"}}, {"model": "recommender.Rating", "pk": 3, "fields": {"movie": 5, "who_rated": 9, "value": 9, "date_rated": "1999-10-24T13:50:24+01:00"}}]

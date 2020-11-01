@@ -84,6 +84,7 @@ class MovieRatingSortGroupForm(forms.Form):
     sort_by = forms.ChoiceField(choices=SORTING_OPTIONS, required=False)
     group_by_ratings = forms.MultipleChoiceField(choices=RATING_CHOICES, widget=forms.CheckboxSelectMultiple, required=False)
     group_by_decades = forms.MultipleChoiceField(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple, required=False)
+    # TODO: date picker
     date_from = forms.DateField(widget=forms.SelectDateWidget, required=False)
     date_to = forms.DateField(widget=forms.SelectDateWidget, required=False)
 
