@@ -61,8 +61,6 @@ class RatingListView(LoginRequiredMixin, ListView):
         return movies_with_ratings
 
     def get_queryset(self):
-        # print(self.kwargs['username'])
-        print(f'\n{self.request}\n')
         # queryset = self.request.user.rating_set.all()
         self.profile_owner = User.objects.get(username=self.kwargs['username'])
         queryset = self.profile_owner.rating_set.all()
@@ -115,8 +113,6 @@ class RatingListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['form_sorting_grouping'] = self.form
         context['profile_owner'] = self.profile_owner
-        print('context:')
-        print(context)
         return context
 
 class MoviesListView(ListView):
@@ -149,6 +145,13 @@ class MoviesListView(ListView):
         context = super().get_context_data(**kwargs)
         context['form_sorting_grouping'] = self.form
         return context
+
+class UserListView(ListView):
+    model = User
+    context_object_name = 'users'
+    paginate_by = 50
+    template_name = 'recommender/user_list.html'
+
 
 class MovieDetailView(DetailView):
     model = Movie
