@@ -12,9 +12,11 @@ from .models import Movie, Rating, Actor, Genre
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import UserRatingForm, MovieSortGroupForm, MovieRatingSortGroupForm
+from django.db.models import Avg, Count, Max, Min
 import requests
 from datetime import timedelta
 import pandas as pd
+import numpy as np
 
 base_tmbd_url = 'https://api.themoviedb.org/3/movie/'
 api_key = 'bef647566a5b4968a35cd34a79dc3dce'
@@ -291,21 +293,41 @@ class EstablishPreferencesView(ListView):
     # def get_context_data(self, *, object_list=None, **kwargs):
     #     context = super().get_context_data(**kwargs)
 
-def recommendation(request):
+
+def user_stats(request, username):
+    active_user = User.objects.get(username=username)
+    average_rating = round(active_user.rating_set.all().aggregate(Avg('value'))['value__avg'], 2)
 
 
     context = {
-
+        'user': active_user,
+        'average_rating': average_rating,
     }
-    return render(request, 'recommender/recommend.html')
+    return render(request, 'recommender/stats.html', context)
 
+
+def recommend(request, username):
+    # Calculate similarity between two users
+    user2 = User.objects.get(pk=2)
+    user3 = User.objects.get(pk=3)
+    user2_ratings = user2.rating_set.all()
+    user3_ratings = user3.rating_set.all()
+    common_items = Movie.objects.filter(rating__in=user2_ratings) & Movie.objects.filter(rating__in=user3_ratings)
+    licznik = sum((i.rating_set.get(who_rated=2).value*i.rating_set.get(who_rated=3).value) for i in common_items)
+    print(licznik)
+    mianownik = np.sqrt(sum(i.rating_set.get(who_rated=2).value**2 for i in common_items)*sum(i.rating_set.get(who_rated=3).value**2 for i in common_items))
+
+    print(licznik/mianownik)
+
+
+    context = {
+        'username': username
+    }
+    return render(request, 'recommender/recommend.html', context)
 
 
 def new_user(request):
     return render(request, 'recommender/new_user.html')
-
-def recommend(request):
-    return render(request, 'recommender/recommend.html')
 
 def users_list(request):
     return render(request, 'recommender/users_list.html')

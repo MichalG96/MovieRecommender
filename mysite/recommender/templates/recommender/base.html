@@ -32,7 +32,7 @@
               <a class="nav-item nav-link" href="{%url 'all_movies'%}">Movie Database</a>
             </div>
             <div class="navbar-nav">
-               <strong><a class="nav-item nav-link" href="{%url 'recommend'%}">Recommend</a></strong>
+               <strong><a class="nav-item nav-link" href="{%url 'recommend' user.username %}">Your recommendations</a></strong>
                {% if user.is_authenticated %}
                 <span class="navbar-text material-icons">how_to_reg</span>
                    <span class="navbar-text">Logged in as {{user.username}}</span>

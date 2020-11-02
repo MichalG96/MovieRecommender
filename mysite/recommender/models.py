@@ -59,3 +59,17 @@ class Rating(models.Model):
     def __str__(self):
         return f'user_{self.who_rated.pk}_movie_{self.movie}_value_{self.value}'
 
+
+class TopMovie(models.Model):
+    # Stores 100 top movies for each user
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    predicted_value = models.FloatField()
+    date_predicted = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['movie', 'user'], name='No multiple predicted ratings')]
+
+    def __str__(self):
+        return f'user_{self.user.pk}_movie_{self.movie}_predicted_value_{self.predicted_value}'
+

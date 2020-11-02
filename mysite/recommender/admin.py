@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Rating, Movie, Genre, Actor, Profile
+from .models import Rating, Movie, Genre, Actor, Profile, TopMovie
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
@@ -19,3 +19,4 @@ admin.site.register(Rating)
 admin.site.register(Movie)
 admin.site.register(Genre)
 admin.site.register(Actor)
+admin.site.register(TopMovie)
