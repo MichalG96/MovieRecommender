@@ -13,6 +13,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import UserRatingForm, MovieSortGroupForm, MovieRatingSortGroupForm
 from django.db.models import Avg, Count, Max, Min
+
+from plotly.offline import plot
+from plotly.graph_objects import Scatter
+import plotly.graph_objects as go
 import requests
 from datetime import timedelta
 import pandas as pd
@@ -297,11 +301,21 @@ class EstablishPreferencesView(ListView):
 def user_stats(request, username):
     active_user = User.objects.get(username=username)
     average_rating = round(active_user.rating_set.all().aggregate(Avg('value'))['value__avg'], 2)
+    # ratings_distribution = {}
+    ratings_distribution = []
+    for i in range(10):
+        ratings_distribution.append(active_user.rating_set.all().filter(value=i+1).count())
 
+    values = ratings_distribution
+    desc = [f'{i}' for i in range(1, 11)]
+    fig = go.Figure([go.Bar(x=desc, y=values, text=values, textposition='auto')])
+    plot_div = plot(fig, output_type='div', show_link=False, link_text="")
 
     context = {
         'user': active_user,
         'average_rating': average_rating,
+        'ratings_distribution': ratings_distribution,
+        'plot_div': plot_div,
     }
     return render(request, 'recommender/stats.html', context)
 
