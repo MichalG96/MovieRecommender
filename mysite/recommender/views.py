@@ -12,7 +12,7 @@ from .models import Movie, Rating, Actor, Genre
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import UserRatingForm, MovieSortGroupForm, MovieRatingSortGroupForm
-from django.db.models import Avg, Count, Max, Min
+from django.db.models import Avg, Count, Max, Min, Prefetch
 
 from plotly.offline import plot
 from plotly.graph_objects import Scatter
@@ -67,8 +67,12 @@ class RatingListView(LoginRequiredMixin, ListView):
         return movies_with_ratings
 
     def get_queryset(self):
-        # queryset = self.request.user.rating_set.all()
-        self.profile_owner = User.objects.get(username=self.kwargs['username'])
+        # self.profile_owner = User.objects.get(username=self.kwargs['username'])
+        self.profile_owner = User.objects.prefetch_related(
+            Prefetch(
+                'rating_set',
+            )).get(username=self.kwargs['username'])
+
         queryset = self.profile_owner.rating_set.all()
         self.form = MovieRatingSortGroupForm(self.request.GET)
 
@@ -202,9 +206,7 @@ class MovieDetailDispatcherView(View):
 
     # Do this if you received POST request
     def post(self, request, *args, **kwargs):
-        current_movie = Movie.objects.get(pk=self.kwargs['pk'])
-
-        if Rating.objects.filter(who_rated=self.request.user.id, movie_id=current_movie.id).exists():
+        if Rating.objects.filter(who_rated=self.request.user.id, movie_id=self.kwargs['pk']).exists():
             # Update view
             view = RatingUpdateView.as_view()
         else:
@@ -299,10 +301,13 @@ class EstablishPreferencesView(ListView):
 
 
 def user_stats(request, username):
-    active_user = User.objects.get(username=username)
+    active_user = User.objects.prefetch_related(
+            Prefetch(
+                'rating_set',
+            )).get(username=username)
     average_rating = round(active_user.rating_set.all().aggregate(Avg('value'))['value__avg'], 2)
-    # ratings_distribution = {}
     ratings_distribution = []
+
     for i in range(10):
         ratings_distribution.append(active_user.rating_set.all().filter(value=i+1).count())
 
@@ -312,7 +317,7 @@ def user_stats(request, username):
     plot_div = plot(fig, output_type='div', show_link=False, link_text="")
 
     context = {
-        'user': active_user,
+        'active_user': active_user,
         'average_rating': average_rating,
         'ratings_distribution': ratings_distribution,
         'plot_div': plot_div,
@@ -321,12 +326,9 @@ def user_stats(request, username):
 
 
 def recommend(request, username):
-    # Calculate similarity between two users
-    user2 = User.objects.get(pk=2)
-    user3 = User.objects.get(pk=3)
-    user2_ratings = user2.rating_set.all()
-    user3_ratings = user3.rating_set.all()
-    common_items = Movie.objects.filter(rating__in=user2_ratings) & Movie.objects.filter(rating__in=user3_ratings)
+    # Calculate similarity between user 2 and 3
+    # TODO: use prefetch
+    common_items = Movie.objects.filter(rating__who_rated=2) & Movie.objects.filter(rating__who_rated=3)
     licznik = sum((i.rating_set.get(who_rated=2).value*i.rating_set.get(who_rated=3).value) for i in common_items)
     print(licznik)
     mianownik = np.sqrt(sum(i.rating_set.get(who_rated=2).value**2 for i in common_items)*sum(i.rating_set.get(who_rated=3).value**2 for i in common_items))

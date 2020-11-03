@@ -4,7 +4,7 @@
 {% endblock title %}
 
 {% block content %}
-   <h1>{{user.username}}</h1>
+   <h1>{{active_user.username}}</h1>
    <h1>Your user stats</h1>
     <h3>Average rating: {{average_rating}}</h3>
 {% for no_of_ratings in ratings_distribution %}
