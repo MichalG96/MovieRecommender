@@ -7,10 +7,18 @@
    <h1>{{active_user.username}}</h1>
    <h1>Your user stats</h1>
     <h3>Average rating: {{average_rating}}</h3>
-{% for no_of_ratings in ratings_distribution %}
-{{no_of_ratings}}
-{% endfor %}
- {% autoescape off %}
-  {{ plot_div }}
-  {% endautoescape %}
+<div class="row">
+    <div class="col-6">
+      {% autoescape off %}
+       {{ plot_div }}
+      {% endautoescape %}
+        </div>
+
+    <div class="col-6">
+        {% autoescape off %}
+         {{ plot_div_genres }}
+        {% endautoescape %}
+    </div>
+</div>
+
 {% endblock content %}

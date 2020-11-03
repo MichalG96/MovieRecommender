@@ -15,12 +15,13 @@ from .forms import UserRatingForm, MovieSortGroupForm, MovieRatingSortGroupForm
 from django.db.models import Avg, Count, Max, Min, Prefetch
 
 from plotly.offline import plot
-from plotly.graph_objects import Scatter
 import plotly.graph_objects as go
 import requests
 from datetime import timedelta
 import pandas as pd
 import numpy as np
+from collections import Counter
+import random
 
 base_tmbd_url = 'https://api.themoviedb.org/3/movie/'
 api_key = 'bef647566a5b4968a35cd34a79dc3dce'
@@ -313,14 +314,68 @@ def user_stats(request, username):
 
     values = ratings_distribution
     desc = [f'{i}' for i in range(1, 11)]
-    fig = go.Figure([go.Bar(x=desc, y=values, text=values, textposition='auto')])
+    fig = go.Figure()
+    fig.add_trace(go.Bar(x=desc,
+                         y=values,
+                         text=values,
+                         textposition='auto',
+                         hovertext=[f'Number of movies rated {i+1}' for i in range(10)]))
+    fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        template='plotly_dark',
+        xaxis=dict(
+            tickmode='linear',
+        )
+    )
+
     plot_div = plot(fig, output_type='div', show_link=False, link_text="")
+
+    rated_movies = Movie.objects.filter(rating__who_rated=2).prefetch_related('genres')
+
+    all_genres = []
+    for movie in rated_movies:
+        # TODO: probably too slow, find way to make this more efficient
+        all_genres += list(movie.genres.all().values_list('name', flat=True))
+
+    genres_counter = Counter(all_genres)
+    top_n_genres = (genres_counter.most_common(7))      # n = 7
+
+    with_even_indices = top_n_genres[::2]
+    with_odd_indices = top_n_genres[1::2]
+
+    top_n_genres_shuffled = with_even_indices + with_odd_indices
+
+    a,b,c = 1,2,3
+
+    fig = go.Figure(data=go.Scatterpolar(
+      r=[i[1] for i in top_n_genres_shuffled],
+      theta=[i[0] for i in top_n_genres_shuffled],
+      fill='toself',
+    # hovertemplate = f"%{r}: <br>Popularity: %{b} </br> %{c}"
+
+    ))
+    fig.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        template='plotly_dark',
+        polar=dict(
+            radialaxis=dict(
+                visible=False
+            ),
+        ),
+        showlegend=False
+    )
+
+    plot_div_genres = plot(fig, output_type='div', show_link=False, link_text="")
 
     context = {
         'active_user': active_user,
         'average_rating': average_rating,
         'ratings_distribution': ratings_distribution,
         'plot_div': plot_div,
+        'plot_div_genres': plot_div_genres,
+        'genres_counter': genres_counter,
     }
     return render(request, 'recommender/stats.html', context)
 
