@@ -10,7 +10,11 @@
 {% if filter %}
     <form action="" method="get" class="form form-inline">
         {% bootstrap_form filter.form layout='inline' %}
-        <button type="submit" class="btn btn-outline-primary">qwe</button>
+        <button type="submit" class="btn btn-outline-primary">Filter</button>
+<!--        TODO: Change to 'all_movies'-->
+<!--        TODO: Go to all_movies or profile, depending on which view are you-->
+        <a class="btn btn-outline-primary btn-block" href="{%url 'all_movies_table'%}">Clear</a>
+
     </form>
 {% endif %}
     {% render_table table %}

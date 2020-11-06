@@ -11,15 +11,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import UserRegisterForm, UserRatingForm, MovieSortGroupForm, MovieRatingSortGroupForm
 from django.db.models import Avg, Count, Max, Min, Prefetch
+from .filters import MovieFilter, RatingFilter
 
 # Third - party Django modules
 import django_tables2 as tables
 from django_tables2.utils import A  # alias for Accessor
 from django_tables2.views import SingleTableMixin
 
-import django_filters
 from django_filters.views import FilterView
-from django_filters import MultipleChoiceFilter
 
 from plotly.offline import plot
 import plotly.graph_objects as go
@@ -34,35 +33,6 @@ api_key = 'bef647566a5b4968a35cd34a79dc3dce'
 base_img_url = 'https://image.tmdb.org/t/p/'
 # available sizes :"w92", "w154"," w185", "w342", "w500", "w780", "original"
 img_size = 'w185/'
-
-
-
-
-class MovieFilter(django_filters.FilterSet):
-    # TODO: separate filter for search by title
-    title = django_filters.CharFilter(lookup_expr='icontains')
-
-    decades_upper = ([1889 + 10 * i for i in range(15)])
-    decades_ranges = ['- 1889'] + [f'{1890 + 10 * i} - {1899 + 10 * i}' for i in range(14)]
-    DECADE_CHOICES = (tuple(zip(decades_upper, decades_ranges)))
-
-    imdb_id = django_filters.NumberFilter()
-    year_released = MultipleChoiceFilter(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple, method='get_movies_from_decades')
-
-    def get_movies_from_decades(self, queryset, name, value):
-        upper_decades_limits = list(map(int, value))
-        movies_from_decades = queryset.filter(
-            year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
-        for limit in upper_decades_limits[1:]:
-            movies_from_decades |= queryset.filter(year_released__range=[(limit - 9), (limit)])
-        return movies_from_decades
-
-    class Meta:
-        model = Movie
-        # fields = ['year_released']
-        fields = {
-            'tmdb_id': ['lt']
-        }
 
 def register(request):
     if request.method == 'POST':
@@ -161,27 +131,53 @@ class RatingListView(LoginRequiredMixin, ListView):
         context['profile_owner'] = self.profile_owner
         return context
 
+
+class RatingsTable(tables.Table):
+    # TODO: add custom styling for this column, and for header
+    title = tables.LinkColumn("movie_detail", args=[A("movie__pk")], accessor='movie.title')
+    director = tables.Column(accessor='movie.director')
+    year_released = tables.Column(accessor='movie.year_released')
+    movielens_id = tables.Column(accessor='movie.movielens_id')
+
+    class Meta:
+        model = Rating
+        template_name = 'recommender/bootstrap4_custom.html'
+        fields = ('movielens_id', 'title', 'director', 'year_released', 'value', 'date_rated')
+
+
+class FilteredRatingListView(LoginRequiredMixin, SingleTableMixin, FilterView):
+    table_class = RatingsTable
+    model = Movie
+    template_name = 'recommender/movie_list_table.html'
+    filterset_class = RatingFilter
+
+    def get_queryset(self):
+        self.profile_owner = User.objects.prefetch_related(
+            Prefetch(
+                'rating_set',
+            )).get(username=self.kwargs['username'])
+
+        queryset = self.profile_owner.rating_set.all()
+        return queryset
+
+
 class MoviesTable(tables.Table):
     # TODO: add custom styling for this column, and for header
     title = tables.LinkColumn("movie_detail", args=[A("pk")])
     class Meta:
         model = Movie
         template_name = 'recommender/bootstrap4_custom.html'
-
-class MoviesListTableView(tables.SingleTableView):
-    table_class = MoviesTable
-    queryset = Movie.objects.all()
-    paginate_by = 15
-    template_name = 'recommender/movie_list_table.html'
-
-class FilteredPersonListView(SingleTableMixin, FilterView):
-    # TODO: add 'CLEAR' button
-
+# class MoviesListTableView(tables.SingleTableView):
+#     table_class = MoviesTable
+#     queryset = Movie.objects.all()
+#     paginate_by = 15
+#     template_name = 'recommender/movie_list_table.html'
+class FilteredMovieListView(SingleTableMixin, FilterView):
     table_class = MoviesTable
     model = Movie
     template_name = 'recommender/movie_list_table.html'
-
-    # TODO: add filtering by decades
+    # queryset = Movie.objects.filter(year_released__gte=2000)
+    paginate_by = 20
     filterset_class = MovieFilter
 
 

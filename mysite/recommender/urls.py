@@ -3,7 +3,7 @@ from . import views
 from django.contrib.auth import views as auth_views
 from .views import (MoviesListView, RatingListView, MovieDetailDispatcherView,
                     UserListView, RatingDeleteView, EstablishPreferencesView,
-                    MoviesListTableView, FilteredPersonListView)
+                    FilteredMovieListView, FilteredRatingListView)
 from django.views.generic import TemplateView
 
 urlpatterns = [
@@ -15,8 +15,9 @@ urlpatterns = [
     path('add_user/', views.add_user, name='add_user'),
     path('all_movies/', MoviesListView.as_view(), name='all_movies'),
     # path('all_movies_table/', MoviesListTableView.as_view(), name='all_movies_table'),
-    path('all_movies_table/', FilteredPersonListView.as_view(), name='all_movies_table'),
+    path('all_movies_table/', FilteredMovieListView.as_view(), name='all_movies_table'),
     path('profile/<str:username>/', RatingListView.as_view(), name='profile'),
+    path('profile_table/<str:username>/', FilteredRatingListView.as_view(), name='profile_table'),
     path('profile/<str:username>/stats/', views.user_stats, name='user_stats'),
     path('preferences/', EstablishPreferencesView.as_view(), name='preferences'),
     path('movie/<int:pk>/', MovieDetailDispatcherView.as_view(), name='movie_detail'),
