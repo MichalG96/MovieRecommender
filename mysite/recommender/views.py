@@ -138,6 +138,7 @@ class RatingsTable(tables.Table):
     director = tables.Column(accessor='movie.director')
     year_released = tables.Column(accessor='movie.year_released')
     movielens_id = tables.Column(accessor='movie.movielens_id')
+    date_rated = tables.DateTimeColumn(format ='d/m/Y H:i:s')
 
     class Meta:
         model = Rating
@@ -148,7 +149,7 @@ class RatingsTable(tables.Table):
 class FilteredRatingListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     table_class = RatingsTable
     model = Movie
-    template_name = 'recommender/movie_list_table.html'
+    template_name = 'recommender/rating_list_table.html'
     filterset_class = RatingFilter
 
     def get_queryset(self):
@@ -159,6 +160,11 @@ class FilteredRatingListView(LoginRequiredMixin, SingleTableMixin, FilterView):
 
         queryset = self.profile_owner.rating_set.all()
         return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile_owner'] = self.profile_owner
+        return context
 
 
 class MoviesTable(tables.Table):

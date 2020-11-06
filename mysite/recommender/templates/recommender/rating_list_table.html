@@ -11,9 +11,7 @@
     <form action="" method="get" class="form form-inline">
         {% bootstrap_form filter.form layout='inline' %}
         <button type="submit" class="btn btn-outline-primary">Filter</button>
-<!--        TODO: Change to 'all_movies'-->
-        <a class="btn btn-outline-primary btn-block" href="{%url 'all_movies_table'%}">Clear</a>
-
+        <a class="btn btn-outline-primary btn-block" href="{%url 'profile_table' profile_owner.username%}">Clear</a>
     </form>
 {% endif %}
     {% render_table table %}
