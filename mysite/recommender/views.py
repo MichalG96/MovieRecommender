@@ -47,9 +47,9 @@ class MovieFilter(django_filters.FilterSet):
     DECADE_CHOICES = (tuple(zip(decades_upper, decades_ranges)))
 
     imdb_id = django_filters.NumberFilter()
-    # year_released = django_filters.NumberFilter()
-    year_released = MultipleChoiceFilter(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple, method='siurak')
-    def siurak(self, queryset, name, value):
+    year_released = MultipleChoiceFilter(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple, method='get_movies_from_decades')
+
+    def get_movies_from_decades(self, queryset, name, value):
         upper_decades_limits = list(map(int, value))
         movies_from_decades = queryset.filter(
             year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
