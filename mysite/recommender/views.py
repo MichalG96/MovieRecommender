@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views import View
+from django import forms
 from .models import Movie, Rating, Actor, Genre
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
@@ -18,7 +19,7 @@ from django_tables2.views import SingleTableMixin
 
 import django_filters
 from django_filters.views import FilterView
-
+from django_filters import MultipleChoiceFilter
 
 from plotly.offline import plot
 import plotly.graph_objects as go
@@ -36,10 +37,32 @@ img_size = 'w185/'
 
 
 
+
 class MovieFilter(django_filters.FilterSet):
+    # TODO: separate filter for search by title
+    title = django_filters.CharFilter(lookup_expr='icontains')
+
+    decades_upper = ([1889 + 10 * i for i in range(15)])
+    decades_ranges = ['- 1889'] + [f'{1890 + 10 * i} - {1899 + 10 * i}' for i in range(14)]
+    DECADE_CHOICES = (tuple(zip(decades_upper, decades_ranges)))
+
+    imdb_id = django_filters.NumberFilter()
+    # year_released = django_filters.NumberFilter()
+    year_released = MultipleChoiceFilter(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple, method='siurak')
+    def siurak(self, queryset, name, value):
+        upper_decades_limits = list(map(int, value))
+        movies_from_decades = queryset.filter(
+            year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
+        for limit in upper_decades_limits[1:]:
+            movies_from_decades |= queryset.filter(year_released__range=[(limit - 9), (limit)])
+        return movies_from_decades
+
     class Meta:
         model = Movie
-        fields = ['imdb_id']
+        # fields = ['year_released']
+        fields = {
+            'tmdb_id': ['lt']
+        }
 
 def register(request):
     if request.method == 'POST':
@@ -152,6 +175,8 @@ class MoviesListTableView(tables.SingleTableView):
     template_name = 'recommender/movie_list_table.html'
 
 class FilteredPersonListView(SingleTableMixin, FilterView):
+    # TODO: add 'CLEAR' button
+
     table_class = MoviesTable
     model = Movie
     template_name = 'recommender/movie_list_table.html'

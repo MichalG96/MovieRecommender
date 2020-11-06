@@ -1,13 +1,16 @@
 {% extends 'recommender/base.html' %}
+
 {%load static%}
+
 {% load django_tables2 %}
-{% block content %}
 {% load bootstrap4 %}
+
+{% block content %}
 
 {% if filter %}
     <form action="" method="get" class="form form-inline">
         {% bootstrap_form filter.form layout='inline' %}
-        {% bootstrap_button 'filter' %}
+        <button type="submit" class="btn btn-outline-primary">qwe</button>
     </form>
 {% endif %}
     {% render_table table %}
