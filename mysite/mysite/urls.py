@@ -21,6 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    # TODO: change this path before deploying
     path('admin/', admin.site.urls),
     path('', include('recommender.urls')),
     path('login/', auth_views.LoginView.as_view(template_name='recommender/login.html'), name='login'),

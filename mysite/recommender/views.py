@@ -182,7 +182,6 @@ class FilteredMovieListView(SingleTableMixin, FilterView):
     table_class = MoviesTable
     model = Movie
     template_name = 'recommender/movie_list_table.html'
-    # queryset = Movie.objects.filter(year_released__gte=2000)
     paginate_by = 20
     filterset_class = MovieFilter
 

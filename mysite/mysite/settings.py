@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_tables2',
     'django_filters',
-    'bootstrap4'
+    'bootstrap4',
+    'widget_tweaks'
 ]
 
 MIDDLEWARE = [
