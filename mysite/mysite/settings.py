@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'recommender.apps.RecommenderConfig',
     'crispy_forms',
-    "django_tables2",
+    'django_tables2',
+    'django_filters',
+    'bootstrap4'
 ]
 
 MIDDLEWARE = [

@@ -11,8 +11,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from .forms import UserRegisterForm, UserRatingForm, MovieSortGroupForm, MovieRatingSortGroupForm
 from django.db.models import Avg, Count, Max, Min, Prefetch
 
+# Third - party Django modules
 import django_tables2 as tables
 from django_tables2.utils import A  # alias for Accessor
+from django_tables2.views import SingleTableMixin
+
+import django_filters
+from django_filters.views import FilterView
 
 
 from plotly.offline import plot
@@ -28,6 +33,13 @@ api_key = 'bef647566a5b4968a35cd34a79dc3dce'
 base_img_url = 'https://image.tmdb.org/t/p/'
 # available sizes :"w92", "w154"," w185", "w342", "w500", "w780", "original"
 img_size = 'w185/'
+
+
+
+class MovieFilter(django_filters.FilterSet):
+    class Meta:
+        model = Movie
+        fields = ['imdb_id']
 
 def register(request):
     if request.method == 'POST':
@@ -126,18 +138,27 @@ class RatingListView(LoginRequiredMixin, ListView):
         context['profile_owner'] = self.profile_owner
         return context
 
-class SimpleTable(tables.Table):
+class MoviesTable(tables.Table):
     # TODO: add custom styling for this column, and for header
     title = tables.LinkColumn("movie_detail", args=[A("pk")])
     class Meta:
         model = Movie
-        template_name = "recommender/bootstrap4_custom.html"
+        template_name = 'recommender/bootstrap4_custom.html'
 
 class MoviesListTableView(tables.SingleTableView):
-    table_class = SimpleTable
+    table_class = MoviesTable
     queryset = Movie.objects.all()
     paginate_by = 15
-    template_name = "recommender/movie_list_table.html"
+    template_name = 'recommender/movie_list_table.html'
+
+class FilteredPersonListView(SingleTableMixin, FilterView):
+    table_class = MoviesTable
+    model = Movie
+    template_name = 'recommender/movie_list_table.html'
+
+    # TODO: add filtering by decades
+    filterset_class = MovieFilter
+
 
 class MoviesListView(ListView):
     model = Movie
