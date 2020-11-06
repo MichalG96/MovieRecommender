@@ -131,32 +131,3 @@ a.article-title:hover {
   color: silver;
   opacity: 1; /* Firefox */
 }
-
-#ck-button {
-    margin:4px;
-    background-color:#EFEFEF;
-    border-radius:4px;
-    border:1px solid #D0D0D0;
-    overflow:auto;
-    float:left;
-}
-
-#ck-button label {
-    float:left;
-    width:4.0em;
-}
-
-#ck-button label span {
-    text-align:center;
-    padding:3px 0px;
-    display:block;
-}
-
-#ck-button input:checked + span {
-    background-color:#911;
-    color:#fff;
-}
-
-.elo: checked{
-    background-color:#911;
-}
