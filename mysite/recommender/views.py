@@ -11,13 +11,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import UserRegisterForm, UserRatingForm, MovieSortGroupForm, MovieRatingSortGroupForm
 from django.db.models import Avg, Count, Max, Min, Prefetch
+
 from .filters import MovieFilter, RatingFilter
+from .tables import RatingsTable, MoviesTable
 
 # Third - party Django modules
-import django_tables2 as tables
-from django_tables2.utils import A  # alias for Accessor
 from django_tables2.views import SingleTableMixin
-
 from django_filters.views import FilterView
 
 from plotly.offline import plot
@@ -46,104 +45,6 @@ def register(request):
         form = UserRegisterForm()
     return render(request, 'recommender/register.html', {'form': form})
 
-# TODO: part of a profile (photo, username) has to be visible by any other LOGGED IN user
-# ({% if user.is_authenticated %} in template)
-
-class RatingListView(LoginRequiredMixin, ListView):
-    model = Movie
-    template_name = 'recommender/profile.html'
-    context_object_name = 'ratings'
-    paginate_by = 10
-
-    def group_by_decade(self, queryset, decades_grouping):
-        upper_decades_limits = list(map(int, decades_grouping))
-        movies_from_decades = queryset.filter(
-            movie__year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
-        for limit in upper_decades_limits[1:]:
-            movies_from_decades |= queryset.filter(movie__year_released__range=[(limit - 9), (limit)])
-        # Consists only of movies from decades defined by the user
-        return movies_from_decades
-
-    def group_by_rating(self, queryset, ratings_grouping):
-        possible_ratings = list(map(int, ratings_grouping))
-        movies_with_ratings = queryset.filter(value=possible_ratings[0])
-        for rating in possible_ratings[1:]:
-            movies_with_ratings |= queryset.filter(value=rating)
-        # Consists only of movies from decades and with ratings defined by the user
-        return movies_with_ratings
-
-    def get_queryset(self):
-        # self.profile_owner = User.objects.get(username=self.kwargs['username'])
-        self.profile_owner = User.objects.prefetch_related(
-            Prefetch(
-                'rating_set',
-            )).get(username=self.kwargs['username'])
-
-        queryset = self.profile_owner.rating_set.all()
-        self.form = MovieRatingSortGroupForm(self.request.GET)
-
-        if self.form.is_valid():
-            decades_grouping = self.form.cleaned_data['group_by_decades']
-            ratings_grouping = self.form.cleaned_data['group_by_ratings']
-            if decades_grouping:
-                queryset = self.group_by_decade(queryset, decades_grouping)
-            if ratings_grouping:
-                queryset = self.group_by_rating(queryset, ratings_grouping)
-            date_from_grouping = self.form.cleaned_data['date_from']
-            # When filtering, it is neccesary to add one day do 'date_to', to make this day inclusive
-            # Otherwise, the last day showing would be te previous day of date_to_grouping
-            date_to_grouping = self.form.cleaned_data['date_to']
-            if date_from_grouping:
-                if date_to_grouping:
-                    queryset = queryset.filter(date_rated__range=[date_from_grouping, date_to_grouping+timedelta(days=1)])
-                else:
-                    queryset = queryset.filter(date_rated__gte=date_from_grouping)
-            elif date_to_grouping:
-                queryset = queryset.filter(date_rated__lte=date_to_grouping+timedelta(days=1))
-            # Add form data to the context
-            # (needed to keep sorting and grouping consistent across pagination)
-            self.extra_context = self.form.cleaned_data
-        else:
-            decades_grouping = self.form.cleaned_data['group_by_decades']
-            ratings_grouping = self.form.cleaned_data['group_by_ratings']
-            if decades_grouping:
-                queryset = self.group_by_decade(queryset, decades_grouping)
-            if ratings_grouping:
-                queryset = self.group_by_rating(queryset, ratings_grouping)
-            self.extra_context = self.form.cleaned_data
-
-        # GROUPING DONE, NOW SORT THE DATA THAT IS LEFT
-        ordering = self.form.cleaned_data['sort_by']
-        if ordering:
-            if 'value' in ordering or 'date_rated' in ordering:
-                return queryset.order_by(ordering)
-            else:
-                if ordering.startswith('-'):
-                    return queryset.order_by(f'-movie__{ordering[1:]}')
-                else:
-                    return queryset.order_by(f'movie__{ordering}')
-        else:
-            return queryset
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form_sorting_grouping'] = self.form
-        context['profile_owner'] = self.profile_owner
-        return context
-
-
-class RatingsTable(tables.Table):
-    # TODO: add custom styling for this column, and for header
-    title = tables.LinkColumn("movie_detail", args=[A("movie__pk")], accessor='movie.title')
-    director = tables.Column(accessor='movie.director')
-    year_released = tables.Column(accessor='movie.year_released')
-    movielens_id = tables.Column(accessor='movie.movielens_id')
-    date_rated = tables.DateTimeColumn(format ='d/m/Y H:i:s')
-
-    class Meta:
-        model = Rating
-        template_name = 'recommender/bootstrap4_custom.html'
-        fields = ('movielens_id', 'title', 'director', 'year_released', 'value', 'date_rated')
 
 
 class FilteredRatingListView(LoginRequiredMixin, SingleTableMixin, FilterView):
@@ -167,17 +68,6 @@ class FilteredRatingListView(LoginRequiredMixin, SingleTableMixin, FilterView):
         return context
 
 
-class MoviesTable(tables.Table):
-    # TODO: add custom styling for this column, and for header
-    title = tables.LinkColumn("movie_detail", args=[A("pk")])
-    class Meta:
-        model = Movie
-        template_name = 'recommender/bootstrap4_custom.html'
-# class MoviesListTableView(tables.SingleTableView):
-#     table_class = MoviesTable
-#     queryset = Movie.objects.all()
-#     paginate_by = 15
-#     template_name = 'recommender/movie_list_table.html'
 class FilteredMovieListView(SingleTableMixin, FilterView):
     table_class = MoviesTable
     model = Movie
@@ -185,37 +75,119 @@ class FilteredMovieListView(SingleTableMixin, FilterView):
     paginate_by = 20
     filterset_class = MovieFilter
 
-
-class MoviesListView(ListView):
-    model = Movie
-    context_object_name = 'movies'
-    paginate_by = 15
-    ordering = 'id'
-
-    def get_queryset(self):
-        # queryset = super().get_queryset()
-        queryset = Movie.objects.all()
-        self.form = MovieSortGroupForm(self.request.GET)
-        if self.form.is_valid():
-            decades_grouping = self.form.cleaned_data['group_by_decades']
-            if decades_grouping:
-                upper_decades_limits = list(map(int, decades_grouping))
-                movies_from_decades = queryset.filter(year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
-                for limit in upper_decades_limits[1:]:
-                    movies_from_decades |= queryset.filter(year_released__range=[(limit - 9), (limit)])
-                queryset = movies_from_decades
-
-        self.extra_context = self.form.cleaned_data
-        ordering = self.form.cleaned_data['sort_by']
-        if ordering:
-            return queryset.order_by(ordering)
-        else:
-            return queryset.order_by(self.ordering)
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form_sorting_grouping'] = self.form
-        return context
+# TODO: part of a profile (photo, username) has to be visible by any other LOGGED IN user
+# ({% if user.is_authenticated %} in template)
+# class RatingListView(LoginRequiredMixin, ListView):
+#     model = Movie
+#     template_name = 'recommender/profile.html'
+#     context_object_name = 'ratings'
+#     paginate_by = 10
+#
+#     def group_by_decade(self, queryset, decades_grouping):
+#         upper_decades_limits = list(map(int, decades_grouping))
+#         movies_from_decades = queryset.filter(
+#             movie__year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
+#         for limit in upper_decades_limits[1:]:
+#             movies_from_decades |= queryset.filter(movie__year_released__range=[(limit - 9), (limit)])
+#         # Consists only of movies from decades defined by the user
+#         return movies_from_decades
+#
+#     def group_by_rating(self, queryset, ratings_grouping):
+#         possible_ratings = list(map(int, ratings_grouping))
+#         movies_with_ratings = queryset.filter(value=possible_ratings[0])
+#         for rating in possible_ratings[1:]:
+#             movies_with_ratings |= queryset.filter(value=rating)
+#         # Consists only of movies from decades and with ratings defined by the user
+#         return movies_with_ratings
+#
+#     def get_queryset(self):
+#         # self.profile_owner = User.objects.get(username=self.kwargs['username'])
+#         self.profile_owner = User.objects.prefetch_related(
+#             Prefetch(
+#                 'rating_set',
+#             )).get(username=self.kwargs['username'])
+#
+#         queryset = self.profile_owner.rating_set.all()
+#         self.form = MovieRatingSortGroupForm(self.request.GET)
+#
+#         if self.form.is_valid():
+#             decades_grouping = self.form.cleaned_data['group_by_decades']
+#             ratings_grouping = self.form.cleaned_data['group_by_ratings']
+#             if decades_grouping:
+#                 queryset = self.group_by_decade(queryset, decades_grouping)
+#             if ratings_grouping:
+#                 queryset = self.group_by_rating(queryset, ratings_grouping)
+#             date_from_grouping = self.form.cleaned_data['date_from']
+#             # When filtering, it is neccesary to add one day do 'date_to', to make this day inclusive
+#             # Otherwise, the last day showing would be te previous day of date_to_grouping
+#             date_to_grouping = self.form.cleaned_data['date_to']
+#             if date_from_grouping:
+#                 if date_to_grouping:
+#                     queryset = queryset.filter(date_rated__range=[date_from_grouping, date_to_grouping+timedelta(days=1)])
+#                 else:
+#                     queryset = queryset.filter(date_rated__gte=date_from_grouping)
+#             elif date_to_grouping:
+#                 queryset = queryset.filter(date_rated__lte=date_to_grouping+timedelta(days=1))
+#             # Add form data to the context
+#             # (needed to keep sorting and grouping consistent across pagination)
+#             self.extra_context = self.form.cleaned_data
+#         else:
+#             decades_grouping = self.form.cleaned_data['group_by_decades']
+#             ratings_grouping = self.form.cleaned_data['group_by_ratings']
+#             if decades_grouping:
+#                 queryset = self.group_by_decade(queryset, decades_grouping)
+#             if ratings_grouping:
+#                 queryset = self.group_by_rating(queryset, ratings_grouping)
+#             self.extra_context = self.form.cleaned_data
+#
+#         # GROUPING DONE, NOW SORT THE DATA THAT IS LEFT
+#         ordering = self.form.cleaned_data['sort_by']
+#         if ordering:
+#             if 'value' in ordering or 'date_rated' in ordering:
+#                 return queryset.order_by(ordering)
+#             else:
+#                 if ordering.startswith('-'):
+#                     return queryset.order_by(f'-movie__{ordering[1:]}')
+#                 else:
+#                     return queryset.order_by(f'movie__{ordering}')
+#         else:
+#             return queryset
+#
+#     def get_context_data(self, *, object_list=None, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['form_sorting_grouping'] = self.form
+#         context['profile_owner'] = self.profile_owner
+#         return context
+# class MoviesListView(ListView):
+#     model = Movie
+#     context_object_name = 'movies'
+#     paginate_by = 15
+#     ordering = 'id'
+#
+#     def get_queryset(self):
+#         # queryset = super().get_queryset()
+#         queryset = Movie.objects.all()
+#         self.form = MovieSortGroupForm(self.request.GET)
+#         if self.form.is_valid():
+#             decades_grouping = self.form.cleaned_data['group_by_decades']
+#             if decades_grouping:
+#                 upper_decades_limits = list(map(int, decades_grouping))
+#                 movies_from_decades = queryset.filter(year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
+#                 for limit in upper_decades_limits[1:]:
+#                     movies_from_decades |= queryset.filter(year_released__range=[(limit - 9), (limit)])
+#                 queryset = movies_from_decades
+#
+#         self.extra_context = self.form.cleaned_data
+#         ordering = self.form.cleaned_data['sort_by']
+#         if ordering:
+#             return queryset.order_by(ordering)
+#         else:
+#             return queryset.order_by(self.ordering)
+#
+#     def get_context_data(self, *, object_list=None, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['form_sorting_grouping'] = self.form
+#         return context
 
 class UserListView(ListView):
     model = User
@@ -325,14 +297,11 @@ class RatingDeleteView(UserPassesTestMixin, DeleteView):
 
     def get_object(self, *args, **kwargs):
         obj = super().get_object()
-        print(f'obj:{obj}')
         new_obj = obj.rating_set.get(who_rated=self.request.user.id)
-        print(f'new obj: {new_obj}')
         return new_obj
 
     def test_func(self):
         rating = self.get_object()
-        print(f'test func: {rating}')
         if self.request.user == rating.who_rated:
             return True
         else:
@@ -344,13 +313,11 @@ class RatingDeleteView(UserPassesTestMixin, DeleteView):
 class EstablishPreferencesView(ListView):
     # After user is created, select n(20? 30? 40?) movies to provide initial
     # recommendations for him
-
     model = Movie
     template_name = 'recommender/preferences.html'
     context_object_name = 'movies'
 
     def get_queryset(self):
-        print('losu losu')
         # TODO: first draw top 400 most rated movies, then out of those 400,
         # draw n with the biggest variance in ratings
         # For testing: ensure that user has not rated any of these movies
@@ -408,8 +375,6 @@ def user_stats(request, username):
 
     top_n_genres_shuffled = with_even_indices + with_odd_indices
 
-    a,b,c = 1,2,3
-
     fig = go.Figure(data=go.Scatterpolar(
       r=[i[1] for i in top_n_genres_shuffled],
       theta=[i[0] for i in top_n_genres_shuffled],
@@ -450,9 +415,7 @@ def recommend(request, username):
     licznik = sum((i.rating_set.get(who_rated=2).value*i.rating_set.get(who_rated=3).value) for i in common_items)
     print(licznik)
     mianownik = np.sqrt(sum(i.rating_set.get(who_rated=2).value**2 for i in common_items)*sum(i.rating_set.get(who_rated=3).value**2 for i in common_items))
-
     print(licznik/mianownik)
-
 
     context = {
         'username': username

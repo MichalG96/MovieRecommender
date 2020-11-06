@@ -8,7 +8,8 @@ from .models import Movie
 
 
 decades_upper = ([1899 + 10 * i for i in range(14)])
-decades_ranges = ['Up to 1899'] + [f"{1900 + 10 * i}'s" for i in range(13)]
+# TODO: change text
+decades_ranges = ['To 1900'] + [f"{1900 + 10 * i}'s" for i in range(13)]
 DECADE_CHOICES = (tuple(zip(decades_upper, decades_ranges)))
 
 class MovieFilter(FilterSet):

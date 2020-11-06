@@ -11,6 +11,8 @@
     <div class="col-2">
     <!--        TODO: level off the buttons, fix text input hanging out of the div-->
     <form action="" method="get" class="form form-inline">
+        <!--        TODO: redo this line so that I don't have to use widget tweaks custom placeholder class-->
+
             {% render_field filter.form.movie__title placeholder="Search by title" class="form-control" %}
         <button type="submit" class="btn btn-outline-primary btn-block">Search</button>
         {% for input in filter.form.movie__year_released %}
@@ -27,7 +29,7 @@
         {{filter.form.date_from}}
         {{filter.form.date_to}}
         <button type="submit" class="btn btn-outline-primary btn-block">Filter</button>
-        <a class="btn btn-outline-primary btn-block" href="{%url 'profile' profile_owner.username%}">Clear</a>
+        <a class="btn btn-outline-danger btn-block" href="{%url 'profile' profile_owner.username%}">Clear</a>
         <a class="btn btn-primary btn-block" href="{%url 'user_stats' profile_owner.username%}">Stats</a>
     </form>
     </div>
