@@ -1,18 +1,19 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.contrib import messages
 from django.urls import reverse
-from .forms import UserRegisterForm
-from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views import View
 from .models import Movie, Rating, Actor, Genre
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
-from .forms import UserRatingForm, MovieSortGroupForm, MovieRatingSortGroupForm
+from .forms import UserRegisterForm, UserRatingForm, MovieSortGroupForm, MovieRatingSortGroupForm
 from django.db.models import Avg, Count, Max, Min, Prefetch
+
+import django_tables2 as tables
+from django_tables2.utils import A  # alias for Accessor
+
 
 from plotly.offline import plot
 import plotly.graph_objects as go
@@ -21,7 +22,6 @@ from datetime import timedelta
 import pandas as pd
 import numpy as np
 from collections import Counter
-import random
 
 base_tmbd_url = 'https://api.themoviedb.org/3/movie/'
 api_key = 'bef647566a5b4968a35cd34a79dc3dce'
@@ -125,6 +125,19 @@ class RatingListView(LoginRequiredMixin, ListView):
         context['form_sorting_grouping'] = self.form
         context['profile_owner'] = self.profile_owner
         return context
+
+class SimpleTable(tables.Table):
+    # TODO: add custom styling for this column, and for header
+    title = tables.LinkColumn("movie_detail", args=[A("pk")])
+    class Meta:
+        model = Movie
+        template_name = "recommender/bootstrap4_custom.html"
+
+class MoviesListTableView(tables.SingleTableView):
+    table_class = SimpleTable
+    queryset = Movie.objects.all()
+    paginate_by = 15
+    template_name = "recommender/movie_list_table.html"
 
 class MoviesListView(ListView):
     model = Movie
@@ -306,11 +319,13 @@ def user_stats(request, username):
             Prefetch(
                 'rating_set',
             )).get(username=username)
-    average_rating = round(active_user.rating_set.all().aggregate(Avg('value'))['value__avg'], 2)
+    users_ratings = active_user.rating_set.all()
+    average_rating = round(users_ratings.aggregate(Avg('value'))['value__avg'], 2)
+    no_of_ratings = users_ratings.count()
     ratings_distribution = []
 
     for i in range(10):
-        ratings_distribution.append(active_user.rating_set.all().filter(value=i+1).count())
+        ratings_distribution.append(users_ratings.filter(value=i+1).count())
 
     values = ratings_distribution
     desc = [f'{i}' for i in range(1, 11)]
@@ -376,6 +391,7 @@ def user_stats(request, username):
         'plot_div': plot_div,
         'plot_div_genres': plot_div_genres,
         'genres_counter': genres_counter,
+        'no_of_ratings': no_of_ratings,
     }
     return render(request, 'recommender/stats.html', context)
 

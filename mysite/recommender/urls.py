@@ -2,8 +2,8 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 from .views import (MoviesListView, RatingListView, MovieDetailDispatcherView,
-                    UserListView, RatingDeleteView, EstablishPreferencesView
-                    )
+                    UserListView, RatingDeleteView, EstablishPreferencesView,
+                    MoviesListTableView,)
 from django.views.generic import TemplateView
 
 urlpatterns = [
@@ -14,6 +14,7 @@ urlpatterns = [
     path('all_users/', UserListView.as_view(), name='all_users'),
     path('add_user/', views.add_user, name='add_user'),
     path('all_movies/', MoviesListView.as_view(), name='all_movies'),
+    path('all_movies_table/', MoviesListTableView.as_view(), name='all_movies_table'),
     path('profile/<str:username>/', RatingListView.as_view(), name='profile'),
     path('profile/<str:username>/stats/', views.user_stats, name='user_stats'),
     path('preferences/', EstablishPreferencesView.as_view(), name='preferences'),

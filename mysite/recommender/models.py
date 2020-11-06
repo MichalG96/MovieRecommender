@@ -29,9 +29,9 @@ class Actor(models.Model):
         return self.name
 
 class Movie(models.Model):
-    movielens_id = models.IntegerField()
-    imdb_id = models.IntegerField()
-    tmdb_id = models.IntegerField()
+    movielens_id = models.IntegerField(verbose_name='Movielens ID')
+    imdb_id = models.IntegerField(verbose_name='IMdB ID')
+    tmdb_id = models.IntegerField(verbose_name='tMdB ID')
     title = models.CharField(max_length=200)
     year_released = models.IntegerField()
     director = models.CharField(max_length=100)

@@ -25,7 +25,7 @@ SECRET_KEY = '!tzcc_y$g5ll85mwsbe3a_^5r9u^p$eio+5ogo&dd85z&t(ush'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '192.168.1.20', '192.168.1.60', '192.168.1.4']    # TODO: REMOVE THIS ADDRES WHEN YOU'RE NOT IN HOME
+ALLOWED_HOSTS = ['127.0.0.1', '192.168.1.20', '192.168.1.60', '192.168.1.4', '172.20.10.7']    # TODO: REMOVE THIS ADDRES WHEN YOU'RE NOT IN HOME
 
 
 # Application definition
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'recommender.apps.RecommenderConfig',
     'crispy_forms',
+    "django_tables2",
 ]
 
 MIDDLEWARE = [
