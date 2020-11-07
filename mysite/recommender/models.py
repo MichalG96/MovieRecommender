@@ -33,7 +33,7 @@ class Movie(models.Model):
     imdb_id = models.IntegerField(verbose_name='IMdB ID')
     tmdb_id = models.IntegerField(verbose_name='tMdB ID')
     title = models.CharField(max_length=200)
-    year_released = models.IntegerField()
+    year_released = models.IntegerField(verbose_name='Year')
     director = models.CharField(max_length=100)
     genres = models.ManyToManyField(Genre)
     actors = models.ManyToManyField(Actor)

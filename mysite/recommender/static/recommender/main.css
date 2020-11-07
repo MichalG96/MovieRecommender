@@ -87,13 +87,15 @@ a.article-title:hover {
       color: #fffbd1;
 }
 
+.center-column {
+   text-align: center;
+}
 
 .table .table-row:hover{
     color: #fffbd1;
-    text-shadow:0px 0px 1px #52d9ff;
+    text-shadow:0px 0px 7px #52d9ff, 0px 0px 1px #a3fff6;
 
 }
-
 .row-glow:hover{
     color: #ffffff;
     text-shadow:0px 0px 15px #52d9ff, 0px 0px 5px #ffffff;
@@ -113,18 +115,13 @@ a.article-title:hover {
 
 .link-glow:hover{
     color:#007bff;
-    text-shadow:0px 0px 3px #6bb3ff;
+    /*color:red;*/
+    text-shadow:0px 0px 1px #6bb3ff;
+    font-weight:bold;
 }
 
 .checked{
     color:red;
-}
-
-.carousel-item{
-    height: 32rem;
-    background: #777;
-    color: white;
-    position: relative;
 }
 
 .form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */

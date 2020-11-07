@@ -51,6 +51,7 @@ class FilteredRatingListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     table_class = RatingsTable
     model = Movie
     template_name = 'recommender/rating_list_table.html'
+    paginate_by = 15
     filterset_class = RatingFilter
 
     def get_queryset(self):
@@ -326,7 +327,6 @@ class EstablishPreferencesView(ListView):
 
     # def get_context_data(self, *, object_list=None, **kwargs):
     #     context = super().get_context_data(**kwargs)
-
 
 def user_stats(request, username):
     active_user = User.objects.prefetch_related(
