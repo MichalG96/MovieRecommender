@@ -34,7 +34,7 @@ class RatingsTable(tables.Table):
 class MoviesTable(tables.Table):
     # TODO: add custom styling for this column, and for header
 
-    id = tables.Column(attrs={"th":{"class": "center-column","style": "width: 6%"}})
+    id = tables.Column(attrs={"th":{"class": "center-column", "style": "width: 7%"}})
     movielens_id = tables.Column(attrs={"th": {"class": "center-column", "style": "width: 15%"}})
     imdb_id = tables.Column(attrs={"th":{"class": "center-column", "style": "width: 11%"}})
     tmdb_id = tables.Column(attrs={"th":{"class": "center-column", "style": "width: 12%"}})

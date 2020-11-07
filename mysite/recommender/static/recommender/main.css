@@ -128,3 +128,8 @@ a.article-title:hover {
   color: silver;
   opacity: 1; /* Firefox */
 }
+
+.form-control { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  overflow-x: scroll;
+}
+

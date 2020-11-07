@@ -7,7 +7,9 @@
         <table {% render_attrs table.attrs %}>
             {% block table.thead %}
             {% if table.show_header %}
-                <thead {{ table.attrs.thead.as_html }}>
+<!--                <thead {{ table.attrs.thead.as_html }}>-->
+<!--            TODO: prettier head-->
+                <thead class="thead-dark">
                 <tr>
                 {% for column in table.columns %}
                     <th {{ column.attrs.th.as_html }}>
