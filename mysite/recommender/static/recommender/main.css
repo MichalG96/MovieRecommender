@@ -79,9 +79,15 @@ a.article-title:hover {
   font-size: 2.5rem;
 }
 
-.bold-row{
+/*.bold-row{
+    font-weight:bold;
+}*/
+
+.bold-col{
     font-weight:bold;
 }
+
+
 
 .table{
       color: #fffbd1;
@@ -131,5 +137,23 @@ a.article-title:hover {
 
 .form-control { /* Chrome, Firefox, Opera, Safari 10.1+ */
   overflow-x: scroll;
+}
+
+.search-button{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  }
+
+.filter-button{
+  margin-top: 5px;
+  }
+
+.decades{
+  margin-top: 0px !important
+}
+
+.ratings{
+  margin-bottom: 0px !important;
+  margin-top: 0px !important;
 }
 

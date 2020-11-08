@@ -6,31 +6,36 @@
 {% load django_tables2 %}
 
 {% block content %}
+<h2>User profile: {{profile_owner.username}}&emsp;<a href="{%url 'user_stats' profile_owner.username%}">(stats)</a></h2>
 <div class="row">
 {% if filter %}
     <div class="col-2">
-    <!--        TODO: level off the buttons, fix text input hanging out of the div-->
+    <!--        TODO: level off the buttons-->
     <form action="" method="get" class="form form-inline">
-        <!--        TODO: redo this line so that I don't have to use widget tweaks custom placeholder class-->
+    <!--        TODO: redo this line so that I don't have to use widget tweaks custom placeholder class-->
+        {% render_field filter.form.movie__title placeholder="Search by title" class="form-control" %}
+    <button type="submit" class="btn btn-outline-primary btn-block search-button">Search</button>
 
-            {% render_field filter.form.movie__title placeholder="Search by title" class="form-control" %}
-        <button type="submit" class="btn btn-outline-primary btn-block">Search</button>
-        {% for input in filter.form.movie__year_released %}
-                    {% if forloop.counter0|divisibleby:2 %}<div class="d-flex justify-content-center"><div class="btn-group btn-group-toggle" data-toggle="buttons">{% endif %}
-                              <label class="btn btn-outline-primary">  {{ input}}</label>
-                    {% if forloop.counter0|add:"1"|divisibleby:2 %}</div></div>{% endif %}
-        {% endfor %}
-        {% for input in filter.form.value %}
-                    {% if forloop.counter0|divisibleby:2 %}<div class="d-flex justify-content-center"><div class="btn-group btn-group-toggle" data-toggle="buttons">{% endif %}
-                              <label class="btn btn-outline-primary">  {{ input}}</label>
-                    {% if forloop.counter0|add:"1"|divisibleby:2 %}</div></div>{% endif %}
-        {% endfor %}
+    Filter by decades:<hr>
 
-        {{filter.form.date_from}}
-        {{filter.form.date_to}}
-        <button type="submit" class="btn btn-outline-primary btn-block">Filter</button>
-        <a class="btn btn-outline-danger btn-block" href="{%url 'profile' profile_owner.username%}">Clear</a>
-        <a class="btn btn-primary btn-block" href="{%url 'user_stats' profile_owner.username%}">Stats</a>
+    {% for input in filter.form.movie__year_released %}
+                {% if forloop.counter0|divisibleby:2 %}<div class="btn-group btn-group-toggle btn-block decades " data-toggle="buttons">{% endif %}
+                          <label class="btn btn-sm btn-outline-primary w-100">  {{ input}}</label>
+                {% if forloop.counter0|add:"1"|divisibleby:2 %}</div>{% endif %}
+    {% endfor %}
+
+    Filter by ratings:<hr>
+
+    {% for input in filter.form.value %}
+                {% if forloop.counter0|divisibleby:5 %}<div class="btn-group btn-group-toggle btn-block ratings" data-toggle="buttons">{% endif %}
+                          <label class="btn btn-sm btn-outline-warning">  {{ input}}</label>
+                {% if forloop.counter0|add:"1"|divisibleby:5 %}</div>{% endif %}
+    {% endfor %}
+    <hr>
+    {{filter.form.date_from}}
+    {{filter.form.date_to}}
+    <button type="submit" class="btn btn-outline-primary btn-block">Filter</button>
+    <a class="btn btn-outline-danger btn-block" href="{%url 'profile' profile_owner.username%}">Clear</a>
     </form>
     </div>
 {% endif %}
