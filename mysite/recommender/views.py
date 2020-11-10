@@ -418,6 +418,9 @@ def recommend(request, username):
     # mianownik = np.sqrt(sum(i.rating_set.get(who_rated=2).value**2 for i in common_items)*sum(i.rating_set.get(who_rated=3).value**2 for i in common_items))
     # print(licznik/mianownik)
 
+    # TODO: after recommending, add movies to the database.
+    # If there are recommended movies in the database - display them. If not - perform recommendation
+
     content_based_recommendations = ContentBased(username)
     recommended_movies = content_based_recommendations.recommend_n_movies(20)
     context = {

@@ -15,7 +15,7 @@
             <div class="col-3">
                 {{ movies.0.title}}
                 <div class="col-3">
-                    
+
                     <form method="post">{% csrf_token %}
                     <input type="number" id="quantity" name="rating" min="1" max="10">
                     </form>
