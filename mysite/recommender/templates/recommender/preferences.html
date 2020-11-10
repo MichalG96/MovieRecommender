@@ -11,18 +11,34 @@
 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="false">
   <div class="carousel-inner">
     <div class="carousel-item active">
-       {{ movies.0.title}}
-                  <button class="btn btn-primary">Rate</button>
-            <button class="btn btn-warning">Did not see</button>
-    </div>
-       {% for movie in movies %}
-          <div class="carousel-item">
-                  {{movie.title}}
-            <button class="btn btn-primary">Rate</button>
-            <button class="btn btn-warning">Did not see</button>
-          </div>
-       {% endfor%}
+        <div class="d-flex justify-content-center">
+            <div class="col-3">
+                {{ movies.0.title}}
+                <div class="col-3">
+                    
+                    <form method="post">{% csrf_token %}
+                    <input type="number" id="quantity" name="rating" min="1" max="10">
+                    </form>
 
+                    <button class="btn btn-primary">Rate</button>
+                    <button class="btn btn-warning">Did not see</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% for movie in movies %}
+        <div class="carousel-item">
+            <div class="d-flex justify-content-center">
+                <div class="col-3">
+                    {{movie.title}}
+                    <div class="col-3">
+                        <button class="btn btn-primary">Rate</button>
+                        <button class="btn btn-warning">Did not see</button>
+                    </div>
+                </div>
+          </div>
+        </div>
+    {% endfor%}
   </div>
   <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>

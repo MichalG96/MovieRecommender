@@ -14,6 +14,7 @@ from django.db.models import Avg, Count, Max, Min, Prefetch
 
 from .filters import MovieFilter, RatingFilter
 from .tables import RatingsTable, MoviesTable
+from .recommendation_algorithms import ContentBased
 
 # Third - party Django modules
 from django_tables2.views import SingleTableMixin
@@ -411,14 +412,17 @@ def user_stats(request, username):
 def recommend(request, username):
     # Calculate similarity between user 2 and 3
     # TODO: use prefetch
-    common_items = Movie.objects.filter(rating__who_rated=2) & Movie.objects.filter(rating__who_rated=3)
-    licznik = sum((i.rating_set.get(who_rated=2).value*i.rating_set.get(who_rated=3).value) for i in common_items)
-    print(licznik)
-    mianownik = np.sqrt(sum(i.rating_set.get(who_rated=2).value**2 for i in common_items)*sum(i.rating_set.get(who_rated=3).value**2 for i in common_items))
-    print(licznik/mianownik)
+    # common_items = Movie.objects.filter(rating__who_rated=2) & Movie.objects.filter(rating__who_rated=3)
+    # licznik = sum((i.rating_set.get(who_rated=2).value*i.rating_set.get(who_rated=3).value) for i in common_items)
+    # print(licznik)
+    # mianownik = np.sqrt(sum(i.rating_set.get(who_rated=2).value**2 for i in common_items)*sum(i.rating_set.get(who_rated=3).value**2 for i in common_items))
+    # print(licznik/mianownik)
 
+    content_based_recommendations = ContentBased(username)
+    recommended_movies = content_based_recommendations.recommend_n_movies(20)
     context = {
-        'username': username
+        'username': username,
+        'recommended_movies': recommended_movies
     }
     return render(request, 'recommender/recommend.html', context)
 

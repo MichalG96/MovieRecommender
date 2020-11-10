@@ -5,6 +5,8 @@
 
 {% block content %}
    <h1>{{username}}</h1>
-   <h1>Oto Twoje rekomendacje</h1>
-
+   <h1>Your top recommendations are:</h1>
+      {% for movie in recommended_movies %}
+      <h3>{{ movie }}</h3>
+      {% endfor %}
 {% endblock content %}
