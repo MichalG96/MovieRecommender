@@ -422,10 +422,10 @@ def recommend(request, username):
     # If there are recommended movies in the database - display them. If not - perform recommendation
 
     content_based_recommendations = ContentBased(username)
-    recommended_movies = content_based_recommendations.recommend_n_movies(20)
+    recommended_movies, predicted_ratings = content_based_recommendations.recommend_n_movies(20)
     context = {
         'username': username,
-        'recommended_movies': recommended_movies
+        'recommended_movies': zip(recommended_movies, predicted_ratings)
     }
     return render(request, 'recommender/recommend.html', context)
 

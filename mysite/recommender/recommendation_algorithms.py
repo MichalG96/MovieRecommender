@@ -22,6 +22,15 @@ class ContentBased():
         ids_list = [x - 1 for x in ids_list]
         return ratings_list, ids_list
 
+    @staticmethod
+    def to_percent(value):
+        # Inflate the numbers a bit, multiply each predicted rating by 1.1
+        if value > 9.25:    #10/10.5
+            return 100
+        else:
+            return round(value * 10.5)
+
+
     def recommend_n_movies(self, n):
         ratings_list, ids_list = self.get_rated_movies()
         print(ratings_list, ids_list)
@@ -34,11 +43,16 @@ class ContentBased():
         print(predicted_ratings)
         print(predicted_ratings.shape)
         recommended_ids = []
+        recommended_predicted_ratings = []
         counter = 0
         for i in np.argsort(predicted_ratings, axis=0)[::-1]:
             if i.item() not in ids_list:
                 recommended_ids.append(i.item()+1)  # adding 1 - SQL database's indexing starts at 1
+                recommended_predicted_ratings.append(predicted_ratings[i].item())
                 counter += 1
             if counter == n:
                 break
-        return Movie.objects.filter(id__in=recommended_ids).values_list('title', flat=True)
+
+        recommended_predicted_ratings = list(map(self.to_percent, recommended_predicted_ratings))
+        # return Movie.objects.filter(id__in=recommended_ids).values_list('title', flat=True), recommended_predicted_ratings
+        return Movie.objects.filter(id__in=recommended_ids), recommended_predicted_ratings

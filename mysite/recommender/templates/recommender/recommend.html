@@ -6,7 +6,7 @@
 {% block content %}
    <h1>{{username}}</h1>
    <h1>Your top recommendations are:</h1>
-      {% for movie in recommended_movies %}
-      <h3>{{ movie }}</h3>
+      {% for movie, rating in recommended_movies %}
+      <h3><a href="{% url 'movie_detail' movie.id %}">{{ movie.title }}</a> - there's {{ rating }}% chance you'll like it</h3>
       {% endfor %}
 {% endblock content %}
