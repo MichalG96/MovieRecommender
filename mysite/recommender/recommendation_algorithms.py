@@ -1,10 +1,9 @@
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy import sparse
-import pandas as pd
 
 from django.contrib.auth.models import User
-from .models import Movie, Rating
+from .models import Movie
 
 class ContentBased():
     def __init__(self, username):
@@ -24,24 +23,20 @@ class ContentBased():
 
     @staticmethod
     def to_percent(value):
-        # Inflate the numbers a bit, multiply each predicted rating by 1.1
+        # Inflate the numbers a bit, multiply each predicted rating by 1.05
         if value > 9.25:    #10/10.5
             return 100
         else:
             return round(value * 10.5)
 
-
     def recommend_n_movies(self, n):
         ratings_list, ids_list = self.get_rated_movies()
-        print(ratings_list, ids_list)
         Dl = self.tf_idf[ids_list]
         y = sparse.csr_matrix(np.array(ratings_list)).T
         wt_1 = sparse.linalg.inv((np.dot(Dl.T, Dl) + self.lam_I))
         wt_2 = np.dot(Dl.T, y)
         Wt = np.dot(wt_1, wt_2)
         predicted_ratings = np.dot(self.tf_idf, Wt).todense()
-        print(predicted_ratings)
-        print(predicted_ratings.shape)
         recommended_ids = []
         recommended_predicted_ratings = []
         counter = 0
@@ -54,5 +49,4 @@ class ContentBased():
                 break
 
         recommended_predicted_ratings = list(map(self.to_percent, recommended_predicted_ratings))
-        # return Movie.objects.filter(id__in=recommended_ids).values_list('title', flat=True), recommended_predicted_ratings
         return Movie.objects.filter(id__in=recommended_ids), recommended_predicted_ratings
