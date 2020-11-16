@@ -8,4 +8,4 @@ desktop.ini
 /mysite/recommender/fixtures/actors_old.json
 *.bat
 /mysite/static/images
-/mysite/static/private
+/mysite/static/private/passes.txt
