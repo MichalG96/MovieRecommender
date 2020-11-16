@@ -25,14 +25,18 @@ python install -r requirements.txt
     * Logging in
     * Password reset via email
 * All movies are displayed, they can be sorted by each column, and filtered by decades
-* Searching movies by the title
+* Searching movies by the title:
+
 ![](readme_imgs/movie_list.png)
-* A user can view all of his/her rated movies, and sort them, or filter them by decade, rating, or date of rating
+* A user can view all of his/her rated movies, and sort them, or filter them by decade, rating, or date:
+
 ![](readme_imgs/profile.png)
-* A user can add, update, and remove rating for a movie
+* A user can add, update, and remove rating for a movie:
+
 ![](readme_imgs/rating.png)
 * Movie overviews and posters are loaded from TMDb, using [TMDb API](https://developers.themoviedb.org/3/getting-started/introduction)
 * A user can view information about his/her ratings:
+
 ![](readme_imgs/stats.png)
 
 
