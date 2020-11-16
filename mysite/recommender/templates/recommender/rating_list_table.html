@@ -32,6 +32,7 @@
                 {% if forloop.counter0|add:"1"|divisibleby:5 %}</div>{% endif %}
     {% endfor %}
     <hr>
+    Filter by date:<hr>
     {{filter.form.date_from}}
     {{filter.form.date_to}}
     <button type="submit" class="btn btn-outline-primary btn-block">Filter</button>
