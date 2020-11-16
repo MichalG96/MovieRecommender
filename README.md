@@ -10,7 +10,6 @@ The idea for this project came from my master's thesis, which focused on movie r
 * CSS
 * NumPy
 ## Installation
-1. Inside mysite/private/
 ## Functionalities
 
 ## Todos 
