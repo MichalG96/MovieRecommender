@@ -9,3 +9,4 @@ desktop.ini
 *.bat
 /mysite/static/images
 /mysite/static/private
+venv/
