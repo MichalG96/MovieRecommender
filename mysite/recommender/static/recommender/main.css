@@ -2,7 +2,6 @@ body {
   background: #090c1a;
   color: #fffbd1;
   margin-top: 5rem;
-   /*text-shadow:0px 0px 15px #fff*/
 }
 
 ul {
@@ -97,6 +96,7 @@ ul {
 .decades{
   margin-top: 0px !important
 }
+
 
 .ratings{
   margin-bottom: 0px !important;

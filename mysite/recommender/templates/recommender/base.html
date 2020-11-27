@@ -18,36 +18,34 @@
 </head>
 <body>
 
+    <header class="site-header">
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
+            <div class="container">
+              <a class="navbar-brand mr-4" href="{%url 'homepage'%}">Movie Recommender</a>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarToggle">
+                <div class="navbar-nav mr-auto">
+                  <a class="nav-item nav-link" href="{%url 'all_movies'%}">Movie Database</a>
+                </div>
+                <div class="navbar-nav">
+                   {% if user.is_authenticated %}
+                       <span class="navbar-text material-icons">how_to_reg</span>
+                       <span class="navbar-text">Logged in as {{user.username}}</span>
+                       <strong><a class="nav-item nav-link" href="{%url 'recommend' user.username %}">Your recommendations</a></strong>
+                       <strong><a class="nav-item nav-link" href="{%url 'all_users' %}">All users</a></strong>
+                       <strong><a class="nav-item nav-link" href="{%url 'profile' user.username %}">Profile</a></strong>
+                       <strong><a class="nav-item nav-link" href="{%url 'logout'%}">Logout</a></strong>
+                   {% else %}
+                      <a class="nav-item nav-link" href="{%url 'login'%}">Login</a>
+                      <a class="nav-item nav-link" href="{%url 'register'%}">Register</a>
+                   {% endif %}
 
-
-     <header class="site-header">
-      <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
-        <div class="container">
-          <a class="navbar-brand mr-4" href="{%url 'homepage'%}">Movie Recommender</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarToggle">
-            <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="{%url 'all_movies'%}">Movie Database</a>
+                </div>
+              </div>
             </div>
-            <div class="navbar-nav">
-               {% if user.is_authenticated %}
-                   <span class="navbar-text material-icons">how_to_reg</span>
-                   <span class="navbar-text">Logged in as {{user.username}}</span>
-                   <strong><a class="nav-item nav-link" href="{%url 'recommend' user.username %}">Your recommendations</a></strong>
-                   <strong><a class="nav-item nav-link" href="{%url 'all_users' %}">All users</a></strong>
-                   <strong><a class="nav-item nav-link" href="{%url 'profile' user.username %}">Profile</a></strong>
-                   <strong><a class="nav-item nav-link" href="{%url 'logout'%}">Logout</a></strong>
-               {% else %}
-                  <a class="nav-item nav-link" href="{%url 'login'%}">Login</a>
-                  <a class="nav-item nav-link" href="{%url 'register'%}">Register</a>
-               {% endif %}
-
-            </div>
-          </div>
-        </div>
-      </nav>
+        </nav>
     </header>
 
    <main role="main" class="container">

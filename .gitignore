@@ -10,3 +10,5 @@ desktop.ini
 /mysite/static/images
 /mysite/static/private
 venv/
+layout/
+ui/
