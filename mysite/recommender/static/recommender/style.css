@@ -279,6 +279,49 @@ nav a {
   width: 100%;
 }
 
+.decades-container label::before {
+  font-family: "Font Awesome 5 Free";
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 900;
+
+}
+
+.decades-container label {
+    display: inline-block;
+}
+
+.decades-container input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+}
+
+.decades-container input[type="checkbox"] {
+  display: absolute;
+}
+
+
+.tick::before {
+  transform: rotate(-360deg);
+  transition: transform .3s ease-in-out;
+  content: "\f00c";
+
+}
+
+.plus::before {
+  content: "\f067";
+}
+
+.tick {
+  background: lightgreen;
+}
+
+.plus {
+  background: lightseagreen;
+}
+
 .controls {
   flex: 1;
   display: grid;
@@ -295,8 +338,8 @@ nav a {
 }
 
 .controls a {
-    appearance: button; /* CSS3 */
--webkit-appearance: button; /* Safari and Chrome */
+  appearance: button; /* CSS3 */
+  -webkit-appearance: button; /* Safari and Chrome */
   -moz-appearance: button; /* Firefox */
   align-items: flex-start;
 
@@ -338,10 +381,9 @@ nav a {
   cursor: pointer;
 }
 
-.decades-container input[type="checkbox"]:checked {
-  background: red;
-  opacity: 1;
-}
+/*.decades-container input[type="checkbox"]:checked {*/
+/*  background: red;*/
+/*}*/
 
 
 table {

@@ -14,6 +14,7 @@ DECADE_CHOICES = (tuple(zip(decades_upper, decades_ranges)))
 
 class MovieFilter(FilterSet):
 
+    # adding additional class to input widget: attrs={'class': "form-control"}
     year_released = MultipleChoiceFilter(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple(), method='get_movies_from_decades')
 
     def get_movies_from_decades(self, queryset, name, value):
@@ -25,6 +26,7 @@ class MovieFilter(FilterSet):
 
     class Meta:
         model = Movie
+
         fields = {
             'title': ['icontains']
         }

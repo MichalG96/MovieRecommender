@@ -6,8 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link
           rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
   />
+
   <link rel="preconnect" href="https://fonts.gstatic.com"/>
   <link
           href="https://fonts.googleapis.com/css2?family=Archivo+Narrow&display=swap"
@@ -15,7 +16,6 @@
   />
   <link rel="stylesheet" type="text/css" href="{% static 'recommender/style.css' %}">
 
-  <script src="{% static 'recommender/main.js' %}"></script>
 
   <title>
     {% block title %}{% endblock %}
@@ -78,6 +78,8 @@
   {% endif %}
   {% block content %}{% endblock %}
 </div>
+
+<script src="{% static 'recommender/main.js' %}"></script>
 
 </body>
 </html>
