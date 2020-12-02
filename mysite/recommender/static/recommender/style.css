@@ -200,8 +200,8 @@ nav a {
 
 .btn-normal:hover {
   /* color: #fffde9; */
-  color: gold;
-  border: 0.1rem solid gold;
+  color: #ffe46f;
+  border: 0.1rem solid #ffe46f;
 }
 
 .btn-normal:focus {
@@ -290,36 +290,26 @@ nav a {
 }
 
 .decades-container label {
-    display: inline-block;
+  /*display: inline-block;*/
+  display: flex;
+    justify-content: center;
+
+  align-items: center;
+  font-size: 1.3rem;
 }
 
+
+
 .decades-container input[type="checkbox"] {
-  position: absolute;
   opacity: 0;
 }
 
-.decades-container input[type="checkbox"] {
-  display: absolute;
-}
-
-
 .tick::before {
-  transform: rotate(-360deg);
-  transition: transform .3s ease-in-out;
-  content: "\f00c";
-
+  content: "\f00c \00a0";
 }
 
 .plus::before {
-  content: "\f067";
-}
-
-.tick {
-  background: lightgreen;
-}
-
-.plus {
-  background: lightseagreen;
+  content: "\f067 \00a0";
 }
 
 .controls {
@@ -367,8 +357,8 @@ nav a {
 
 .decades-container label:hover {
   /* color: #fffde9; */
-  color: gold;
-  border: 0.1rem solid gold;
+  color: #e9dd9a;
+  border: 0.05rem solid #e9dd9a;
 }
 
 .decades-container label:focus {
@@ -504,7 +494,9 @@ th {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(3, 1fr);
   }
-
+.decades-form-container .text h1 {
+  font-size: 1.2rem;
+}
 
   .decades-container form {
     grid-template-columns: 1fr 1fr 1fr 1fr;
