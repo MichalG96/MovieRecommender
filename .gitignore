@@ -12,3 +12,5 @@ desktop.ini
 venv/
 layout/
 ui/
+/mysite/recommender/templates/recommender/base_old.html
+/mysite/recommender/templates/recommender/movie_list_table_old.html

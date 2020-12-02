@@ -1,32 +1,60 @@
 {% extends 'recommender/base.html' %}
 
-{%load static%}
+{% load static %}
 
 {% load widget_tweaks %}
 {% load django_tables2 %}
 
 {% block content %}
-<div class="row">
-{% if filter %}
-    <div class="col-2">
-    <!--        TODO: level off the buttons-->
-        <form action="" method="get" class="form form-inline">
-    <!--        TODO: redo this line so that I don't have to use widget tweaks-->
-        {% render_field filter.form.title__icontains placeholder="Search by title" class="form-control" %}
-        <button type="submit" class="btn btn-outline-primary btn-block search-button">Search</button>
-        {% for input in filter.form.year_released %}
-            {% if forloop.counter0|divisibleby:2 %}<div class="btn-group btn-group-toggle btn-block decades" data-toggle="buttons">{% endif %}
-                      <label class="btn btn-sm btn-outline-primary w-100">  {{ input}}</label>
-            {% if forloop.counter0|add:"1"|divisibleby:2 %}</div>{% endif %}
-        {% endfor %}
-        <button type="submit" class="btn btn-outline-primary btn-block filter-button">Filter</button>
-        <a class="btn btn-outline-danger btn-block " href="{%url 'all_movies'%}">Clear</a>
-        </form>
+  <section class="decades-form">
+    <div class="decades-form-container">
+    <div class="text">
+      <h1>Filter by decades:</h1>
     </div>
-{% endif %}
-    <div class="col-10">
+      <div class="decades-container">
+        {% if filter %}
+          {#TODO: button is messing everything up#}
+          <form action="" method="get">
+            <div class="decades">
+              {% for input in filter.form.year_released %}
+                {{ input }}
+              {% endfor %}
+            </div>
+            <div class="controls">
+              <button type="submit" class="btn btn-info">Filter</button>
+              <a href="{% url 'all_movies' %}" class="btn btn-danger">Clear</a>
+            </div>
+          </form>
+        {% endif %}
+
+      </div>
+
+    </div>
+  </section>
+  {#  <div class="row">#}
+  {#    {% if filter %}#}
+  {#      <div class="col-2">#}
+  {#        <!--        TODO: level off the buttons-->#}
+  {#        <form action="" method="get" class="form form-inline">#}
+  {#          <!--        TODO: redo this line so that I don't have to use widget tweaks-->#}
+  {#          {% render_field filter.form.title__icontains placeholder="Search by title" class="form-control" %}#}
+  {#          <button type="submit" class="btn btn-outline-primary btn-block search-button">Search</button>#}
+  {#          {% for input in filter.form.year_released %}#}
+  {#            {% if forloop.counter0|divisibleby:2 %}#}
+  {#              <div class="btn-group btn-group-toggle btn-block decades" data-toggle="buttons">{% endif %}#}
+  {#          <label class="btn btn-sm btn-outline-primary w-100">  {{ input }}</label>#}
+  {#          {% if forloop.counter0|add:"1"|divisibleby:2 %}</div>{% endif %}#}
+  {#          {% endfor %}#}
+  {#          <button type="submit" class="btn btn-outline-primary btn-block filter-button">Filter</button>#}
+  {#          <a class="btn btn-outline-danger btn-block " href="{% url 'all_movies' %}">Clear</a>#}
+  {#        </form>#}
+  {#      </div>#}
+  {#    {% endif %}#}
+  {#    <div class="col-10">#}
+  <section class="movie-table">
 
     {% render_table table %}
-        </div>
-</div>
+  </section>
+  </div>
+  </div>
 {% endblock content %}

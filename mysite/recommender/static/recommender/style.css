@@ -1,0 +1,495 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 10px;
+  font-weight: 100;
+}
+
+body {
+  font-family: "Archivo Narrow", sans-serif;
+  background: #0b0f22;
+  color: #fffde9;
+}
+
+/*===== NAVBAR =====*/
+
+nav {
+  height: 15vh;
+  background: linear-gradient(
+          black 0%,
+          rgba(0, 0, 0, 0.823) 45%,
+          rgba(0, 0, 0, 0.623) 55%,
+          rgba(0, 0, 0, 0.1) 90%,
+          rgba(0, 0, 0, 0) 100%
+  );
+  display: flex;
+  padding: 0 5vw;
+  position: sticky;
+  top: 0px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+nav a {
+  width: 10%;
+  padding: 1rem;
+  align-self: center;
+}
+
+.nav-links li input, .nav-links li button {
+  height: 3rem;
+  border-radius: 5px 0px 5px 0px;
+}
+
+
+/* ===== DROPDOWN ===== */
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  width: 100%;
+  justify-content: space-between;
+  height: 100%;
+  align-items: center;
+}
+
+.nav-links li a {
+  color: #fffde9;
+  text-decoration: none;
+  font-size: 1.6rem;
+}
+
+.nav-links a {
+  background: none;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.user-actions {
+  position: relative;
+}
+
+.user-actions ul {
+  margin-left: 40%;
+  position: absolute;
+  margin-top: 0.7rem;
+  background: #050711;
+  width: 10rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-direction: column;
+  list-style: none;
+  border-radius: 2px;
+  font-size: 1.4rem;
+  border: 1px solid #0072dc;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-5px);
+  transform: translateX(10px);
+  transition: all 0.4s ease;
+}
+
+.user-actions a:focus + ul {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+
+.user-actions li {
+  /* padding-top: 2rem; */
+  padding: 1rem 0;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #0072dca9;
+}
+
+.user-actions li:hover {
+  background: #0a102c;
+  border-radius: 2px;
+  border: 1px solid rgba(212, 181, 0, 0.822);
+}
+
+.user-actions a {
+  color: black;
+  text-decoration: none;
+}
+
+.logo {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/*===== NAVBAR MOBILE =====*/
+
+.burger {
+  display: none;
+  cursor: pointer;
+}
+
+.burger div {
+  width: 25px;
+  height: 3px;
+  margin: 4px;
+  background: #fffde9;
+}
+
+@media screen and (max-width: 960px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  nav {
+    background: #050711;
+    height: 7vh;
+  }
+
+  .nav-links {
+    position: absolute;
+    right: 0px;
+    height: 30vh;
+    top: 7vh;
+    background: #050711;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    padding: 0 3rem;
+    transform: translateX(-100%);
+  }
+
+  .nav-links li {
+    opacity: 1;
+  }
+
+  .burger {
+    display: block;
+  }
+}
+
+.nav-active {
+  /* display: none; */
+  transition: transform 0.3s ease-in;
+  transform: translateY(0%);
+}
+
+/*===== BUTTONS =====*/
+
+.btn {
+  background: none;
+  border-radius: 5px 0px 5px 0px;
+  cursor: pointer;
+  font-family: "Archivo Narrow", sans-serif;
+  font-size: 13px;
+
+}
+
+.btn-search {
+  padding: 0 0.5rem 0 0.5rem;
+}
+
+.btn-normal {
+  border: 0.1rem solid #0072dc;
+  color: #0072dc;
+}
+
+.btn-normal:hover {
+  /* color: #fffde9; */
+  color: gold;
+  border: 0.1rem solid gold;
+}
+
+.btn-normal:focus {
+  box-shadow: 0 0 0 0.2rem gold;
+}
+
+.btn-danger {
+  border: 0.2rem solid #b90000;
+  color: #b90000;
+}
+
+.btn-info {
+  border: 0.2rem solid #fffde9;
+  color: #fffde9;
+}
+
+/* ================ MY FLEXBOX  =================  */
+
+.container {
+  height: 100%;
+  /* background: lightcoral; */
+  margin-left: 5vw;
+  margin-right: 5vw;
+  margin-bottom: 2vh;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.decades-form {
+  display: flex;
+  justify-content: start;
+  width: 15rem;
+}
+
+.decades-form-container {
+  width: 95%;
+  height: 320px;
+  border-radius: 5px 0px 5px 0px;
+  border: 2px solid #0072dc;
+  padding: 0.5rem;
+  flex: 0 1 auto;
+  display: flex;
+  align-items: space-evenly;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.decades-form-container .text {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.decades-form-container .text h1 {
+  font-weight: 200;
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+
+.decades-container {
+  flex: 4;
+  display: flex;
+  justify-content: center;
+}
+
+.decades {
+  flex: 4;
+  display: grid;
+  grid-template-columns: 0.5fr 0.5fr;
+  grid-template-rows: auto auto auto auto auto auto;
+  column-gap: 0.4rem;
+  row-gap: 0.4rem;
+  width: 100%;
+}
+
+.controls {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 40% 40%;
+  grid-template-rows: auto;
+  column-gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.controls a, .controls .btn {
+  /*change on breakpoint*/
+  height: 60%;
+}
+
+.controls a {
+    appearance: button; /* CSS3 */
+-webkit-appearance: button; /* Safari and Chrome */
+  -moz-appearance: button; /* Firefox */
+  align-items: flex-start;
+
+  text-decoration: none;
+  font-size: 1.3rem;
+  text-align: center;
+
+}
+
+
+.decades-container form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: space-evenly;
+}
+
+.decades-container label {
+  background: none;
+  border-radius: 5px 0px 5px 0px;
+  cursor: pointer;
+  border: 0.1rem solid #0072dc;
+  color: #0072dc;
+}
+
+.decades-container label:hover {
+  /* color: #fffde9; */
+  color: gold;
+  border: 0.1rem solid gold;
+}
+
+.decades-container label:focus {
+  box-shadow: 0 0 0 0.2rem gold;
+}
+
+.decades-container input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.decades-container input[type="checkbox"]:checked {
+  background: red;
+  opacity: 1;
+}
+
+
+table {
+  width: 100%;
+  font-size: 1.4rem;
+  padding: 0.5rem;
+  border-collapse: collapse;
+  /* table-layout: fixed; */
+}
+
+table a {
+  text-decoration: none;
+  font-weight: 700;
+  color: #0072dc;
+}
+
+tr:hover {
+  background: #2c36690c;
+}
+
+tr:hover td:not(:nth-child(5)) {
+  text-shadow: 0px 0px 50px #82b2ff3b, 0px 0px 25px #5294ff80,
+  0px 0px 15px #52daffa2, 0px 0px 5px #ffffff;
+}
+
+tr:hover td:nth-child(5) a {
+  color: #ecd500;
+  text-shadow: 0px 0px 15px #e0e400c0, 0px 0px 3px #feffc0;
+  font-weight: 100;
+}
+
+tr {
+  border-bottom: 1px solid #0072dc;
+}
+
+td,
+th {
+  font-size: 1.5rem;
+  text-align: center;
+  padding: 1.1rem 0 1.1rem 0;
+}
+
+td {
+  font-weight: 100;
+  /* word-wrap: break-word; */
+}
+
+th {
+  font-weight: 600;
+}
+
+.movie-table {
+  border-radius: 5px 0px 5px 0px;
+  border: 2px solid #0072dc;
+  width: auto;
+  height: 100%;
+  flex: 1 1 auto;
+}
+
+@media screen and (max-width: 1024px) {
+  .decades-form {
+    width: 100%;
+  }
+
+  .decades-form-container {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    height: auto;
+    margin-bottom: 0.5rem;
+  }
+
+  .controls {
+    grid-template-columns: auto;
+    grid-template-rows: 40% 40%;
+    row-gap: 0.5rem;
+    justify-content: center;
+    align-content: center;
+  }
+
+  .controls a, .controls .btn {
+    /*change on breakpoint*/
+    height: 100%;
+  }
+
+  .decades-container form {
+    flex-direction: row;
+
+  }
+
+  .decades {
+    flex: 3;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+  .controls-container {
+    grid-template-columns: auto;
+    grid-template-rows: 0.5fr 0.5fr;
+    row-gap: 0.4rem;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .container {
+    margin-left: 1vw;
+    margin-right: 1vw;
+  }
+
+  .decades-form-container {
+    /*justify-content: space-between;*/
+    justify-content: space-evenly;
+  }
+
+  .decades {
+    flex: 5;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+
+
+  .decades-container form {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    margin-left: 0.3rem;
+  }
+
+  .controls-container {
+    margin-left: 0.3rem;
+  }
+
+  .controls a {
+    font-size: 1.1rem;
+
+  }
+
+  .decades-container button {
+    font-size: 1.1rem;
+  }
+
+  table {
+    /* I think this looks better on mobile */
+    white-space: nowrap;
+  }
+
+  td,
+  th {
+    font-size: 1.2rem;
+  }
+}
