@@ -14,7 +14,19 @@
           href="https://fonts.googleapis.com/css2?family=Archivo+Narrow&display=swap"
           rel="stylesheet"
   />
-  <link rel="stylesheet" type="text/css" href="{% static 'recommender/style.css' %}">
+
+{#TODO: bring back all files into single one before deployment, they are split only for#}
+{#redeability purpose#}
+{#  <link rel="stylesheet" type="text/css" href="{% static 'recommender/style.css' %}">#}
+
+  <link rel="stylesheet" type="text/css" href="{% static 'recommender/globals.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'recommender/navbar.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'recommender/buttons.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'recommender/flexbox.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'recommender/table.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'recommender/pagination.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'recommender/medium_screen.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'recommender/small_screen.css' %}">
 
 
   <title>
@@ -25,6 +37,8 @@
 <body>
 <nav>
   <a href="{% url 'homepage' %}"><img class="logo" src="{% static 'recommender/img/circles.svg' %}" alt=""/></a>
+{#  TODO: move to the dropdown#}
+  <a href="{%url 'profile' user.username %}">Profile</a>
   <ul class="nav-links">
     <li><a href="{% url 'all_movies' %}">Movie Database</a></li>
     <li>
@@ -48,7 +62,7 @@
     {% if user.is_authenticated %}
       <li class="user-actions">
         <!-- TODO: in django template, cut username if its too long -->
-        <a href="#">Logged in as michalskiejdz <i class="fa fa-angle-down"></i></a>
+        <a href="#">Logged in as {{user.username}} <i class="fa fa-angle-down"></i></a>
         <ul>
           {# TODO: profile is not clickable #}
           <li><a href="{% url 'profile' user.username %}">Profile</a></li>

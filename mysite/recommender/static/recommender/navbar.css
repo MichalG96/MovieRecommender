@@ -1,0 +1,160 @@
+nav {
+  height: 15vh;
+  background: linear-gradient(
+          black 0%,
+          rgba(0, 0, 0, 0.823) 45%,
+          rgba(0, 0, 0, 0.623) 55%,
+          rgba(0, 0, 0, 0.1) 90%,
+          rgba(0, 0, 0, 0) 100%
+  );
+  display: flex;
+  padding: 0 5vw;
+  position: sticky;
+  top: 0px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+nav a {
+  width: 10%;
+  padding: 1rem;
+  align-self: center;
+}
+
+.nav-links li input, .nav-links li button {
+  height: 3rem;
+  border-radius: 5px 0px 5px 0px;
+}
+
+.logo {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* ===== DROPDOWN ===== */
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  width: 100%;
+  justify-content: space-between;
+  height: 100%;
+  align-items: center;
+}
+
+.nav-links li a {
+  color: #fffde9;
+  text-decoration: none;
+  font-size: 1.6rem;
+}
+
+.nav-links a {
+  background: none;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.user-actions {
+  position: relative;
+}
+
+.user-actions ul {
+  margin-left: 40%;
+  position: absolute;
+  margin-top: 0.7rem;
+  background: #050711;
+  width: 10rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-direction: column;
+  list-style: none;
+  border-radius: 2px;
+  font-size: 1.4rem;
+  border: 1px solid #0072dc;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-5px);
+  transform: translateX(10px);
+  transition: all 0.4s ease;
+}
+
+.user-actions a:focus + ul {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+
+.user-actions li {
+  /* padding-top: 2rem; */
+  padding: 1rem 0;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #0072dca9;
+}
+
+.user-actions li:hover {
+  background: #0a102c;
+  border-radius: 2px;
+  border: 1px solid rgba(212, 181, 0, 0.822);
+}
+
+.user-actions a {
+  color: black;
+  text-decoration: none;
+}
+
+
+/*===== NAVBAR MOBILE =====*/
+
+.burger {
+  display: none;
+  cursor: pointer;
+}
+
+.burger div {
+  width: 25px;
+  height: 3px;
+  margin: 4px;
+  background: #fffde9;
+}
+
+@media screen and (max-width: 960px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  nav {
+    background: #050711;
+    height: 7vh;
+  }
+
+  .nav-links {
+    position: absolute;
+    right: 0px;
+    height: 30vh;
+    top: 7vh;
+    background: #050711;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    padding: 0 3rem;
+    transform: translateX(-100%);
+  }
+
+  .nav-links li {
+    opacity: 1;
+  }
+
+  .burger {
+    display: block;
+  }
+}
+
+.nav-active {
+  /* display: none; */
+  transition: transform 0.3s ease-in;
+  transform: translateY(0%);
+}

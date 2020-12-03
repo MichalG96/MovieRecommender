@@ -67,11 +67,11 @@
             {% endblock table.tfoot %}
         </table>
     {% endblock table %}
-
+{#  TODO: show current page#}
     {% block pagination %}
         {% if table.page and table.paginator.num_pages > 1 %}
-        <nav aria-label="Table navigation">
-            <ul class="pagination justify-content-center">
+        <div class="pagination-bar" aria-label="Table navigation">
+            <ul class="pagination">
             {% if table.page.has_previous %}
                 {% block pagination.previous %}
                 <li class="previous page-item">
@@ -105,7 +105,7 @@
                 {% endblock pagination.next %}
             {% endif %}
             </ul>
-        </nav>
+        </div>
         {% endif %}
     {% endblock pagination %}
 </div>

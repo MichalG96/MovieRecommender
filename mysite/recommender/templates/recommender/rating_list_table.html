@@ -1,47 +1,46 @@
 {% extends 'recommender/base.html' %}
 
-{%load static%}
+{% load static %}
 
 {% load widget_tweaks %}
 {% load django_tables2 %}
 
 {% block content %}
-<h2>User profile: {{profile_owner.username}}&emsp;<a href="{%url 'user_stats' profile_owner.username%}">(stats)</a></h2>
-<div class="row">
-{% if filter %}
-    <div class="col-2">
-    <!--        TODO: level off the buttons-->
-    <form action="" method="get" class="form form-inline">
-    <!--        TODO: redo this line so that I don't have to use widget tweaks custom placeholder class-->
-        {% render_field filter.form.movie__title placeholder="Search by title" class="form-control" %}
-    <button type="submit" class="btn btn-outline-primary btn-block search-button">Search</button>
-
-    Filter by decades:<hr>
-
-    {% for input in filter.form.movie__year_released %}
-                {% if forloop.counter0|divisibleby:2 %}<div class="btn-group btn-group-toggle btn-block decades " data-toggle="buttons">{% endif %}
-                          <label class="btn btn-sm btn-outline-primary w-100">  {{ input}}</label>
-                {% if forloop.counter0|add:"1"|divisibleby:2 %}</div>{% endif %}
-    {% endfor %}
-
-    Filter by ratings:<hr>
-
-    {% for input in filter.form.value %}
-                {% if forloop.counter0|divisibleby:5 %}<div class="btn-group btn-group-toggle btn-block ratings" data-toggle="buttons">{% endif %}
-                          <label class="btn btn-sm btn-outline-warning">  {{ input}}</label>
-                {% if forloop.counter0|add:"1"|divisibleby:5 %}</div>{% endif %}
-    {% endfor %}
-    <hr>
-    Filter by date:<hr>
-    {{filter.form.date_from}}
-    {{filter.form.date_to}}
-    <button type="submit" class="btn btn-outline-primary btn-block">Filter</button>
-    <a class="btn btn-outline-danger btn-block" href="{%url 'profile' profile_owner.username%}">Clear</a>
-    </form>
+  <section class="user-info">
+    <h1>User profile: {{ profile_owner.username }}&emsp;<a href="{% url 'user_stats' profile_owner.username %}">(stats)</a>
+    </h1>
+  </section>
+  <section class="filter-form ratings-form">
+    <div class="form-container ratings-form-container">
+      {% if filter %}
+        <form action="" method="get">
+          <div class="filter-decades">
+            <h1>Filter by decades:</h1>
+          <div class="decades decades-ratings">
+            {% for input in filter.form.movie__year_released %}
+              {{ input }}
+            {% endfor %}</div>
+          </div>
+          <div class="filter-ratings">
+            <h1>Filter by ratings:</h1>
+            {% for input in filter.form.value %}
+              {{ input }}
+            {% endfor %}
+          </div>
+          <div class="filter-date">
+            <h1>Filter by date:</h1>
+            {{ filter.form.date_from }}
+            {{ filter.form.date_to }}
+          </div>
+          <div class="controls controls-ratings">
+            <button type="submit" class="btn btn-info">Filter</button>
+            <a class="btn btn-danger" href="{% url 'profile' profile_owner.username %}">Clear</a>
+          </div>
+        </form>
+      {% endif %}
     </div>
-{% endif %}
-<div class="col-10">
+  </section>
+  <section class="movie-table rating-table">
     {% render_table table %}
-</div>
-</div>
+  </section>
 {% endblock content %}

@@ -6,36 +6,31 @@
 {% load django_tables2 %}
 
 {% block content %}
-  <section class="decades-form">
-    <div class="decades-form-container">
+  <section class="filter-form movies-form">
+    <div class="form-container movies-form-container">
       <div class="text">
         <h1>Filter by decades:</h1>
       </div>
       <div class="decades-container">
         {% if filter %}
-          {#TODO: button is messing everything up#}
           <form action="" method="get">
-            <div class="decades">
+            <div class="decades decades-movies">
               {% for input in filter.form.year_released %}
                 {{ input }}
               {% endfor %}
             </div>
-            <div class="controls">
+            <div class="controls controls-movies">
               <button type="submit" class="btn btn-info">Filter</button>
               <a href="{% url 'all_movies' %}" class="btn btn-danger">Clear</a>
             </div>
           </form>
         {% endif %}
-
       </div>
-
     </div>
   </section>
 
   <section class="movie-table">
-
     {% render_table table %}
   </section>
-  </div>
-  </div>
+
 {% endblock content %}

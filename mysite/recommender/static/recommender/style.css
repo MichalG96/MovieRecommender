@@ -45,6 +45,10 @@ nav a {
   border-radius: 5px 0px 5px 0px;
 }
 
+.logo {
+  max-width: 100%;
+  max-height: 100%;
+}
 
 /* ===== DROPDOWN ===== */
 
@@ -120,10 +124,6 @@ nav a {
   text-decoration: none;
 }
 
-.logo {
-  max-width: 100%;
-  max-height: 100%;
-}
 
 /*===== NAVBAR MOBILE =====*/
 
@@ -186,7 +186,6 @@ nav a {
   cursor: pointer;
   font-family: "Archivo Narrow", sans-serif;
   font-size: 13px;
-
 }
 
 .btn-search {
@@ -199,7 +198,6 @@ nav a {
 }
 
 .btn-normal:hover {
-  /* color: #fffde9; */
   color: #ffe46f;
   border: 0.1rem solid #ffe46f;
 }
@@ -222,7 +220,6 @@ nav a {
 
 .container {
   height: 100%;
-  /* background: lightcoral; */
   margin-left: 5vw;
   margin-right: 5vw;
   margin-bottom: 2vh;
@@ -230,13 +227,22 @@ nav a {
   flex-wrap: wrap;
 }
 
-.decades-form {
+.user-info {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  height: 10rem;
+  font-size: 1.4rem;
+}
+
+.filter-form {
   display: flex;
   justify-content: start;
   width: 15rem;
 }
 
-.decades-form-container {
+.form-container {
   width: 95%;
   height: 320px;
   border-radius: 5px 0px 5px 0px;
@@ -249,14 +255,14 @@ nav a {
   justify-content: space-around;
 }
 
-.decades-form-container .text {
+.form-container .text {
   display: flex;
   flex: 1;
   align-items: center;
   justify-content: center;
 }
 
-.decades-form-container .text h1 {
+.form-container .text h1 {
   font-weight: 200;
   font-size: 1.6rem;
   text-align: center;
@@ -269,16 +275,6 @@ nav a {
   justify-content: center;
 }
 
-.decades {
-  flex: 4;
-  display: grid;
-  grid-template-columns: 0.5fr 0.5fr;
-  grid-template-rows: auto auto auto auto auto auto;
-  column-gap: 0.4rem;
-  row-gap: 0.4rem;
-  width: 100%;
-}
-
 .decades-container label::before {
   font-family: "Font Awesome 5 Free";
   font-style: normal;
@@ -286,57 +282,17 @@ nav a {
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
   font-weight: 900;
-
 }
 
 .decades-container label {
-  /*display: inline-block;*/
   display: flex;
-    justify-content: center;
-
+  justify-content: center;
   align-items: center;
   font-size: 1.3rem;
 }
-
-
 
 .decades-container input[type="checkbox"] {
   opacity: 0;
-}
-
-.tick::before {
-  content: "\f00c \00a0";
-}
-
-.plus::before {
-  content: "\f067 \00a0";
-}
-
-.controls {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 40% 40%;
-  grid-template-rows: auto;
-  column-gap: 0.5rem;
-  justify-content: center;
-  align-items: center;
-}
-
-.controls a, .controls .btn {
-  /*change on breakpoint*/
-  height: 60%;
-}
-
-.controls a {
-  appearance: button; /* CSS3 */
-  -webkit-appearance: button; /* Safari and Chrome */
-  -moz-appearance: button; /* Firefox */
-  align-items: flex-start;
-
-  text-decoration: none;
-  font-size: 1.3rem;
-  text-align: center;
-
 }
 
 
@@ -371,9 +327,50 @@ nav a {
   cursor: pointer;
 }
 
-/*.decades-container input[type="checkbox"]:checked {*/
-/*  background: red;*/
-/*}*/
+.decades {
+  flex: 4;
+  display: grid;
+  grid-template-columns: 0.5fr 0.5fr;
+  grid-template-rows: auto auto auto auto auto auto;
+  column-gap: 0.4rem;
+  row-gap: 0.4rem;
+  width: 100%;
+}
+
+
+.tick::before {
+  content: "\f00c \00a0";
+}
+
+.plus::before {
+  content: "\f067 \00a0";
+}
+
+.controls {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 40% 40%;
+  grid-template-rows: auto;
+  column-gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.controls a, .controls .btn {
+  /*change on breakpoint*/
+  height: 60%;
+}
+
+.controls a {
+  appearance: button; /* CSS3 */
+  -webkit-appearance: button; /* Safari and Chrome */
+  -moz-appearance: button; /* Firefox */
+  align-items: flex-start;
+
+  text-decoration: none;
+  font-size: 1.3rem;
+  text-align: center;
+}
 
 
 table {
@@ -394,16 +391,28 @@ tr:hover {
   background: #2c36690c;
 }
 
-tr:hover td:not(:nth-child(5)) {
+.movie-table tr:hover td:not(:nth-child(5)) {
   text-shadow: 0px 0px 50px #82b2ff3b, 0px 0px 25px #5294ff80,
   0px 0px 15px #52daffa2, 0px 0px 5px #ffffff;
 }
 
-tr:hover td:nth-child(5) a {
+.movie-table tr:hover td:nth-child(5) a {
   color: #ecd500;
   text-shadow: 0px 0px 15px #e0e400c0, 0px 0px 3px #feffc0;
   font-weight: 100;
 }
+
+.rating-table tr:hover td:not(:nth-child(2)) {
+  text-shadow: 0px 0px 50px #82b2ff3b, 0px 0px 25px #5294ff80,
+  0px 0px 15px #52daffa2, 0px 0px 5px #ffffff;
+}
+
+.rating-table tr:hover td:nth-child(2) a {
+  color: #ecd500;
+  text-shadow: 0px 0px 15px #e0e400c0, 0px 0px 3px #feffc0;
+  font-weight: 100;
+}
+
 
 tr {
   border-bottom: 1px solid #0072dc;
@@ -433,18 +442,52 @@ th {
   flex: 1 1 auto;
 }
 
+.pagination-bar {
+  display: flex;
+  justify-content: center;
+}
+
+.pagination {
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination li {
+  padding: 2rem;
+}
+
+.pagination a {
+  text-decoration: none;
+  color: gold;
+  font-size: 1.3rem;
+}
+
+
 @media screen and (max-width: 1024px) {
-  .decades-form {
+  .filter-form {
     width: 100%;
   }
 
-  .decades-form-container {
+  .form-container {
     width: 100%;
     flex-direction: row;
     align-items: center;
     justify-content: space-evenly;
     height: auto;
     margin-bottom: 0.5rem;
+  }
+
+  .decades-container form {
+    flex-direction: row;
+  }
+
+  .decades {
+    flex: 3;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(2, 1fr);
   }
 
   .controls {
@@ -459,23 +502,6 @@ th {
     /*change on breakpoint*/
     height: 100%;
   }
-
-  .decades-container form {
-    flex-direction: row;
-
-  }
-
-  .decades {
-    flex: 3;
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-  }
-
-  .controls-container {
-    grid-template-columns: auto;
-    grid-template-rows: 0.5fr 0.5fr;
-    row-gap: 0.4rem;
-  }
 }
 
 @media screen and (max-width: 650px) {
@@ -484,19 +510,14 @@ th {
     margin-right: 1vw;
   }
 
-  .decades-form-container {
+  .form-container {
     /*justify-content: space-between;*/
     justify-content: space-evenly;
   }
 
-  .decades {
-    flex: 5;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+  .form-container .text h1 {
+    font-size: 1.2rem;
   }
-.decades-form-container .text h1 {
-  font-size: 1.2rem;
-}
 
   .decades-container form {
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -504,16 +525,17 @@ th {
     margin-left: 0.3rem;
   }
 
-  .controls-container {
-    margin-left: 0.3rem;
+  .decades-container button {
+    font-size: 1.1rem;
+  }
+
+  .decades {
+    flex: 5;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
   }
 
   .controls a {
-    font-size: 1.1rem;
-
-  }
-
-  .decades-container button {
     font-size: 1.1rem;
   }
 

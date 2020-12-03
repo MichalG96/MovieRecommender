@@ -1,0 +1,45 @@
+@media screen and (max-width: 650px) {
+  .container {
+    margin-left: 1vw;
+    margin-right: 1vw;
+  }
+
+  .form-container {
+    /*justify-content: space-between;*/
+    justify-content: space-evenly;
+  }
+
+  .form-container .text h1 {
+    font-size: 1.2rem;
+  }
+
+  .decades-container form {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    margin-left: 0.3rem;
+  }
+
+  .decades-container button {
+    font-size: 1.1rem;
+  }
+
+  .decades {
+    flex: 5;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+
+  .controls a {
+    font-size: 1.1rem;
+  }
+
+  table {
+    /* I think this looks better on mobile */
+    white-space: nowrap;
+  }
+
+  td,
+  th {
+    font-size: 1.2rem;
+  }
+}

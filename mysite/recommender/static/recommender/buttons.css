@@ -1,0 +1,35 @@
+.btn {
+  background: none;
+  border-radius: 5px 0px 5px 0px;
+  cursor: pointer;
+  font-family: "Archivo Narrow", sans-serif;
+  font-size: 13px;
+}
+
+.btn-search {
+  padding: 0 0.5rem 0 0.5rem;
+}
+
+.btn-normal {
+  border: 0.1rem solid #0072dc;
+  color: #0072dc;
+}
+
+.btn-normal:hover {
+  color: #ffe46f;
+  border: 0.1rem solid #ffe46f;
+}
+
+.btn-normal:focus {
+  box-shadow: 0 0 0 0.2rem gold;
+}
+
+.btn-danger {
+  border: 0.2rem solid #b90000;
+  color: #b90000;
+}
+
+.btn-info {
+  border: 0.2rem solid #fffde9;
+  color: #fffde9;
+}
