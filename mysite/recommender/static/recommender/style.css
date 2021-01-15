@@ -275,7 +275,7 @@ nav a {
   justify-content: center;
 }
 
-.decades-container label::before {
+.form-container label::before {
   font-family: "Font Awesome 5 Free";
   font-style: normal;
   font-variant: normal;
@@ -284,19 +284,18 @@ nav a {
   font-weight: 900;
 }
 
-.decades-container label {
+.form-container label {
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 1.3rem;
 }
 
-.decades-container input[type="checkbox"] {
+.form-container input[type="checkbox"] {
   opacity: 0;
 }
 
-
-.decades-container form {
+.form-container form {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -327,7 +326,7 @@ nav a {
   cursor: pointer;
 }
 
-.decades {
+.filter-by {
   flex: 4;
   display: grid;
   grid-template-columns: 0.5fr 0.5fr;
@@ -484,7 +483,7 @@ th {
     flex-direction: row;
   }
 
-  .decades {
+  .filter-by {
     flex: 3;
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(2, 1fr);
@@ -529,7 +528,7 @@ th {
     font-size: 1.1rem;
   }
 
-  .decades {
+  .filter-by {
     flex: 5;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(3, 1fr);

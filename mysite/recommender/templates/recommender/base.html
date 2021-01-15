@@ -15,9 +15,9 @@
           rel="stylesheet"
   />
 
-{#TODO: bring back all files into single one before deployment, they are split only for#}
-{#redeability purpose#}
-{#  <link rel="stylesheet" type="text/css" href="{% static 'recommender/style.css' %}">#}
+  {#TODO: bring back all files into single one before deployment, they are split only for#}
+  {#redeability purpose#}
+  {#  <link rel="stylesheet" type="text/css" href="{% static 'recommender/style.css' %}">#}
 
   <link rel="stylesheet" type="text/css" href="{% static 'recommender/globals.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'recommender/navbar.css' %}">
@@ -37,8 +37,10 @@
 <body>
 <nav>
   <a href="{% url 'homepage' %}"><img class="logo" src="{% static 'recommender/img/circles.svg' %}" alt=""/></a>
-{#  TODO: move to the dropdown#}
-  <a href="{%url 'profile' user.username %}">Profile</a>
+  {#  TODO: move to the dropdown#}
+  {% if user.is_authenticated %}
+    <a href="{% url 'profile' user.username %}">Profile</a>
+  {% endif %}
   <ul class="nav-links">
     <li><a href="{% url 'all_movies' %}">Movie Database</a></li>
     <li>
@@ -62,7 +64,7 @@
     {% if user.is_authenticated %}
       <li class="user-actions">
         <!-- TODO: in django template, cut username if its too long -->
-        <a href="#">Logged in as {{user.username}} <i class="fa fa-angle-down"></i></a>
+        <a href="#">Logged in as {{ user.username }} <i class="fa fa-angle-down"></i></a>
         <ul>
           {# TODO: profile is not clickable #}
           <li><a href="{% url 'profile' user.username %}">Profile</a></li>

@@ -23,7 +23,7 @@
     font-size: 1.1rem;
   }
 
-  .decades {
+  .decades-movies {
     flex: 5;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(3, 1fr);
@@ -31,6 +31,14 @@
 
   .controls a {
     font-size: 1.1rem;
+  }
+
+  /*.controls-ratings{*/
+  /*  width: 80%;*/
+  /*}*/
+
+  .controls-ratings{
+    grid-template-columns: 30% 30%;
   }
 
   table {

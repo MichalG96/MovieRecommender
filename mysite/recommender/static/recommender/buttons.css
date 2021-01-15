@@ -4,6 +4,9 @@
   cursor: pointer;
   font-family: "Archivo Narrow", sans-serif;
   font-size: 13px;
+  /*display: flex;*/
+  /*align-items: center;*/
+  /*justify-content: center;*/
 }
 
 .btn-search {
