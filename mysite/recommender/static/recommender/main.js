@@ -9,7 +9,6 @@ document.querySelectorAll(".form-container label input").forEach((checkbox) => {
     }
 });
 
-
 document.querySelectorAll(".form-container label input").forEach((checkbox) => {
     checkbox.addEventListener("change", (event) => {
         if (event.target.checked) {
@@ -22,4 +21,18 @@ document.querySelectorAll(".form-container label input").forEach((checkbox) => {
         }
     });
 });
+
+
+
+let state = 0;
+function switchStates() {
+
+    if (state === 0) {
+        state = 1;
+
+    } else {
+        state = 0;
+    }
+    // console.log(state);
+}
 

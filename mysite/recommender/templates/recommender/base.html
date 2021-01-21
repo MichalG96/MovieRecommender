@@ -64,11 +64,13 @@
     {% if user.is_authenticated %}
       <li class="user-actions">
         <!-- TODO: in django template, cut username if its too long -->
-        <a href="#">Logged in as {{ user.username }} <i class="fa fa-angle-down"></i></a>
-        <ul>
-          {# TODO: profile is not clickable #}
+        <a onclick="switchStates()" href="#">Logged in as {{ user.username }} <i class="fa fa-angle-down"></i></a>
+        {#        TODO: hide dropdown when the a tag is clicked #}
+        {#        TODO: switch arrow direction when the a tag is clicked #}
+        {#        TODO: dropdown cannot disapear when a li element is clicked and held #}
+        <ul id="dropdown">
           <li><a href="{% url 'profile' user.username %}">Profile</a></li>
-          <li><a href="{% url 'logout' %}">Log out X</a></li>
+          <li><a href="{% url 'logout' %}">Log out</a></li>
         </ul>
       </li>
     {% endif %}
