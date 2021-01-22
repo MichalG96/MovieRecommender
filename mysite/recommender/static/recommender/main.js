@@ -23,16 +23,33 @@ document.querySelectorAll(".form-container label input").forEach((checkbox) => {
 });
 
 
-
-let state = 0;
-function switchStates() {
-
-    if (state === 0) {
-        state = 1;
-
-    } else {
-        state = 0;
+function changeArrowDirection() {
+    arrowDirection = document.getElementById('arrow').className;
+    if (arrowDirection === 'fa fa-angle-down') {
+        document.getElementById('arrow').className = ('fa fa-angle-up');
+    } else if (arrowDirection === 'fa fa-angle-up') {
+        document.getElementById('arrow').className = ('fa fa-angle-down');
     }
-    // console.log(state);
 }
 
+/* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+    changeArrowDirection();
+    document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function (event) {
+    if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                changeArrowDirection();
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+}
