@@ -1,26 +1,21 @@
 {% extends 'recommender/base.html' %}
 {% load crispy_forms_tags %}
 {% block title %}
-   Users list
+  Users list
 {% endblock title %}
 
 {% block content %}
 
-    <div class="col-10">
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th scope="col">Username</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for user in users %}
-        <tr class="table-row">
-            <td><a href="{% url 'profile' user.username %}" class="link-glow">{{user.username}}</a></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="users-container">
+    <div class="users">
+      {% for user in users %}
+        <a href="{% url 'profile' user.username %}" class="btn btn-user">{{ user.username }}</a>
+      {% endfor %}
     </div>
-    {% include 'recommender/pagination.html' %}
+    <div class="mockup-pagination">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus architecto, atque corporis culpa deserunt dolorum fugiat harum incidunt omnis perferendis possimus quia quis saepe sed sunt tenetur totam veniam veritatis.
+{#      TODO: handle paginations #}
+{#      {% include 'recommender/pagination.html' %}#}
+    </div>
+  </div>
 {% endblock content %}

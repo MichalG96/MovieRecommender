@@ -16,6 +16,10 @@ nav {
   margin: 0 0 5rem 0;
 }
 
+nav a img{
+  overflow: hidden;
+}
+
 .nav-links ul {
   list-style: none;
 }
@@ -33,6 +37,10 @@ nav {
   color: #fffde9;
   text-decoration: none;
   font-size: 1.6rem;
+}
+.nav-links li a:hover{
+  text-shadow: 0px 0px 80px rgba(130, 178, 255, 0.43), 0px 0px 25px rgba(82, 148, 255, 0.7),
+  0px 0px 25px #52daffa2, 0px 0px 8px #ffffff;
 }
 
 .user-actions li:hover a {
@@ -61,6 +69,13 @@ nav {
   justify-content: center;
 }
 
+
+
+.material-icons{
+  display:inline;
+  /*background: red;*/
+}
+
 .user-actions li a {
   display: block;
   width: 100%;
@@ -68,58 +83,19 @@ nav {
   text-align: center;
 }
 
-/*!*maybe not necessary*!*/
-/*.user-actions {*/
-/*  position: relative;*/
-/*}*/
-
 .user-actions ul {
   margin-top: 1rem;
   background: #031248;
   width: 12rem;
   height: 7rem;
   position: absolute;
-border: 0.1rem solid #0072dc;
-border-radius: 5px 0px 5px 0px;
+  border: 0.1rem solid #0072dc;
+  border-radius: 5px 0px 5px 0px;
+  /*TODO: add smooth transition when dropdown rolls out*/
+  /*transform: translateY(-1rem);*/
+  /*transition: all 0.2s ease;*/
 }
 
-/*display: flex;*/
-/*align-items: center;*/
-/*justify-content: space-around;*/
-/*flex-direction: column;*/
-/*border: 0.1rem solid #0072dc;*/
-/*border-radius: 5px 0px 5px 0px;*/
-/*padding: 0.4rem;*/
-/*}*/
-/*  opacity: 0;*/
-/*  visibility: hidden;*/
-/*  !*pointer-events: none;*!*/
-/*  transform: translateY(-1rem);*/
-/*  transition: all 0.2s ease;*/
-/*}*/
-
-/*.user-actions a:focus + ul {*/
-/*  opacity: 1;*/
-/*  !*pointer-events: all;*!*/
-/*  visibility: visible;*/
-/*  transform: translateY(0);*/
-/*}*/
-
-
-/*W3*/
-
-/*.dropbtn {*/
-/*  background-color: #3498DB;*/
-/*  color: white;*/
-/*  padding: 16px;*/
-/*  font-size: 16px;*/
-/*  border: none;*/
-/*  cursor: pointer;*/
-/*}*/
-
-/*.dropbtn:hover, .dropbtn:focus {*/
-/*  background-color: #2980B9;*/
-/*}*/
 
 .user-actions {
   position: relative;
@@ -134,12 +110,6 @@ border-radius: 5px 0px 5px 0px;
   z-index: 1;
 }
 
-/*.dropdown-content a {*/
-/*  text-decoration: none;*/
-/*  display: block;*/
-/*}*/
-
-/*.user-actions a:hover {background-color: #ddd;}*/
 
 .show {
   display: block;

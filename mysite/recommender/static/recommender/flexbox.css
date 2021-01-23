@@ -239,3 +239,31 @@ form h1 {
   font-size: 1.3rem;
   text-align: center;
 }
+
+.users-container{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.users{
+  width: 80%;
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 6rem 6rem;
+}
+
+.users a{
+  text-decoration: none;
+  text-align: center;
+  font-size: 1.8rem;
+}
+
+.mockup-pagination{
+  margin-top: 5rem;
+  flex: 0;
+}

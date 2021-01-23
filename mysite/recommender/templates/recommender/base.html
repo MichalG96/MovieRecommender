@@ -14,7 +14,8 @@
           href="https://fonts.googleapis.com/css2?family=Archivo+Narrow&display=swap"
           rel="stylesheet"
   />
-
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet">
   {#TODO: bring back all files into single one before deployment, they are split only for#}
   {#redeability purpose#}
   {#  <link rel="stylesheet" type="text/css" href="{% static 'recommender/style.css' %}">#}
@@ -48,7 +49,7 @@
                 placeholder="Search for a movie X"
         />
         <button class="btn btn-search btn-normal" type="submit">
-          {#                TODO: add functionality to this button#}
+          {# TODO: add functionality to this button #}
           Search
         </button>
       </form>
@@ -59,11 +60,14 @@
     <li><a href="{% url 'all_users' %}">Users</a></li>
     {% if user.is_authenticated %}
       <li class="user-actions">
-        <!-- TODO: in django template, cut username if its too long -->
-        <a onclick="myFunction()" href="#" class="dropbtn">Logged in as {{ user.username }} <i id="arrow" class="fa fa-angle-down"></i></a>
-        {#        TODO: hide dropdown when the a tag is clicked #}
-        {#        TODO: switch arrow direction when the a tag is clicked #}
-        {#        TODO: dropdown cannot disapear when a li element is clicked and held #}
+
+        <a onclick="showHideDropdown()" href="#" class="dropbtn">
+{#          <i class="material-icons">how_to_reg</i>#}
+          Logged in
+          as {{ user.username |truncatechars:9 }} <i
+                  id="arrow" class="fa fa-angle-down"></i>
+{#                  <i class="material-icons">how_to_reg</i>#}
+</a>
         <ul id="myDropdown" class="dropdown-content">
           <li><a href="{% url 'profile' user.username %}">Profile</a></li>
           <li><a href="{% url 'logout' %}">Log out</a></li>

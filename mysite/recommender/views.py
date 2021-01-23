@@ -84,7 +84,7 @@ class FilteredMovieListView(SingleTableMixin, FilterView):
 class UserListView(ListView):
     model = User
     context_object_name = 'users'
-    paginate_by = 50
+    paginate_by = 16
     template_name = 'recommender/user_list.html'
 
 
