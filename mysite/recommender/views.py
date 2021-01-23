@@ -5,14 +5,13 @@ from django.urls import reverse
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views import View
-from django import forms
 from .models import Movie, Rating, Actor, Genre
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import UserRegisterForm, UserRatingForm, MovieSortGroupForm, MovieRatingSortGroupForm
 from django.db.models import Avg, Count, Max, Min, Prefetch
 
-from .filters import MovieFilter, RatingFilter
+from .filters import MovieFilter, RatingFilter, UserFilter
 from .tables import RatingsTable, MoviesTable
 from .recommendation_algorithms import ContentBased
 
@@ -81,10 +80,12 @@ class FilteredMovieListView(SingleTableMixin, FilterView):
 # ({% if user.is_authenticated %} in template)
 
 
-class UserListView(ListView):
+
+class UserListView(FilterView):
     model = User
     context_object_name = 'users'
-    paginate_by = 16
+    paginate_by = 25
+    filterset_class = UserFilter
     template_name = 'recommender/user_list.html'
 
 

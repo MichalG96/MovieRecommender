@@ -13,11 +13,24 @@ nav {
   top: 0;
   align-items: center;
   justify-content: space-between;
-  margin: 0 0 5rem 0;
+  margin: 0 0 2rem 0;
 }
 
-nav a img{
-  overflow: hidden;
+nav > a {
+  height: 100%;
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+nav ul {
+  flex: 8;
+}
+
+nav a img {
+  max-width: 80%;
+  max-height: 70%;
 }
 
 .nav-links ul {
@@ -38,7 +51,8 @@ nav a img{
   text-decoration: none;
   font-size: 1.6rem;
 }
-.nav-links li a:hover{
+
+.nav-links li a:hover {
   text-shadow: 0px 0px 80px rgba(130, 178, 255, 0.43), 0px 0px 25px rgba(82, 148, 255, 0.7),
   0px 0px 25px #52daffa2, 0px 0px 8px #ffffff;
 }
@@ -70,9 +84,8 @@ nav a img{
 }
 
 
-
-.material-icons{
-  display:inline;
+.material-icons {
+  display: inline;
   /*background: red;*/
 }
 

@@ -37,7 +37,10 @@
 
 <body>
 <nav>
-  <a href="{% url 'homepage' %}"><img class="logo" src="{% static 'recommender/img/circles.svg' %}" alt=""/></a>
+  <a href="{% url 'homepage' %}">
+{#    Siabadaba#}
+    <img class="logo" src="{% static 'recommender/img/circles.svg' %}" alt=""/>
+  </a>
   <ul class="nav-links">
     <li><a href="{% url 'all_movies' %}">Movie Database</a></li>
     <li>

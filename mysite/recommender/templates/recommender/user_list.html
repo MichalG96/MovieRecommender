@@ -1,21 +1,31 @@
 {% extends 'recommender/base.html' %}
 {% load crispy_forms_tags %}
+{% load widget_tweaks %}
+
 {% block title %}
   Users list
 {% endblock title %}
 
 {% block content %}
-
   <div class="users-container">
+    <div class="search-users">
+      <form action="" method="get">
+        {% render_field filter.form.username__icontains placeholder="Search by a username" class="form-control" %}
+        <div class="search-buttons">
+        <button type="submit" class="btn btn-info btn-user-search">Search</button>
+        <a href="{% url 'all_users' %}" class="btn btn-danger btn-user-search">Clear</a>
+          </div>
+      </form>
+    </div>
+
     <div class="users">
       {% for user in users %}
-        <a href="{% url 'profile' user.username %}" class="btn btn-user">{{ user.username }}</a>
+        <a href="{% url 'profile' user.username %}" class="btn btn-user">{{ user.username |truncatechars:11}}</a>
       {% endfor %}
     </div>
     <div class="mockup-pagination">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus architecto, atque corporis culpa deserunt dolorum fugiat harum incidunt omnis perferendis possimus quia quis saepe sed sunt tenetur totam veniam veritatis.
-{#      TODO: handle paginations #}
-{#      {% include 'recommender/pagination.html' %}#}
+      {#      TODO: handle pagination so that it works correctly when searching by username #}
+            {% include 'recommender/pagination.html' %}
     </div>
   </div>
 {% endblock content %}

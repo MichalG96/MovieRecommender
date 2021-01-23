@@ -14,6 +14,8 @@
 }
 
 .btn-normal {
+  padding: 0 0.5rem 0 0.5rem;
+
   border: 0.1rem solid #0072dc;
   color: #0072dc;
 }
@@ -33,12 +35,13 @@
 }
 
 .btn-info {
+  padding: 0 0.5rem 0 0.5rem;
   border: 0.2rem solid #fffde9;
   color: #fffde9;
 }
 
-.btn-user{
-    border-radius: 8px 0px 8px 0px;
+.btn-user {
+  border-radius: 8px 0px 8px 0px;
   border: 0.2rem solid #fffde9;
   color: #0072dc;
   padding: 1.2rem 0.1rem;
@@ -46,8 +49,12 @@
 
 .btn-user:hover {
   color: gold;
-  /*box-shadow: 0 0 0 0.2rem gold*/
   box-shadow: 0px 0px 50px #82b2ff3b, 0px 0px 25px #5294ff80,
   0px 0px 15px #52daffa2, 0px 0px 5px #ffffff;
   background: #010f24;
+}
+
+.btn-user-search {
+  font-size: 1.5rem;
+  padding: 0.3rem 0.7rem;
 }

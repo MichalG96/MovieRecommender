@@ -240,7 +240,7 @@ form h1 {
   text-align: center;
 }
 
-.users-container{
+.users-container {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -248,22 +248,50 @@ form h1 {
   align-items: center;
 }
 
-.users{
-  width: 80%;
+.users {
+  width: 90%;
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-  gap: 6rem 6rem;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 3rem 4rem;
 }
 
-.users a{
+.users a {
   text-decoration: none;
   text-align: center;
   font-size: 1.8rem;
 }
 
-.mockup-pagination{
+.mockup-pagination {
   margin-top: 5rem;
   flex: 0;
+}
+
+.form-control {
+  height: 3.3rem;
+  border-radius: 5px 0px 5px 0px;
+  padding: 1rem;
+  font-size: 1.45rem;
+}
+
+.search-users {
+  margin-bottom:  3rem;
+  display: flex;
+}
+
+.search-users a {
+  text-decoration: none;
+  text-align: center;
+}
+
+.search-buttons {
+  width: 80%;
+  display: grid;
+  justify-content: center;
+  margin: auto;
+  margin-top: 1.2rem;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(1, 1fr);
+  gap: 2rem 2rem;
 }

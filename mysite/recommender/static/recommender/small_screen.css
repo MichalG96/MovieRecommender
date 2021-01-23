@@ -50,4 +50,10 @@
   th {
     font-size: 1.2rem;
   }
+
+  .users {
+    width: 85%;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem 3rem;
+  }
 }

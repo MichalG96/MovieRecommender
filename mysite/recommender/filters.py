@@ -2,7 +2,9 @@ from datetime import timedelta
 
 from django import forms
 
-from django_filters import MultipleChoiceFilter, FilterSet, CharFilter, DateFilter
+from django_filters import MultipleChoiceFilter, FilterSet, CharFilter, DateFilter, CharFilter
+
+from django.contrib.auth.models import User
 
 from .models import Movie
 
@@ -12,14 +14,16 @@ decades_upper = ([1919 + 10 * i for i in range(12)])
 decades_ranges = ['To 1919'] + [f"{1920 + 10 * i}'s" for i in range(11)]
 DECADE_CHOICES = (tuple(zip(decades_upper, decades_ranges)))
 
-class MovieFilter(FilterSet):
 
+class MovieFilter(FilterSet):
     # adding additional class to input widget: attrs={'class': "form-control"}
-    year_released = MultipleChoiceFilter(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple(), method='get_movies_from_decades')
+    year_released = MultipleChoiceFilter(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple(),
+                                         method='get_movies_from_decades')
 
     def get_movies_from_decades(self, queryset, name, value):
         upper_decades_limits = list(map(int, value))
-        movies_from_decades = queryset.filter(year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
+        movies_from_decades = queryset.filter(
+            year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
         for limit in upper_decades_limits[1:]:
             movies_from_decades |= queryset.filter(year_released__range=[(limit - 9), (limit)])
         return movies_from_decades
@@ -31,8 +35,10 @@ class MovieFilter(FilterSet):
             'title': ['icontains']
         }
 
+
 class DateInput(forms.DateInput):
     input_type = 'date'
+
 
 class RatingFilter(FilterSet):
     movie__title = CharFilter(lookup_expr='icontains')
@@ -41,7 +47,8 @@ class RatingFilter(FilterSet):
     RATING_CHOICES = (tuple(zip(possible_ratings, possible_ratings)))
 
     value = MultipleChoiceFilter(choices=RATING_CHOICES, widget=forms.CheckboxSelectMultiple)
-    movie__year_released = MultipleChoiceFilter(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple, method='get_movies_from_decades')
+    movie__year_released = MultipleChoiceFilter(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple,
+                                                method='get_movies_from_decades')
 
     date_from = DateFilter(field_name='date_rated', lookup_expr='gte', widget=DateInput())
     date_to = DateFilter(field_name='date_rated', widget=DateInput(), method='include_end_date_day')
@@ -54,7 +61,8 @@ class RatingFilter(FilterSet):
 
     def get_movies_from_decades(self, queryset, name, value):
         upper_decades_limits = list(map(int, value))
-        movies_from_decades = queryset.filter(movie__year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
+        movies_from_decades = queryset.filter(
+            movie__year_released__range=[(upper_decades_limits[0] - 9), (upper_decades_limits[0])])
         for limit in upper_decades_limits[1:]:
             movies_from_decades |= queryset.filter(movie__year_released__range=[(limit - 9), (limit)])
         return movies_from_decades
@@ -66,3 +74,11 @@ class RatingFilter(FilterSet):
     #         'movie__title': ['icontains']
     #     }
 
+
+class UserFilter(FilterSet):
+    class Meta:
+        model = User
+
+        fields = {
+            'username': ['icontains']
+        }
