@@ -15,7 +15,7 @@
           rel="stylesheet"
   >
   <link
-           href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet"
   >
   <link
@@ -47,10 +47,22 @@
   <a href="{% url 'homepage' %}" class="logo">
     {#    Siabadaba#}
     MR
-{#    <img class="logo" src="{% static 'recommender/img/circles.svg' %}" alt=""/>#}
+    {#    <img class="logo" src="{% static 'recommender/img/circles.svg' %}" alt=""/>#}
   </a>
   <ul class="nav-links">
-    <li><a href="{% url 'all_movies' %}">Movie Database</a></li>
+    {#  TODO: make visible only in mobile mode #}
+
+    {% if user.is_authenticated %}
+      <li>
+        Logged in
+        as {{ user.username |truncatechars:9 }}
+        {#                  <i class="material-icons">how_to_reg</i>#}
+      </li>
+      <li><a href="{% url 'profile' user.username %}">Profile</a></li>
+      <li><a href="{% url 'logout' %}">Log out</a></li>
+    {% endif %}
+      <li><a href="{% url 'all_movies' %}">Movie Database</a></li>
+
     <li>
       <form action="">
         <input
