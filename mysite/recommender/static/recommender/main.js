@@ -50,3 +50,55 @@ window.onclick = function (event) {
         }
     }
 }
+
+// const mediaQuery = window.matchMedia('(max-width: 900px)')
+//
+// function handleTabletChange(e) {
+//     // Check if the media query is true
+//     if (e.matches) {
+//         // Then log the following message to the console
+//         // alert('Media Query Matched!')
+//         document.querySelectorAll('.nav-links li').style.transform="translateY(-60vh)";
+//
+//     }
+// }
+//
+// mediaQuery.addListener(handleTabletChange)
+// handleTabletChange(mediaQuery)
+
+
+
+const navSlide = () => {
+    const burger = document.querySelector('.burger');
+    const nav_links = document.querySelector('.nav-links');
+    const nav = document.querySelector('nav');
+    const navLinks = document.querySelectorAll('.nav-links li');
+
+    burger.addEventListener('click', () => {
+        nav_links.classList.toggle('nav-active');
+
+        // const mediaQuery = window.matchMedia('(min-width: 900px)')
+        // console.log(mediaQuery);
+        // if (nav.style.animation) {
+        //     nav.style.animation = '';
+        // } else {
+        //     nav.style.animation = `navChangeColor 2.9s forwards 0.2s`;
+        // }
+
+        navLinks.forEach((link, index) => {
+            if (link.style.animation) {
+                link.style.animation = '';
+            } else {
+                link.style.animation = `navLinkFade 0.3s forwards ${index / 10 + 0.25}s`;
+            }
+        });
+
+        burger.classList.toggle('toggle');
+
+    });
+
+
+}
+
+navSlide();
+

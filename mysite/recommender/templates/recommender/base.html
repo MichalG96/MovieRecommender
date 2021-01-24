@@ -13,9 +13,15 @@
   <link
           href="https://fonts.googleapis.com/css2?family=Archivo+Narrow&display=swap"
           rel="stylesheet"
-  />
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        rel="stylesheet">
+  >
+  <link
+           href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet"
+  >
+  <link
+          href="https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap"
+          rel="stylesheet"
+  >
   {#TODO: bring back all files into single one before deployment, they are split only for#}
   {#redeability purpose#}
   {#  <link rel="stylesheet" type="text/css" href="{% static 'recommender/style.css' %}">#}
@@ -28,6 +34,7 @@
   <link rel="stylesheet" type="text/css" href="{% static 'recommender/pagination.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'recommender/medium_screen.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'recommender/small_screen.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'recommender/burger.css' %}">
 
 
   <title>
@@ -37,9 +44,10 @@
 
 <body>
 <nav>
-  <a href="{% url 'homepage' %}">
+  <a href="{% url 'homepage' %}" class="logo">
     {#    Siabadaba#}
-    <img class="logo" src="{% static 'recommender/img/circles.svg' %}" alt=""/>
+    MR
+{#    <img class="logo" src="{% static 'recommender/img/circles.svg' %}" alt=""/>#}
   </a>
   <ul class="nav-links">
     <li><a href="{% url 'all_movies' %}">Movie Database</a></li>
@@ -81,9 +89,9 @@
   </ul>
 
   <div class="burger">
-    <div class="line"></div>
-    <div class="line"></div>
-    <div class="line"></div>
+    <div class="line1"></div>
+    <div class="line2"></div>
+    <div class="line3"></div>
   </div>
 </nav>
 

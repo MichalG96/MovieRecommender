@@ -17,20 +17,11 @@ nav {
 }
 
 nav > a {
-  height: 100%;
   flex: 1;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
 }
 
 nav ul {
   flex: 8;
-}
-
-nav a img {
-  max-width: 80%;
-  max-height: 70%;
 }
 
 .nav-links ul {
@@ -123,9 +114,21 @@ nav a img {
   z-index: 1;
 }
 
-
 .show {
   display: block;
+}
+
+
+.burger {
+  display: none;
+}
+
+.burger div {
+  width: 25px;
+  height: 3px;
+  background: white;
+  margin: 4px;
+  transition: all 0.3s ease;
 }
 
 
