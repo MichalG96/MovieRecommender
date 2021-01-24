@@ -15,7 +15,6 @@
 
 .btn-normal {
   padding: 0 0.5rem 0 0.5rem;
-
   border: 0.1rem solid #0072dc;
   color: #0072dc;
 }
@@ -34,11 +33,24 @@
   color: #b90000;
 }
 
+.btn-danger:hover {
+  box-shadow: 0px 0px 15px #a20000, 0px 0px 12px #920303,
+  0px 0px 5px #ffffff;
+  color: red;
+}
+
 .btn-info {
   padding: 0 0.5rem 0 0.5rem;
   border: 0.2rem solid #fffde9;
   color: #fffde9;
 }
+
+.btn-info:hover {
+  box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.25),
+  0px 0px 12px rgba(255, 255, 106, 0.57),  0px 0px 5px #ffffff;
+  color: white;
+}
+
 
 .btn-user {
   border-radius: 8px 0px 8px 0px;

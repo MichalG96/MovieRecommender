@@ -66,6 +66,7 @@ class FilteredRatingListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['profile_owner'] = self.profile_owner
+
         return context
 
 
@@ -87,6 +88,11 @@ class UserListView(FilterView):
     paginate_by = 25
     filterset_class = UserFilter
     template_name = 'recommender/user_list.html'
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['username__icontains'] = self.request.GET.get('username__icontains')
+    #     return context
 
 
 class MovieDetailView(DetailView):

@@ -38,7 +38,7 @@
 <body>
 <nav>
   <a href="{% url 'homepage' %}">
-{#    Siabadaba#}
+    {#    Siabadaba#}
     <img class="logo" src="{% static 'recommender/img/circles.svg' %}" alt=""/>
   </a>
   <ul class="nav-links">
@@ -64,13 +64,13 @@
     {% if user.is_authenticated %}
       <li class="user-actions">
 
-        <a onclick="showHideDropdown()" href="#" class="dropbtn">
-{#          <i class="material-icons">how_to_reg</i>#}
+        <a onclick="showHideDropdown()" href="#/" class="dropbtn">
+          {#          <i class="material-icons">how_to_reg</i>#}
           Logged in
           as {{ user.username |truncatechars:9 }} <i
-                  id="arrow" class="fa fa-angle-down"></i>
-{#                  <i class="material-icons">how_to_reg</i>#}
-</a>
+                id="arrow" class="fa fa-angle-down"></i>
+          {#                  <i class="material-icons">how_to_reg</i>#}
+        </a>
         <ul id="myDropdown" class="dropdown-content">
           <li><a href="{% url 'profile' user.username %}">Profile</a></li>
           <li><a href="{% url 'logout' %}">Log out</a></li>
