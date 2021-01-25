@@ -1,25 +1,25 @@
 {% extends 'recommender/base.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <div class="content-section">
-        <form method="POST">
-            {%csrf_token%}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Log In</legend>
-                {{form|crispy}}
-            </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-primary" type="submit">Log In</button>
-            </div>
-            <small class="text-muted ml-2">
-                    <a href="{% url 'password_reset' %}">Forgot password?</a>
-            </small>
-        </form>
-        <div class="border-top pt-3">
-            <small class="text-muted">
-                Need an Account? <a class="ml-2" href="{%url 'register'%}">Sign Up Now</a>
-            </small>
+  <div class="login-container">
+    <section class="login">
+      <form method="POST">
+        {% csrf_token %}
+        <legend><h3>Welcome</h3></legend>
+        {{ form|crispy }}
+        <button class="btn" type="submit">Log In</button>
+        <div class="login-add-ons">
+          <small>
+            <a href="{% url 'password_reset' %}">Forgot password?</a>
+          </small>
+          <small>
+            Need an Account? <a href="{% url 'register' %}">Sign Up Now</a>
+          </small>
         </div>
+      </form>
+      <div>
 
-    </div>
+      </div>
+    </section>
+  </div>
 {% endblock content %}

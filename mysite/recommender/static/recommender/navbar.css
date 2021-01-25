@@ -116,6 +116,7 @@ nav ul {
 .dropdown-content {
   display: none;
   position: absolute;
+  margin-left: 2rem;
   /*min-width: 160px;*/
   overflow: auto;
   z-index: 1;

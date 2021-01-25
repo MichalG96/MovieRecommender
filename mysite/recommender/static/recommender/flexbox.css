@@ -305,3 +305,92 @@ form h1 {
   border: 2px solid #0072dc;
   padding: 2rem 0;
 }
+
+.alert {
+  width: 100%;
+  font-size: 1.8rem;
+  border-radius: 7px 0px 7px 0px;
+  display: block;
+  justify-content: center;
+  align-items: center;
+  padding: 1.6rem;
+  background: rgba(255, 0, 0, 0.2);
+  text-align: center;
+  line-height: 3.6rem
+}
+
+.alert a {
+  text-decoration: none;
+  color: #0072dc;
+}
+
+.alert a:hover {
+  text-decoration: underline;
+}
+
+.alert-red {
+  border: 2px solid red;
+}
+
+.login-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.login {
+  font-size: 1.8rem;
+}
+
+.login form {
+  border-radius: 7px 0px 7px 0px;
+  border: 1px solid #0072dc;
+  padding: 1.5rem;
+  background: #020424;
+  box-shadow: 0px 0px 40px #82b2ff7b, 0px 0px 25px #5294ff80,
+  0px 0px 15px #52daffa2, 0px 0px 5px #ffffff;
+  margin-bottom: 3rem;
+}
+
+.login form legend {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.login form input {
+  width: 30rem;
+  margin: 1rem 0;
+}
+
+.login button {
+  margin-top: 1rem;
+  width: 100%;
+  height: 3.5rem;
+  font-size: 1.8rem;
+  color: #fffde9;
+  border-radius: 5px 0 5px 0;
+  border: 1px solid #0072dc;
+}
+
+.login button:hover {
+  box-shadow: 0 0 40px #82b2ff1b, 0 0 20px #5294ff70,
+  0 0 15px #52daffa2, 0 0 5px #ffffff;
+}
+
+.login a {
+  text-decoration: none;
+  color: #0072dc;
+}
+
+.login a:hover {
+  text-decoration: underline;
+}
+
+.login-add-ons {
+  margin-top: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
