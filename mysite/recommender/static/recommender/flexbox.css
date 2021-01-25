@@ -332,17 +332,17 @@ form h1 {
   border: 2px solid red;
 }
 
-.login-container {
+.login-container, .register-container {
   display: flex;
   width: 100%;
   justify-content: center;
 }
 
-.login {
+.login, .register {
   font-size: 1.8rem;
 }
 
-.login form {
+.login form, .register form {
   border-radius: 7px 0px 7px 0px;
   border: 1px solid #0072dc;
   padding: 1.5rem;
@@ -352,7 +352,7 @@ form h1 {
   margin-bottom: 3rem;
 }
 
-.login form legend {
+.login form legend, .register form legend {
   text-align: center;
   margin-bottom: 1rem;
 }
@@ -362,7 +362,12 @@ form h1 {
   margin: 1rem 0;
 }
 
-.login button {
+.register form input {
+  width: 100%;
+  margin: 0.5rem 0 0.2rem 0;
+}
+
+.login button, .register button {
   margin-top: 1rem;
   width: 100%;
   height: 3.5rem;
@@ -372,21 +377,22 @@ form h1 {
   border: 1px solid #0072dc;
 }
 
-.login button:hover {
+.login button:hover, .register button:hover {
   box-shadow: 0 0 40px #82b2ff1b, 0 0 20px #5294ff70,
   0 0 15px #52daffa2, 0 0 5px #ffffff;
+  color: white;
 }
 
-.login a {
+.login a, .register a {
   text-decoration: none;
   color: #0072dc;
 }
 
-.login a:hover {
+.login a:hover, .register a:hover {
   text-decoration: underline;
 }
 
-.login-add-ons {
+.add-ons {
   margin-top: 3.5rem;
   display: flex;
   flex-direction: column;
@@ -394,3 +400,19 @@ form h1 {
   align-items: center;
 }
 
+.register ul {
+  list-style: none;
+}
+
+.register label{
+  display: block;
+  margin: 1rem 0 0.6rem 0;
+}
+
+.register small{
+  color: gold;
+}
+
+.add-ons small{
+  color: #fffde9;
+}

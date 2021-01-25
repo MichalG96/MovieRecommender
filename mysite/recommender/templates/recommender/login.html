@@ -8,7 +8,7 @@
         <legend><h3>Welcome</h3></legend>
         {{ form|crispy }}
         <button class="btn" type="submit">Log In</button>
-        <div class="login-add-ons">
+        <div class="add-ons">
           <small>
             <a href="{% url 'password_reset' %}">Forgot password?</a>
           </small>
@@ -17,9 +17,6 @@
           </small>
         </div>
       </form>
-      <div>
-
-      </div>
     </section>
   </div>
 {% endblock content %}
