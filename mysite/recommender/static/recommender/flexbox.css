@@ -229,7 +229,6 @@ form h1 {
   appearance: button; /* CSS3 */
   -webkit-appearance: button; /* Safari and Chrome */
   -moz-appearance: button; /* Firefox */
-  align-items: flex-start;
 
   display: flex;
   justify-content: center;
@@ -276,7 +275,7 @@ form h1 {
 }
 
 .search-users {
-  margin-bottom:  3rem;
+  margin-bottom: 3rem;
   display: flex;
 }
 
@@ -294,4 +293,15 @@ form h1 {
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(1, 1fr);
   gap: 2rem 2rem;
+}
+
+.search-by-title {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-radius: 5px 0px 5px 0px;
+  border: 2px solid #0072dc;
+  padding: 2rem 0;
 }

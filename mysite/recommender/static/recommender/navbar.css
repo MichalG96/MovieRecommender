@@ -29,6 +29,7 @@ nav ul {
 }
 
 .nav-links {
+  margin-left: 7rem;
   display: flex;
   list-style: none;
   width: 100%;
@@ -37,16 +38,18 @@ nav ul {
   align-items: center;
 }
 
-.nav-links > li:first-child,
-.nav-links > li:nth-child(2),
-.nav-links > li:nth-child(3){
+#logged-in-mobile,
+#profile-mobile,
+#logout-mobile,
+#search{
   display: none;
 }
+
 
 .nav-links li a {
   color: #fffde9;
   text-decoration: none;
-  font-size: 1.6rem;
+  font-size: 1.8rem;
 }
 
 .nav-links li a:hover {
@@ -124,6 +127,7 @@ nav ul {
 
 .burger {
   display: none;
+  margin-left: 2rem;
 }
 
 .burger div {
@@ -131,7 +135,16 @@ nav ul {
   height: 3px;
   background: white;
   margin: 4px;
-  transition: all 0.3s ease;
+  transition: all 0.45s ease;
 }
 
+li form .form-control{
+  height: 2.8rem;
+  width: 17rem;
+  margin-right: 0.5rem;
+}
 
+li form{
+  display: flex;
+  align-items: center;
+}

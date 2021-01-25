@@ -66,7 +66,6 @@ class FilteredRatingListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['profile_owner'] = self.profile_owner
-
         return context
 
 
@@ -76,10 +75,6 @@ class FilteredMovieListView(SingleTableMixin, FilterView):
     template_name = 'recommender/movie_list_table.html'
     paginate_by = 20
     filterset_class = MovieFilter
-
-# TODO: part of a profile (photo, username) has to be visible by any other LOGGED IN user
-# ({% if user.is_authenticated %} in template)
-
 
 
 class UserListView(FilterView):
@@ -324,9 +319,6 @@ def recommend(request, username):
 
 def new_user(request):
     return render(request, 'recommender/new_user.html')
-
-def users_list(request):
-    return render(request, 'recommender/users_list.html')
 
 def add_user(request):
     return render(request, 'recommender/add_user.html')

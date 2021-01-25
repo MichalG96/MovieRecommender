@@ -4,13 +4,6 @@
   cursor: pointer;
   font-family: "Archivo Narrow", sans-serif;
   font-size: 13px;
-  /*display: flex;*/
-  /*align-items: center;*/
-  /*justify-content: center;*/
-}
-
-.btn-search {
-  padding: 0 0.5rem 0 0.5rem;
 }
 
 .btn-normal {
@@ -51,6 +44,13 @@
   color: white;
 }
 
+.btn-search {
+  padding: 0.3rem 0.8rem  0.3rem 0.8rem ;
+  /*height: 3rem;*/
+  font-size: 1.5rem;
+  font-weight: 900;
+  height: 90%;
+}
 
 .btn-user {
   border-radius: 8px 0px 8px 0px;
@@ -69,4 +69,8 @@
 .btn-user-search {
   font-size: 1.5rem;
   padding: 0.3rem 0.7rem;
+}
+
+a.btn{
+  text-decoration: none;
 }

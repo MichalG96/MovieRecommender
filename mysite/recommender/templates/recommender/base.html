@@ -1,4 +1,6 @@
 {% load static %}
+{% load widget_tweaks %}
+
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
@@ -44,59 +46,55 @@
 
 <body>
 <nav>
-  <a href="{% url 'homepage' %}" class="logo">
-    {#    Siabadaba#}
-    MR
-    {#    <img class="logo" src="{% static 'recommender/img/circles.svg' %}" alt=""/>#}
-  </a>
+  <a href="{% url 'homepage' %}" class="logo">MR</a>
   <ul class="nav-links">
-    {#  TODO: make visible only in mobile mode #}
-
     {% if user.is_authenticated %}
-      <li>
+      <li id="logged-in-mobile">
         Logged in
-        as {{ user.username |truncatechars:9 }}
-        {#                  <i class="material-icons">how_to_reg</i>#}
+        as {{ user.username |truncatechars:20 }}
+        {# <i class="material-icons">how_to_reg</i> #}
       </li>
-      <li><a href="{% url 'profile' user.username %}">Profile</a></li>
-      <li><a href="{% url 'logout' %}">Log out</a></li>
+      <li id="profile-mobile"><a href="{% url 'profile' user.username %}">Profile</a></li>
+      <li id="logout-mobile"><a href="{% url 'logout' %}">Log out</a></li>
     {% endif %}
-      <li><a href="{% url 'all_movies' %}">Movie Database</a></li>
-
-    <li>
-      <form action="">
+    <li id="md"><a href="{% url 'all_movies' %}">Movie Database</a></li>
+    <li id="search">
+{#      <form action="{% url 'all_movies' %}" method="get">#}
+      <form action="" method="get">
+{#        TODO: this renders only on the MovieList view, because this form is connected to this view only#}
+{#        {% render_field filter.form.title__icontains placeholder="Search for a movie X" class="form-control" %}#}
         <input
                 type="text"
-                name=""
-                id=""
                 placeholder="Search for a movie X"
         />
-        <button class="btn btn-search btn-normal" type="submit">
-          {# TODO: add functionality to this button #}
+        <button class="btn btn-normal btn-search" type="submit">
           Search
         </button>
       </form>
     </li>
     {% if user.is_authenticated %}
-      <li><a href="{% url 'recommend' user.username %}">Your recommendations</a></li>
+      <li id="yr"><a href="{% url 'recommend' user.username %}">Your recommendations</a></li>
     {% endif %}
-    <li><a href="{% url 'all_users' %}">Users</a></li>
+    <li id="users"><a href="{% url 'all_users' %}">Users</a></li>
     {% if user.is_authenticated %}
-      <li class="user-actions">
+      <li id="logged-in-desktop" class="user-actions">
 
         <a onclick="showHideDropdown()" href="#/" class="dropbtn">
-          {#          <i class="material-icons">how_to_reg</i>#}
           Logged in
-          as {{ user.username |truncatechars:9 }} <i
-                id="arrow" class="fa fa-angle-down"></i>
-          {#                  <i class="material-icons">how_to_reg</i>#}
+          as {{ user.username |truncatechars:9 }}
+          <i id="arrow" class="fa fa-angle-down"></i>
+          {#<i class="material-icons">how_to_reg</i>#}
         </a>
         <ul id="myDropdown" class="dropdown-content">
           <li><a href="{% url 'profile' user.username %}">Profile</a></li>
           <li><a href="{% url 'logout' %}">Log out</a></li>
         </ul>
       </li>
+    {% else %}
+      <li id="login"><a href="{% url 'login' %}">Log In</a></li>
+      <li id="register"><a href="{% url 'register' %}">Register</a></li>
     {% endif %}
+
 
   </ul>
 
