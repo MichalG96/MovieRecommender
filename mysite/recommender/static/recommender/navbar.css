@@ -38,13 +38,17 @@ nav ul {
   align-items: center;
 }
 
+.nav-links li a{
+  display: flex;
+  align-items: center;
+}
+
 #logged-in-mobile,
 #profile-mobile,
 #logout-mobile,
-#search{
+#search {
   display: none;
 }
-
 
 .nav-links li a {
   color: #fffde9;
@@ -122,6 +126,12 @@ nav ul {
   z-index: 1;
 }
 
+.dropdown-content li a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .show {
   display: block;
 }
@@ -139,13 +149,13 @@ nav ul {
   transition: all 0.45s ease;
 }
 
-li form .form-control{
+li form .form-control {
   height: 2.8rem;
   width: 17rem;
   margin-right: 0.5rem;
 }
 
-li form{
+li form {
   display: flex;
   align-items: center;
 }

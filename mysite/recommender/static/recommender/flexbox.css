@@ -332,17 +332,17 @@ form h1 {
   border: 2px solid red;
 }
 
-.login-container, .register-container {
+.login-container, .register-container, .password-reset-container {
   display: flex;
   width: 100%;
   justify-content: center;
 }
 
-.login, .register {
+.login, .register, .password-reset {
   font-size: 1.8rem;
 }
 
-.login form, .register form {
+.login form, .register form, .password-reset form {
   border-radius: 7px 0px 7px 0px;
   border: 1px solid #0072dc;
   padding: 1.5rem;
@@ -352,7 +352,7 @@ form h1 {
   margin-bottom: 3rem;
 }
 
-.login form legend, .register form legend {
+.login form legend, .register form legend, .password-reset legend {
   text-align: center;
   margin-bottom: 1rem;
 }
@@ -367,17 +367,29 @@ form h1 {
   margin: 0.5rem 0 0.2rem 0;
 }
 
-.login button, .register button {
+.password-reset form input {
+  width: 30rem;
+}
+
+.login button, .register button, .password-reset button {
   margin-top: 1rem;
   width: 100%;
   height: 3.5rem;
-  font-size: 1.8rem;
   color: #fffde9;
   border-radius: 5px 0 5px 0;
   border: 1px solid #0072dc;
 }
 
-.login button:hover, .register button:hover {
+.login button, .register button {
+  font-size: 1.8rem;
+}
+
+.password-reset button {
+  font-size: 1.6rem;
+}
+
+
+.login button:hover, .register button:hover, .password-reset button:hover {
   box-shadow: 0 0 40px #82b2ff1b, 0 0 20px #5294ff70,
   0 0 15px #52daffa2, 0 0 5px #ffffff;
   color: white;
@@ -404,15 +416,42 @@ form h1 {
   list-style: none;
 }
 
-.register label{
+.register label {
   display: block;
   margin: 1rem 0 0.6rem 0;
 }
 
-.register small{
-  color: gold;
+.register small {
+  color: rgba(255, 223, 62, 0.95);
 }
 
-.add-ons small{
+.add-ons small {
   color: #fffde9;
+}
+
+.home-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 100%;
+  font-size: 2rem;
+}
+
+.card {
+  border-radius: 7px 0 7px 0;
+  border: 1px solid #0072dc;
+  padding: 1.5rem;
+  background: #020424;
+  box-shadow: 0 0 40px #82b2ff4b, 0 0 20px #5294ff80,
+  0 0 15px #52daff92, 0 0 5px #ffffff;
+  margin: 1.2rem;
+  width: 50%;
+}
+
+
+.card img {
+  max-width: 100%;
+  max-height: 100%;
 }
