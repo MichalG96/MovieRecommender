@@ -1,12 +1,14 @@
 {% extends 'recommender/base.html' %}
 {% block title %}
-   Recommendations
+  Recommendations
 {% endblock title %}
 
 {% block content %}
-   <h1>{{username}}</h1>
-   <h1>Your top recommendations are:</h1>
-      {% for movie, rating in recommended_movies %}
-      <h3><a href="{% url 'movie_detail' movie.id %}">{{ movie.title }}</a> - there's {{ rating }}% chance you'll like it</h3>
-      {% endfor %}
+  <ul>
+    <h1>{{ username }}, your top recommendations are:</h1>
+    {% for movie, rating in recommended_movies %}
+      <li><h2><a href="{% url 'movie_detail' movie.id %}">{{ movie.title }}</a> - there's {{ rating }}% chance you'll like it
+      </h2></li>
+    {% endfor %}
+  </ul>
 {% endblock content %}

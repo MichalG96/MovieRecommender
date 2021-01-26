@@ -6,7 +6,7 @@
   font-size: 13px;
 }
 
-.btn-normal {
+.btn-normal, .btn-shiny {
   padding: 0 0.5rem 0 0.5rem;
   border: 0.1rem solid #0072dc;
   color: #0072dc;
@@ -15,6 +15,10 @@
 .btn-normal:hover {
   color: #ffe46f;
   border: 0.1rem solid #ffe46f;
+}
+.btn-shiny:hover {
+  box-shadow: 0px 0px 50px #82b2ff3b, 0px 0px 25px #5294ff80,
+  0px 0px 15px #52daffa2, 0px 0px 5px #ffffff;
 }
 
 .btn-normal:focus {

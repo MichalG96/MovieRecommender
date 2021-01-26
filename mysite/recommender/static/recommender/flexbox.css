@@ -1,7 +1,7 @@
 .container {
   height: 100%;
-  margin-left: 5vw;
-  margin-right: 5vw;
+  margin-left: 7vw;
+  margin-right: 7vw;
   margin-bottom: 2vh;
   display: flex;
   flex-wrap: wrap;
@@ -450,8 +450,64 @@ form h1 {
   width: 50%;
 }
 
-
 .card img {
   max-width: 100%;
   max-height: 100%;
+}
+
+.movie-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  font-size: 2rem;
+}
+
+.title {
+  flex: 1 0 100%;
+  background: pink;
+  display: flex;
+  justify-content: center;
+  font-family: 'Bangers';
+  font-size: 6rem;
+}
+
+
+.poster {
+  background: #20c997;
+  flex: 2 0 20%;
+}
+
+.movie-info {
+  background: #207ac9;
+  flex: 2 0 40%;
+}
+
+.rating {
+  background: #88c920;
+  flex: 2 0 40%;
+}
+
+.overview {
+  background: #aa20c9;
+  flex: 1 0 60%;
+}
+
+.cast {
+  background: #c99920;
+  flex: 1 0 40%;
+}
+
+.movie-container div {
+  /*margin: 1rem;*/
+}
+
+.fa-star {
+  font-size: 3rem;
+  color: #ffe100;
+  text-shadow: 0px 0px 20px #ffef6d, 0px 0px 8px #ffe225;
+}
+
+.star-glow:hover {
+  color: #ffe100;
+  text-shadow: 0px 0px 25px #ffefbd, 0px 0px 10px #ffe285;
 }
