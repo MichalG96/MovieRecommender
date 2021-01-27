@@ -477,7 +477,14 @@ form h1 {
   flex: 2 0 content;
   display: flex;
   justify-content: flex-start;
+  height: 320px;
 }
+
+.poster div {
+  display: flex;
+  align-items: center;
+}
+
 
 .movie-info {
   flex: 6 1 380px;
@@ -492,8 +499,35 @@ form h1 {
   flex: 1 0 380px;
 }
 
-.rating * {
-  text-align: center;
+.rating > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.rating form {
+  display: flex;
+  flex-direction: column;
+  height: 40%;
+  justify-content: space-evenly;
+}
+
+.info {
+}
+
+.stars {
+}
+
+.rate-movie {
+  background: #ffffff;
+}
+
+.rate-buttons {
+  height: 30%;
+  display: flex;
+  justify-content: space-evenly;
+
 }
 
 .overview {
@@ -513,6 +547,8 @@ form h1 {
 .movie-container > div:not(.title) > div {
   border-radius: 5px 0 5px 0;
   border: 2px solid #0072dc;
+  box-shadow: 0 0 15px #5294ff60,
+  0 0 8px #52daff42, 0 0 3px #ffffff50;
   padding: 1rem;
   height: 100%;
 }
@@ -543,10 +579,9 @@ form h1 {
 
 .cast-detail td {
   padding: 1rem 2rem 1rem 0;
-
 }
 
-.col-name {
+.col-name, .actor-name {
   font-weight: bold;
 }
 
@@ -586,8 +621,8 @@ form h1 {
 
   .poster div, .overview div, .cast div {
     border: none !important;
+    box-shadow: none !important;
   }
-
 
 }
 

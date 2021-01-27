@@ -26,7 +26,7 @@
           <tr>
             <td class="col-name">Genres</td>
             <td>
-              {{ genres_tmdb|join:', ' }}, Jeszcze, Kilka, Innych, Gatunków, Bo, Testuję
+              {{ genres_tmdb|join:', ' }}
             </td>
           </tr>
           <tr>
@@ -41,27 +41,46 @@
       <div>
         {% if user.is_authenticated %}
           {% if rating_exists %}
-            <h3>Your rating:</h3>
-            {#            TODO: change back #}
-            {#            {% with ''|center:rating.value as range %}#}
-            {% with ''|center:10 as range %}
-              {% for _ in range %}
-                <i class="fa fa-star star-glow"></i>
-              {% endfor %}
-            {% endwith %}
+            <div class="info">
+              <h2>Your rating:</h2>
+            </div>
+            <div class="stars">
+              {% with ''|center:rating.value as range %}
+                {% for _ in range %}
+                  <i class="fa fa-star star-glow"></i>
+                {% endfor %}
+              {% endwith %}
+            </div>
           {% endif %}
           {% if not rating_exists %}
-            <h3>Rate this movie</h3>
+            <div class="info">
+              <h2>Rate this movie</h2>
+            </div>
           {% endif %}
-          <form method="POST">{% csrf_token %}
-            {{ form|crispy }}
-            <button class="btn btn-shiny" type="submit">Rate</button>
-          </form>
           {% if rating_exists %}
-            <a class="btn btn-danger" href="{% url 'delete_rating' movie.id %}">Delete</a>
+            <form method="POST">{% csrf_token %}
+              <div class="rate-movie">
+                {{ form|crispy }}
+              </div>
+              <div class="rate-buttons">
+                <button class="btn btn-shiny" type="submit">Rate</button>
+                <a class="btn btn-danger" href="{% url 'delete_rating' movie.id %}">Delete</a>
+              </div>
+            </form>
+            {% else %}
+            <form method="POST">{% csrf_token %}
+              <div class="rate-movie">
+                {{ form|crispy }}
+              </div>
+              <div class="rate-buttons">
+                <button class="btn btn-shiny" type="submit">Rate</button>
+              </div>
+            </form>
           {% endif %}
         {% else %}
-          <h3>Log in to rate</h3>
+          <div class="log-in-to-rate">
+            <h3>Log in to rate</h3>
+          </div>
         {% endif %}
       </div>
     </div>
@@ -78,7 +97,7 @@
           <tbody>
           {% for actor in cast_tmdb %}
             <tr>
-              <td>{{ actor.name }}</td>
+              <td class="actor-name">{{ actor.name }}</td>
               <td>{{ actor.character }}</td>
             </tr>
           {% endfor %}
