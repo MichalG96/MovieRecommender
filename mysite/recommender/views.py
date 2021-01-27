@@ -33,18 +33,18 @@ base_img_url = 'https://image.tmdb.org/t/p/'
 # available sizes :"w92", "w154"," w185", "w342", "w500", "w780", "original"
 img_size = 'w185/'
 
+
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
-            messages.success(request, f'Account created for {username}')    # TODO: change language
+            messages.success(request, f'Account created for {username}')  # TODO: change language
             return redirect('homepage')
     else:
         form = UserRegisterForm()
     return render(request, 'recommender/register.html', {'form': form})
-
 
 
 class FilteredRatingListView(LoginRequiredMixin, SingleTableMixin, FilterView):
@@ -120,6 +120,7 @@ class MovieDetailView(DetailView):
         context['form'] = UserRatingForm(initial={'value': initial_value})
         return context
 
+
 class MovieDetailDispatcherView(View):
     # Do this if you received GET request
     def get(self, request, *args, **kwargs):
@@ -136,6 +137,7 @@ class MovieDetailDispatcherView(View):
             view = RatingCreateView.as_view()
         return view(request, *args, **kwargs)
 
+
 class RatingCreateView(CreateView):
     model = Movie
     template_name = 'recommender/movie_detail.html'
@@ -149,6 +151,7 @@ class RatingCreateView(CreateView):
 
     def get_success_url(self):
         return reverse('movie_detail', kwargs={'pk': self.kwargs['pk']})
+
 
 class RatingUpdateView(UserPassesTestMixin, UpdateView):
     model = Movie
@@ -180,6 +183,7 @@ class RatingUpdateView(UserPassesTestMixin, UpdateView):
     def get_success_url(self):
         return reverse('movie_detail', kwargs={'pk': self.kwargs['pk']})
 
+
 class RatingDeleteView(UserPassesTestMixin, DeleteView):
     model = Movie
     template_name = 'recommender/delete_rating.html'
@@ -199,6 +203,7 @@ class RatingDeleteView(UserPassesTestMixin, DeleteView):
     def get_success_url(self):
         return reverse('movie_detail', kwargs={'pk': self.kwargs['pk']})
 
+
 class EstablishPreferencesView(ListView):
     # After user is created, select n(20? 30? 40?) movies to provide initial
     # recommendations for him
@@ -216,18 +221,19 @@ class EstablishPreferencesView(ListView):
     # def get_context_data(self, *, object_list=None, **kwargs):
     #     context = super().get_context_data(**kwargs)
 
+
 def user_stats(request, username):
     active_user = User.objects.prefetch_related(
-            Prefetch(
-                'rating_set',
-            )).get(username=username)
+        Prefetch(
+            'rating_set',
+        )).get(username=username)
     users_ratings = active_user.rating_set.all()
     average_rating = round(users_ratings.aggregate(Avg('value'))['value__avg'], 2)
     no_of_ratings = users_ratings.count()
     ratings_distribution = []
 
     for i in range(10):
-        ratings_distribution.append(users_ratings.filter(value=i+1).count())
+        ratings_distribution.append(users_ratings.filter(value=i + 1).count())
 
     values = ratings_distribution
     desc = [f'{i}' for i in range(1, 11)]
@@ -236,7 +242,7 @@ def user_stats(request, username):
                          y=values,
                          text=values,
                          textposition='auto',
-                         hovertext=[f'Number of movies rated {i+1}' for i in range(10)]))
+                         hovertext=[f'Number of movies rated {i + 1}' for i in range(10)]))
     fig.update_layout(
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
@@ -256,7 +262,7 @@ def user_stats(request, username):
         all_genres += list(movie.genres.all().values_list('name', flat=True))
 
     genres_counter = Counter(all_genres)
-    top_n_genres = (genres_counter.most_common(7))      # n = 7
+    top_n_genres = (genres_counter.most_common(7))  # n = 7
 
     with_even_indices = top_n_genres[::2]
     with_odd_indices = top_n_genres[1::2]
@@ -264,10 +270,10 @@ def user_stats(request, username):
     top_n_genres_shuffled = with_even_indices + with_odd_indices
 
     fig = go.Figure(data=go.Scatterpolar(
-      r=[i[1] for i in top_n_genres_shuffled],
-      theta=[i[0] for i in top_n_genres_shuffled],
-      fill='toself',
-    # hovertemplate = f"%{r}: <br>Popularity: %{b} </br> %{c}"
+        r=[i[1] for i in top_n_genres_shuffled],
+        theta=[i[0] for i in top_n_genres_shuffled],
+        fill='toself',
+        # hovertemplate = f"%{r}: <br>Popularity: %{b} </br> %{c}"
 
     ))
     fig.update_layout(
@@ -319,6 +325,7 @@ def recommend(request, username):
 
 def new_user(request):
     return render(request, 'recommender/new_user.html')
+
 
 def add_user(request):
     return render(request, 'recommender/add_user.html')

@@ -388,7 +388,6 @@ form h1 {
   font-size: 1.6rem;
 }
 
-
 .login button:hover, .register button:hover, .password-reset button:hover {
   box-shadow: 0 0 40px #82b2ff1b, 0 0 20px #5294ff70,
   0 0 15px #52daffa2, 0 0 5px #ffffff;
@@ -455,6 +454,10 @@ form h1 {
   max-height: 100%;
 }
 
+.raw-data {
+  font-size: 1.6rem;
+}
+
 .movie-container {
   display: flex;
   flex-wrap: wrap;
@@ -464,50 +467,127 @@ form h1 {
 
 .title {
   flex: 1 0 100%;
-  background: pink;
   display: flex;
   justify-content: center;
   font-family: 'Bangers';
   font-size: 6rem;
 }
 
-
 .poster {
-  background: #20c997;
-  flex: 2 0 20%;
+  flex: 2 0 content;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .movie-info {
-  background: #207ac9;
-  flex: 2 0 40%;
+  flex: 6 1 380px;
+}
+
+.movie-info div {
+  display: flex;
+  align-items: center;
 }
 
 .rating {
-  background: #88c920;
-  flex: 2 0 40%;
+  flex: 1 0 380px;
+}
+
+.rating * {
+  text-align: center;
 }
 
 .overview {
-  background: #aa20c9;
-  flex: 1 0 60%;
+  flex: 1 0 400px;
 }
 
 .cast {
-  background: #c99920;
-  flex: 1 0 40%;
+  flex: 1 0 400px;
 }
 
-.movie-container div {
+.movie-container > div {
   /*margin: 1rem;*/
+  /*border: 0.2rem solid blue;*/
+  padding: 0.8rem;
+}
+
+.movie-container > div:not(.title) > div {
+  border-radius: 5px 0 5px 0;
+  border: 2px solid #0072dc;
+  padding: 1rem;
+  height: 100%;
 }
 
 .fa-star {
-  font-size: 3rem;
+  font-size: 2.5rem;
   color: #ffe100;
-  text-shadow: 0px 0px 20px #ffef6d, 0px 0px 8px #ffe225;
+  text-shadow: 0 0 20px #ffef6d, 0 0 8px #ffe225;
 }
 
 .star-glow:hover {
   color: #ffe100;
-  text-shadow: 0px 0px 25px #ffefbd, 0px 0px 10px #ffe285;
+  text-shadow: 0 0 25px #ffefbd, 0 0 10px #ffe285;
 }
+
+.movie-detail {
+  font-size: 2rem;
+  height: 100%;
+}
+
+.cast-detail {
+  font-size: 2rem;
+}
+
+.movie-detail td {
+  padding: 1rem 4rem 1rem 0;
+}
+
+.cast-detail td {
+  padding: 1rem 2rem 1rem 0;
+
+}
+
+.col-name {
+  font-weight: bold;
+}
+
+@media screen and (max-width: 800px) {
+  .movie-container, .movie-detail, .cast-detail {
+    font-size: 1.6rem;
+  }
+
+  .title {
+    font-size: 3rem;
+  }
+
+  .poster {
+    margin: auto;
+  }
+
+  .movie-info {
+    flex: 1 0 100%;
+  }
+
+  .movie-info div {
+    display: flex;
+    align-items: center;
+  }
+
+  .rating {
+    flex: 1 0 100%;
+  }
+
+  .overview {
+    flex: 1 0 100%;
+  }
+
+  .cast {
+    flex: 1 0 100%;
+  }
+
+  .poster div, .overview div, .cast div {
+    border: none !important;
+  }
+
+
+}
+

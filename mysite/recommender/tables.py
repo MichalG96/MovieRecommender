@@ -24,7 +24,7 @@ class RatingsTable(tables.Table):
     class Meta:
         model = Rating
         template_name = 'recommender/bootstrap4_custom.html'
-        attrs = {"class": "table table-hover"}
+        attrs = {"class": "custom-table"}
         row_attrs = {
             "class": "table-row"
         }
@@ -46,7 +46,7 @@ class MoviesTable(tables.Table):
 
     class Meta:
         model = Movie
-        attrs = {"class": "table table-hover"}
+        attrs = {"class": "custom-table"}
         row_attrs = {
             "class": "table-row"
         }

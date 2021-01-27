@@ -7,33 +7,44 @@
 {% block content %}
 
   <div class="movie-container">
-    <div class="title">{{ movie.title }}</div>
-    <div class="poster"><img src="{{ img_url }}" class="img-fluid"></div>
-    <div class="movie-info">
-{#  TODO: update table styling  #}
-      <table>
-        <tbody>
-        <tr>
-          <td>Director</td>
-          <td>{{ movie.director }}</td>
-        </tr>
-        <tr>
-          <td>Genres</td>
-          <td>
-            {{ genres_tmdb|join:', ' }}
-          </td>
-        </tr>
-        <tr>
-          <td>Released</td>
-          <td>{{ movie.year_released }}</td>
-        </tr>
-        </tbody>
-      </table>
+    <div class="title">
+      <div>{{ movie.title }}</div>
     </div>
-    <div class="rating">  {% if user.is_authenticated %}
+    <div class="poster">
+      <div>
+        <img src="{{ img_url }}" alt="Movie poster">
+      </div>
+    </div>
+    <div class="movie-info">
+      <div>
+        <table class="movie-detail">
+          <tbody>
+          <tr>
+            <td class="col-name">Director</td>
+            <td>{{ movie.director }}</td>
+          </tr>
+          <tr>
+            <td class="col-name">Genres</td>
+            <td>
+              {{ genres_tmdb|join:', ' }}, Jeszcze, Kilka, Innych, Gatunków, Bo, Testuję
+            </td>
+          </tr>
+          <tr>
+            <td class="col-name">Released</td>
+            <td>{{ movie.year_released }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="rating">
+      <div>
+        {% if user.is_authenticated %}
           {% if rating_exists %}
             <h3>Your rating:</h3>
-            {% with ''|center:rating.value as range %}
+            {#            TODO: change back #}
+            {#            {% with ''|center:rating.value as range %}#}
+            {% with ''|center:10 as range %}
               {% for _ in range %}
                 <i class="fa fa-star star-glow"></i>
               {% endfor %}
@@ -43,103 +54,27 @@
             <h3>Rate this movie</h3>
           {% endif %}
           <form method="POST">{% csrf_token %}
-            <div class="form-group">
-              {{ form|crispy }}
-              <button class="btn btn-shiny" type="submit">Rate</button>
-            </div>
+            {{ form|crispy }}
+            <button class="btn btn-shiny" type="submit">Rate</button>
           </form>
           {% if rating_exists %}
             <a class="btn btn-danger" href="{% url 'delete_rating' movie.id %}">Delete</a>
           {% endif %}
         {% else %}
           <h3>Log in to rate</h3>
-        {% endif %}</div>
-    <div class="overview"> {{ overview }}</div>
-    <div class="cast"><div class="row">
-        <table>
-          <thead>
-          </thead>
-          <tbody>
-          {% for actor in cast_tmdb %}
-            <tr>
-              <td>{{ actor.name }}</td>
-              <td>{{ actor.character }}</td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table></div>
-  </div>
-
-  <div class="container.fluid">
-    <div class="row justify-content-md-center">
-      <h1>{{ movie.title }}</h1>
-    </div>
-    <div class="row">
-      <div class="col-3">
-        <img src="{{ img_url }}" class="img-fluid">
-      </div>
-      <div class="col-6">
-        <table>
-          <tbody>
-          <tr>
-            <td>Director</td>
-            <td>{{ movie.director }}</td>
-          </tr>
-          <tr>
-            <td>Genres</td>
-            <td>
-              {{ genres_tmdb|join:', ' }}
-            </td>
-          </tr>
-          <tr>
-            <td>Released</td>
-            <td>{{ movie.year_released }}</td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="col-3">
-        {% if user.is_authenticated %}
-          {% if rating_exists %}
-            <h3>Your rating:</h3>
-            {% with ''|center:rating.value as range %}
-              {% for _ in range %}
-                <i class="fa fa-star fa-2x star-glow"></i>
-              {% endfor %}
-            {% endwith %}
-          {% endif %}
-          <hr/>
-          {% if not rating_exists %}
-            <h3>Rate this movie</h3>
-          {% endif %}
-          <form method="POST">{% csrf_token %}
-            <div class="form-group">
-              {{ form|crispy }}
-              <button class="btn btn-outline-primary btn-block" type="submit">Rate</button>
-            </div>
-          </form>
-          {% if rating_exists %}
-            <a class="btn btn-outline-danger btn-block" href="{% url 'delete_rating' movie.id %}">Delete</a>
-          {% endif %}
-        {% else %}
-          <h3>Log in to rate</h3>
         {% endif %}
       </div>
     </div>
-    <div class="col-9">
-      <div class="row justify-content-md-center">
-        <h1>Overview</h1>
-      </div>
-      <div class="row justify-content-md-center">
+    <div class="overview">
+      <div>
+        <h4>Overview</h4>
         {{ overview }}
       </div>
-      <div class="row justify-content-md-center">
-        <h1>Cast</h1>
-      </div>
-      <div class="row">
-        <table>
-          <thead>
-          </thead>
+    </div>
+    <div class="cast">
+      <div>
+        <h4>Cast</h4>
+        <table class="cast-detail">
           <tbody>
           {% for actor in cast_tmdb %}
             <tr>
@@ -151,8 +86,11 @@
         </table>
       </div>
     </div>
+  </div>
 
-    <h5>= My DataBase INFO =</h5>
+
+  <div class="raw-data">
+    <h3>= My DataBase INFO =</h3>
     <p>Id: {{ movie.id }}</p>
     <p>MovieLens Id: {{ movie.movielens_id }}</p>
     <p>IMdB Id:{{ movie.imdb_id }}</p>
@@ -177,7 +115,7 @@
         {% endif %}
       {% endfor %}
     </p>
-    <h5>= The Movie DataBase INFO =</h5>
+    <h3>= The Movie DataBase INFO =</h3>
     <p>Genres: {{ genres_tmdb|join:', ' }}</p>
     <p>Overview: {{ overview }}</p>
     <p>Cast:

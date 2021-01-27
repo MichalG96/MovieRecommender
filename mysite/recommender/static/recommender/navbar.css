@@ -13,7 +13,7 @@ nav {
   top: 0;
   align-items: center;
   justify-content: space-between;
-  margin: 0 0 2rem 0;
+  margin-bottom: 1rem;
 }
 
 nav > a {

@@ -41,13 +41,12 @@
     grid-template-columns: 30% 30%;
   }
 
-  table {
+  .custom-table table {
     /* I think this looks better on mobile */
     white-space: nowrap;
   }
 
-  td,
-  th {
+  .custom-table td, th {
     font-size: 1.2rem;
   }
 

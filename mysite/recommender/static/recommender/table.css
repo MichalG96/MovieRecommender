@@ -1,6 +1,6 @@
 table {
   width: 100%;
-  font-size: 1.4rem;
+  font-size: 1.7rem;
   padding: 0.5rem;
   border-collapse: collapse;
   /* table-layout: fixed; */
@@ -12,40 +12,39 @@ table a {
   color: #0072dc;
 }
 
-tr:hover {
+.custom-table tr:hover {
   background: #2c36690c;
 }
 
 .movie-table tr:hover td:not(:nth-child(5)) {
-  text-shadow: 0px 0px 50px #82b2ff3b, 0px 0px 25px #5294ff80,
-  0px 0px 15px #52daffa2, 0px 0px 5px #ffffff;
+  text-shadow: 0 0 50px #82b2ff3b, 0 0 25px #5294ff80,
+  0 0 15px #52daffa2, 0 0 5px #ffffff;
 }
 
 .movie-table tr:hover td:nth-child(5) a {
   color: #ecd500;
-  text-shadow: 0px 0px 15px #e0e400c0, 0px 0px 3px #feffc0;
+  text-shadow: 0 0 15px #e0e400c0, 0 0 3px #feffc0;
   font-weight: 100;
 }
 
 .rating-table tr:hover td:not(:nth-child(2)) {
-  text-shadow: 0px 0px 50px #82b2ff3b, 0px 0px 25px #5294ff80,
-  0px 0px 15px #52daffa2, 0px 0px 5px #ffffff;
+  text-shadow: 0 0 50px #82b2ff3b, 0 0 25px #5294ff80,
+  0 0 15px #52daffa2, 0 0 5px #ffffff;
 }
 
 .rating-table tr:hover td:nth-child(2) a {
   color: #ecd500;
-  text-shadow: 0px 0px 15px #e0e400c0, 0px 0px 3px #feffc0;
+  text-shadow: 0 0 15px #e0e400c0, 0 0 3px #feffc0;
   font-weight: 100;
 }
 
 
-tr {
+.custom-table tr {
   border-bottom: 1px solid #0072dc;
 }
 
-td,
-th {
-  font-size: 1.5rem;
+.custom-table td, th {
+  /*font-size: 1.5rem;*/
   text-align: center;
   padding: 1.1rem 0 1.1rem 0;
 }
@@ -65,4 +64,8 @@ th {
   width: auto;
   height: 100%;
   flex: 1 1 auto;
+}
+
+thead{
+  background: #01091d;
 }
