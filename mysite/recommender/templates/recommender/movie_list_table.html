@@ -8,16 +8,15 @@
 {% block content %}
 
   <section class="search-by-title">
-    {#    <div class="search-bar">#}
     <form action="" method="get">
       {% render_field filter.form.title__icontains placeholder="Search for a movie X" class="form-control" %}
-      <button class="btn btn-normal btn-search" type="submit">
-        Search
-      </button>
-      <a href="{% url 'all_movies' %}" class="btn btn-danger btn-search">Clear</a>
-
+      <div class="search-btn-group">
+        <button class="btn btn-normal btn-search" type="submit">
+          Search
+        </button>
+        <a href="{% url 'all_movies' %}" class="btn btn-danger btn-search">Clear</a>
+      </div>
     </form>
-    {#    </div>#}
   </section>
 
   <section class="filter-form movies-form">

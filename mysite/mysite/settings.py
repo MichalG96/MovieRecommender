@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +21,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 
-with open('static/private/passes.txt') as f:
-    key = f.readline()
-    email_user = f.readline()
-    email_password = f.readline()
+# with open('static/private/passes_new.txt') as f:
+#     key = f.readline()
+#     email_user = f.readline()
+#     email_password = f.readline()
+
+with open('static/private/passes.json') as f:
+    data = json.load(f)
+
+key = data['key']
+email_user = data['email']
+email_password = data['password']
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = key
@@ -142,9 +150,12 @@ MEDIA_ROOT = BASE_DIR / 'media'    # where the files updated by users are being 
 MEDIA_URL = '/media/'       # how does the browser get the files
 # MEDIA_URL = 'images/'       # how does the browser get the files
 
+print(key, email_user, email_password)
+print(len(key), len(email_user), len(email_password))
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = email_user
-EMAIL_HOST_PASSWORD = email_password    # TODO: hide this in enviromental variables
+EMAIL_HOST_PASSWORD = email_password

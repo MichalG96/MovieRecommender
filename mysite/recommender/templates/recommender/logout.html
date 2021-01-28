@@ -1,7 +1,8 @@
 {% extends 'recommender/base.html' %}
 {% block content %}
   <div class="alert alert-red" role="alert">
-  <p>You have been logged out.</p>
-  <p>Wish to return?
-    <a class="ml-2" href="{% url 'login' %}">Log In Again</a></p>
+    <p>You have been logged out.</p>
+    <p>Wish to return?
+      <a class="ml-2" href="{% url 'login' %}">Log In Again</a></p>
+  </div>
 {% endblock content %}

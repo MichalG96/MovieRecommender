@@ -5,7 +5,6 @@
 {% endblock title %}
 
 {% block content %}
-
   <div class="movie-container">
     <div class="title">
       <div>{{ movie.title }}</div>
@@ -47,7 +46,7 @@
             <div class="stars">
               {% with ''|center:rating.value as range %}
                 {% for _ in range %}
-                  <i class="fa fa-star star-glow"></i>
+                  <i class="fa fa-star star-active"></i>
                 {% endfor %}
               {% endwith %}
             </div>

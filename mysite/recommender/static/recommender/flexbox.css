@@ -21,11 +21,7 @@
   justify-content: start;
 }
 
-.movies-form {
-  width: 20rem;
-}
-
-.ratings-form {
+.movies-form, .ratings-form {
   width: 20rem;
 }
 
@@ -48,9 +44,7 @@
 .ratings-form-container {
   height: 520px;
   padding: 0.7rem;
-
 }
-
 
 .form-container .text {
   display: flex;
@@ -225,19 +219,14 @@ form h1 {
   height: 60%;
 }
 
-.controls a {
-  appearance: button; /* CSS3 */
-  -webkit-appearance: button; /* Safari and Chrome */
-  -moz-appearance: button; /* Firefox */
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  text-decoration: none;
-  font-size: 1.3rem;
-  text-align: center;
-}
+/*.controls a {*/
+/*  display: flex;*/
+/*  justify-content: center;*/
+/*  align-items: center;*/
+/*  text-decoration: none;*/
+/*  font-size: 1.3rem;*/
+/*  text-align: center;*/
+/*}*/
 
 .users-container {
   display: flex;
@@ -268,8 +257,8 @@ form h1 {
 }
 
 .form-control {
-  height: 3.3rem;
-  border-radius: 5px 0px 5px 0px;
+  height: 3.5rem;
+  border-radius: 5px 0 5px 0;
   padding: 1rem;
   font-size: 1.45rem;
 }
@@ -301,7 +290,7 @@ form h1 {
   justify-content: center;
   align-items: center;
   margin-bottom: 1.5rem;
-  border-radius: 5px 0px 5px 0px;
+  border-radius: 5px 0 5px 0;
   border: 2px solid #0072dc;
   padding: 2rem 0;
 }
@@ -314,7 +303,6 @@ form h1 {
   justify-content: center;
   align-items: center;
   padding: 1.6rem;
-  background: rgba(255, 0, 0, 0.2);
   text-align: center;
   line-height: 3.6rem
 }
@@ -329,7 +317,18 @@ form h1 {
 }
 
 .alert-red {
+  background: rgba(255, 0, 0, 0.2);
   border: 2px solid red;
+}
+
+.alert-blue {
+  background: rgba(0, 42, 255, 0.2);
+  border: 2px solid #0072dc;
+}
+
+.alert-green {
+  background: rgba(20, 190, 0, 0.2);
+  border: 2px solid #00b703;
 }
 
 .login-container, .register-container, .password-reset-container {
@@ -343,12 +342,12 @@ form h1 {
 }
 
 .login form, .register form, .password-reset form {
-  border-radius: 7px 0px 7px 0px;
+  border-radius: 7px 0 7px 0;
   border: 1px solid #0072dc;
   padding: 1.5rem;
   background: #020424;
-  box-shadow: 0px 0px 40px #82b2ff7b, 0px 0px 25px #5294ff80,
-  0px 0px 15px #52daffa2, 0px 0px 5px #ffffff;
+  box-shadow: 0 0 40px #82b2ff7b, 0 0 25px #5294ff80,
+  0 0 15px #52daffa2, 0 0 5px #ffffff;
   margin-bottom: 3rem;
 }
 
@@ -387,6 +386,17 @@ form h1 {
 .password-reset button {
   font-size: 1.6rem;
 }
+
+.password-reset li{
+  list-style: none;
+  color: rgba(255, 223, 62, 0.95);
+  font-size: 1.3rem;
+}
+
+.password-reset ul{
+margin: 0.7rem 0;
+}
+
 
 .login button:hover, .register button:hover, .password-reset button:hover {
   box-shadow: 0 0 40px #82b2ff1b, 0 0 20px #5294ff70,
@@ -496,37 +506,52 @@ form h1 {
 }
 
 .rating {
-  flex: 1 0 380px;
+  flex: 6 0 380px;
 }
 
 .rating > div {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: center;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.stars {
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
 }
 
 .rating form {
   display: flex;
   flex-direction: column;
-  height: 40%;
+  /*height: 40%;*/
+  flex: 2;
   justify-content: space-evenly;
-}
-
-.info {
-}
-
-.stars {
 }
 
 .rate-movie {
-  background: #ffffff;
+  flex: 1;
 }
 
 .rate-buttons {
-  height: 30%;
+  flex: 3;
   display: flex;
   justify-content: space-evenly;
+  flex-direction: column;
+}
+
+.rate-buttons button, .rate-buttons a {
+  font-size: 1.7rem;
+  padding: 0.4rem 0;
 
 }
 
@@ -555,11 +580,19 @@ form h1 {
 
 .fa-star {
   font-size: 2.5rem;
+}
+
+.star-active {
   color: #ffe100;
   text-shadow: 0 0 20px #ffef6d, 0 0 8px #ffe225;
 }
 
-.star-glow:hover {
+.star-dark {
+  color: black;
+  text-shadow: 0 0 20px #ffffff80, 0 0 8px #ffffffb0;
+}
+
+.star-active:hover {
   color: #ffe100;
   text-shadow: 0 0 25px #ffefbd, 0 0 10px #ffe285;
 }
