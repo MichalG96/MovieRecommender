@@ -9,7 +9,7 @@ from .models import Movie, Rating, Actor, Genre
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from .forms import UserRegisterForm, UserRatingForm, MovieSortGroupForm, MovieRatingSortGroupForm
-from django.db.models import Avg, Count, Max, Min, Prefetch
+from django.db.models import Avg, Count, Max, Min, Prefetch, StdDev
 
 from .filters import MovieFilter, RatingFilter, UserFilter
 from .tables import RatingsTable, MoviesTable
@@ -24,11 +24,13 @@ import plotly.graph_objects as go
 import requests
 from collections import Counter
 
-base_tmbd_url = 'https://api.themoviedb.org/3/movie/'
-api_key = 'bef647566a5b4968a35cd34a79dc3dce'
-base_img_url = 'https://image.tmdb.org/t/p/'
+BASE_TMDB_URL = 'https://api.themoviedb.org/3/movie/'
+API_KEY = 'bef647566a5b4968a35cd34a79dc3dce'
+BASE_IMG_URL = 'https://image.tmdb.org/t/p/'
 # available sizes :"w92", "w154"," w185", "w342", "w500", "w780", "original"
-img_size = 'w185/'
+IMG_SIZE = 'w185/'
+IMG_SIZE_SMALL = 'w92/'
+
 
 
 def register(request):
@@ -90,12 +92,12 @@ class MovieDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         tmdb_id = self.object.tmdb_id
-        url = f'{base_tmbd_url}{tmdb_id}?api_key={api_key}'
-        url_credits = f'{base_tmbd_url}{tmdb_id}/credits?api_key={api_key}'
+        url = f'{BASE_TMDB_URL}{tmdb_id}?api_key={API_KEY}'
+        url_credits = f'{BASE_TMDB_URL}{tmdb_id}/credits?api_key={API_KEY}'
         r = requests.get(url).json()
         genres = [genre_dict['name'] for genre_dict in r['genres']]
         overview = r['overview']
-        img_url = f'{base_img_url}{img_size}{r["poster_path"]}'
+        img_url = f'{BASE_IMG_URL}{IMG_SIZE}{r["poster_path"]}'
         r_credits = requests.get(url_credits).json()
         cast = [{'name': person['name'], 'character': person['character']} for person in r_credits['cast'][:8]]
         context['actors'] = self.object.actors.all()
@@ -229,8 +231,28 @@ def user_stats(request, username):
 
     # Get basic user info
     users_ratings = active_user.rating_set.all()
+
+    std_rating = round(users_ratings.aggregate(StdDev('value'))['value__stddev'], 2)
     average_rating = round(users_ratings.aggregate(Avg('value'))['value__avg'], 2)
     no_of_ratings = users_ratings.count()
+
+    movies_ordered_by_rating = users_ratings.order_by('value')
+    top_3 = movies_ordered_by_rating[::-1][:3]
+    bottom_3 = movies_ordered_by_rating[:3]
+
+    top_3_poster_urls, bottom_3_poster_urls = [], []
+
+    for rating in top_3:
+        url = f'{BASE_TMDB_URL}{rating.movie.tmdb_id}?api_key={API_KEY}'
+        r = requests.get(url).json()
+        top_3_poster_urls.append(f'{BASE_IMG_URL}{IMG_SIZE_SMALL}{r["poster_path"]}')
+
+    for rating in bottom_3:
+        url = f'{BASE_TMDB_URL}{rating.movie.tmdb_id}?api_key={API_KEY}'
+        r = requests.get(url).json()
+        bottom_3_poster_urls.append(f'{BASE_IMG_URL}{IMG_SIZE_SMALL}{r["poster_path"]}')
+
+
 
     # List containing the number of each rating given by the user; how many 1s, 2s, etc.
     ratings_distribution = [users_ratings.filter(value=i + 1).count() for i in range(10)]
@@ -251,10 +273,10 @@ def user_stats(request, username):
         )
     )
 
+    # Generate HTML and JS for the plot
     plot_div_ratings_distribution = plot(fig, output_type='div', show_link=False, link_text="")
 
     rated_movies = Movie.objects.filter(rating__who_rated=active_user.id).prefetch_related('genres')
-
     all_genres = []
     for movie in rated_movies:
         # TODO: probably too slow, find way to make this more efficient
@@ -293,11 +315,14 @@ def user_stats(request, username):
     context = {
         'active_user': active_user,
         'average_rating': average_rating,
+        'std_rating': std_rating,
         'ratings_distribution': ratings_distribution,
         'plot_div_ratings_distribution': plot_div_ratings_distribution,
         'plot_div_genres': plot_div_genres,
         'genres_counter': genres_counter,
         'no_of_ratings': no_of_ratings,
+        'top_3_poster_urls': top_3_poster_urls,
+        'bottom_3_poster_urls': bottom_3_poster_urls
     }
     return render(request, 'recommender/stats.html', context)
 

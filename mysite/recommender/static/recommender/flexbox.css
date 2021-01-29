@@ -638,14 +638,15 @@ form h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 2rem;
 }
 
 .stats-text h1 {
-  font-size: 4.5rem;
+  font-size: 4rem;
 }
 
 .stats-text p {
-  font-size: 3rem;
+  font-size: 2.5rem;
 }
 
 .stats-plots {
@@ -656,6 +657,7 @@ form h1 {
 
 .stats-plots > div{
   border: 2px dotted red;
+  z-index: -1;
 }
 
 
