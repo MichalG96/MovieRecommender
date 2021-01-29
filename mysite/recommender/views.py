@@ -22,9 +22,6 @@ from django_filters.views import FilterView
 from plotly.offline import plot
 import plotly.graph_objects as go
 import requests
-from datetime import timedelta
-import pandas as pd
-import numpy as np
 from collections import Counter
 
 base_tmbd_url = 'https://api.themoviedb.org/3/movie/'
@@ -223,26 +220,28 @@ class EstablishPreferencesView(ListView):
 
 
 def user_stats(request, username):
+
+    # Get active user, use "Prefetch" to limit the number of database queries
     active_user = User.objects.prefetch_related(
         Prefetch(
             'rating_set',
         )).get(username=username)
+
+    # Get basic user info
     users_ratings = active_user.rating_set.all()
     average_rating = round(users_ratings.aggregate(Avg('value'))['value__avg'], 2)
     no_of_ratings = users_ratings.count()
-    ratings_distribution = []
 
-    for i in range(10):
-        ratings_distribution.append(users_ratings.filter(value=i + 1).count())
+    # List containing the number of each rating given by the user; how many 1s, 2s, etc.
+    ratings_distribution = [users_ratings.filter(value=i + 1).count() for i in range(10)]
 
-    values = ratings_distribution
     desc = [f'{i}' for i in range(1, 11)]
     fig = go.Figure()
     fig.add_trace(go.Bar(x=desc,
-                         y=values,
-                         text=values,
+                         y=ratings_distribution,
+                         text=ratings_distribution,
                          textposition='auto',
-                         hovertext=[f'Number of movies rated {i + 1}' for i in range(10)]))
+                         hovertext=[f'Number of movies rated: {i + 1}' for i in range(10)]))
     fig.update_layout(
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
@@ -252,9 +251,9 @@ def user_stats(request, username):
         )
     )
 
-    plot_div = plot(fig, output_type='div', show_link=False, link_text="")
+    plot_div_ratings_distribution = plot(fig, output_type='div', show_link=False, link_text="")
 
-    rated_movies = Movie.objects.filter(rating__who_rated=2).prefetch_related('genres')
+    rated_movies = Movie.objects.filter(rating__who_rated=active_user.id).prefetch_related('genres')
 
     all_genres = []
     for movie in rated_movies:
@@ -262,19 +261,20 @@ def user_stats(request, username):
         all_genres += list(movie.genres.all().values_list('name', flat=True))
 
     genres_counter = Counter(all_genres)
-    top_n_genres = (genres_counter.most_common(7))  # n = 7
-
-    with_even_indices = top_n_genres[::2]
-    with_odd_indices = top_n_genres[1::2]
-
-    top_n_genres_shuffled = with_even_indices + with_odd_indices
+    n = 7
+    top_n_genres = (genres_counter.most_common(n))
+    top_n_genres_shuffled = []
+    for i in range(n//2):
+        top_n_genres_shuffled.append(top_n_genres[i])
+        top_n_genres_shuffled.append(top_n_genres[-i-1])
+    if n%2 != 0:
+        top_n_genres_shuffled.append(top_n_genres[n//2])
 
     fig = go.Figure(data=go.Scatterpolar(
         r=[i[1] for i in top_n_genres_shuffled],
         theta=[i[0] for i in top_n_genres_shuffled],
         fill='toself',
         # hovertemplate = f"%{r}: <br>Popularity: %{b} </br> %{c}"
-
     ))
     fig.update_layout(
         plot_bgcolor='rgba(0,0,0,0)',
@@ -294,7 +294,7 @@ def user_stats(request, username):
         'active_user': active_user,
         'average_rating': average_rating,
         'ratings_distribution': ratings_distribution,
-        'plot_div': plot_div,
+        'plot_div_ratings_distribution': plot_div_ratings_distribution,
         'plot_div_genres': plot_div_genres,
         'genres_counter': genres_counter,
         'no_of_ratings': no_of_ratings,

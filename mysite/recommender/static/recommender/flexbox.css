@@ -12,8 +12,17 @@
   width: 100%;
   justify-content: center;
   align-items: center;
-  height: 10rem;
-  font-size: 1.4rem;
+  height: 8rem;
+  font-size: 3rem;
+}
+
+.user-info a {
+  text-decoration: none;
+  color: #0072dc;
+}
+
+.user-info a:hover {
+  text-decoration: underline;
 }
 
 .filter-form {
@@ -387,14 +396,14 @@ form h1 {
   font-size: 1.6rem;
 }
 
-.password-reset li{
+.password-reset li {
   list-style: none;
   color: rgba(255, 223, 62, 0.95);
   font-size: 1.3rem;
 }
 
-.password-reset ul{
-margin: 0.7rem 0;
+.password-reset ul {
+  margin: 0.7rem 0;
 }
 
 
@@ -617,6 +626,38 @@ margin: 0.7rem 0;
 .col-name, .actor-name {
   font-weight: bold;
 }
+
+.stats-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-size: 2rem;
+}
+
+.stats-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stats-text h1 {
+  font-size: 4.5rem;
+}
+
+.stats-text p {
+  font-size: 3rem;
+}
+
+.stats-plots {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+
+.stats-plots > div{
+  border: 2px dotted red;
+}
+
 
 @media screen and (max-width: 800px) {
   .movie-container, .movie-detail, .cast-detail {

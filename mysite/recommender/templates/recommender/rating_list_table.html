@@ -5,10 +5,14 @@
 {% load widget_tweaks %}
 {% load django_tables2 %}
 
+{% block title %}
+  {{profile_owner.username|truncatechars:15 }}'s profile
+{% endblock title %}
+
 {% block content %}
   <section class="user-info">
-    <h1>User profile: {{ profile_owner.username }}&emsp;<a href="{% url 'user_stats' profile_owner.username %}">(stats)</a>
-    </h1>
+    Username:&nbsp<b>{{ profile_owner.username }}</b>.&nbsp; You can view the stats &nbsp;
+    <a href="{% url 'user_stats' profile_owner.username %}">here</a>
   </section>
   <section class="filter-form ratings-form">
     <div class="form-container ratings-form-container">

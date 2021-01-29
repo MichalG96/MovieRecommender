@@ -1,25 +1,34 @@
 {% extends 'recommender/base.html' %}
 {% block title %}
-   Stats
+  User stats
 {% endblock title %}
 
 {% block content %}
-   <h1>{{active_user.username}}</h1>
-    <h3>Number of ratings: {{no_of_ratings}}</h3>
-
-    <h3>Average rating: {{average_rating}}</h3>
-<div class="row">
-    <div class="col-6">
-      {% autoescape off %}
-       {{ plot_div }}
-      {% endautoescape %}
-        </div>
-
-    <div class="col-6">
-        {% autoescape off %}
-         {{ plot_div_genres }}
-        {% endautoescape %}
+  <div class="stats-container">
+    <div class="stats-text">
+      <h1>User stats: {{ active_user.username }}</h1>
+      <p>Number of ratings: <b>{{ no_of_ratings }}</b></p>
+      <p>Average rating: <b>{{ average_rating }}</b></p>
     </div>
-</div>
-
+    <div class="stats-plots">
+      {% autoescape off %}
+        {{ plot_div_ratings_distribution }}
+      {% endautoescape %}
+      {% autoescape off %}
+        {{ plot_div_genres }}
+      {% endautoescape %}
+      <div>
+        Plot 3
+      </div>
+      <div>
+        Plot 4
+      </div>
+      <div>
+        Plot 5
+      </div>
+      <div>
+        Plot 6
+      </div>
+    </div>
+  </div>
 {% endblock content %}

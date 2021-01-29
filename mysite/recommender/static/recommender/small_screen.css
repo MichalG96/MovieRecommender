@@ -36,8 +36,7 @@
   /*.controls-ratings{*/
   /*  width: 80%;*/
   /*}*/
-
-  .controls-ratings{
+  .controls-ratings {
     grid-template-columns: 30% 30%;
   }
 
@@ -55,7 +54,12 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 3rem 3rem;
   }
-  .register form{
+
+  .register form {
     margin: 1rem 2rem 0 2rem;
+  }
+
+  .user-info {
+    font-size: 1.4rem;
   }
 }

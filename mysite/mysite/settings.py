@@ -150,8 +150,6 @@ MEDIA_ROOT = BASE_DIR / 'media'    # where the files updated by users are being 
 MEDIA_URL = '/media/'       # how does the browser get the files
 # MEDIA_URL = 'images/'       # how does the browser get the files
 
-print(key, email_user, email_password)
-print(len(key), len(email_user), len(email_password))
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
