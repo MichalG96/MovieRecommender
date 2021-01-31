@@ -51,23 +51,6 @@ window.onclick = function (event) {
     }
 }
 
-// const mediaQuery = window.matchMedia('(max-width: 900px)')
-//
-// function handleTabletChange(e) {
-//     // Check if the media query is true
-//     if (e.matches) {
-//         // Then log the following message to the console
-//         // alert('Media Query Matched!')
-//         document.querySelectorAll('.nav-links li').style.transform="translateY(-60vh)";
-//
-//     }
-// }
-//
-// mediaQuery.addListener(handleTabletChange)
-// handleTabletChange(mediaQuery)
-
-
-
 const navSlide = () => {
     const burger = document.querySelector('.burger');
     const nav_links = document.querySelector('.nav-links');
@@ -76,15 +59,6 @@ const navSlide = () => {
 
     burger.addEventListener('click', () => {
         nav_links.classList.toggle('nav-active');
-
-        // const mediaQuery = window.matchMedia('(min-width: 900px)')
-        // console.log(mediaQuery);
-        // if (nav.style.animation) {
-        //     nav.style.animation = '';
-        // } else {
-        //     nav.style.animation = `navChangeColor 2.9s forwards 0.2s`;
-        // }
-
         navLinks.forEach((link, index) => {
             if (link.style.animation) {
                 link.style.animation = '';
@@ -97,9 +71,34 @@ const navSlide = () => {
         burger.classList.toggle('toggle');
 
     });
-
-
 }
 
 navSlide();
 
+
+function goToPreviousSlide() {
+    let totalSlides = 5;
+    let currentSlideNo = location.hash.slice(-1);
+    let goTo = 1;
+    if (currentSlideNo == 1 || currentSlideNo == '') {
+        goTo = totalSlides;
+    } else {
+        goTo = +currentSlideNo - 1;
+    }
+    location.hash = "#slide-" + goTo;
+}
+
+function goToNextSlide() {
+    let totalSlides = 5;
+    let currentSlideNo = location.hash.slice(-1);
+    let goTo = 1;
+    if (currentSlideNo == 5) {
+        goTo = 1;
+    } else if (currentSlideNo == '') {
+        goTo = 2;
+    }
+     else {
+        goTo = +currentSlideNo + 1;
+    }
+    location.hash = "#slide-" + goTo;
+}

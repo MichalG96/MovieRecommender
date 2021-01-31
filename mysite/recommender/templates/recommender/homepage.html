@@ -6,28 +6,60 @@
 
 {% block content %}
   <div class="home-container">
-    <div>
-      <h4>Register to enjoy full capabilities of the site, including:</h4>
+
+    <div class="slider">
+
+      <button onclick="goToPreviousSlide()" class="previous-btn"></button>
+
+      <a href="#slide-1">1</a>
+      <a href="#slide-2">2</a>
+      <a href="#slide-3">3</a>
+      <a href="#slide-4">4</a>
+      <a href="#slide-5">5</a>
+
+      <div class="slides">
+        <div id="slide-1">
+          <img src="{% static 'images/1.png' %}" class="img-fluid">
+        </div>
+        <div id="slide-2">
+          <img src="{% static 'images/2.png' %}" class="img-fluid">
+        </div>
+        <div id="slide-3">
+          <img src="{% static 'images/3.png' %}" class="img-fluid">
+        </div>
+        <div id="slide-4">
+          <img src="{% static 'images/4.png' %}" class="img-fluid">
+        </div>
+        <div id="slide-5">
+          <img src="{% static 'images/ja.jpg' %}" class="img-fluid">
+        </div>
+      </div>
+      <button onclick="goToNextSlide()" class="next-btn"></button>
     </div>
-    <div class="card">
-      Rating the movies
-      <img src="{% static 'images/1.png' %}" class="img-fluid">
-    </div>
-    <div class="card">
-      Viewing other people's ratings
-      <img src="{% static 'images/2.png' %}" class="img-fluid">
-    </div>
-    <div class="card">
-      Viewing your user stats
-      <img src="{% static 'images/3.png' %}" class="img-fluid">
-    </div>
-    <div class="card">
-      Receiving recommendations
-      <img src="{% static 'images/4.png' %}" class="img-fluid">
-    </div>
-  </div>
-  {#  <div class="media-body">#}
-  {#    <img src="{% static 'images/ja.jpg' %}" class="img-fluid">#}
-  {#  </div>#}
+
+
+    {#    <div>#}
+    {#      <h4>Register to enjoy full capabilities of the site, including:</h4>#}
+    {#    </div>#}
+    {#    <div class="card">#}
+    {#      Rating the movies#}
+    {#      <img src="{% static 'images/1.png' %}" class="img-fluid">#}
+    {#    </div>#}
+    {#    <div class="card">#}
+    {#      Viewing other people's ratings#}
+    {#      <img src="{% static 'images/2.png' %}" class="img-fluid">#}
+    {#    </div>#}
+    {#    <div class="card">#}
+    {#      Viewing your user stats#}
+    {#      <img src="{% static 'images/3.png' %}" class="img-fluid">#}
+    {#    </div>#}
+    {#    <div class="card">#}
+    {#      Receiving recommendations#}
+    {#      <img src="{% static 'images/4.png' %}" class="img-fluid">#}
+    {#    </div>#}
+    {#  </div>#}
+    {#  <div class="media-body">#}
+    {#    <img src="{% static 'images/ja.jpg' %}" class="img-fluid">#}
+    {#  </div>#}
 
 {% endblock content %}
