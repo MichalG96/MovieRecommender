@@ -32,7 +32,6 @@ IMG_SIZE = 'w185/'
 IMG_SIZE_SMALL = 'w92/'
 
 
-
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -214,15 +213,40 @@ class EstablishPreferencesView(ListView):
         # TODO: first draw top 400 most rated movies, then out of those 400,
         # draw n with the biggest variance in ratings
         # For testing: ensure that user has not rated any of these movies
+
+        movies_sorted_by_popularity = Movie.objects.all(). \
+            annotate(no_of_ratings=Count('rating')). \
+            order_by('-no_of_ratings')
+
+        k = 200
+        # Get k most rated movies
+        top_k = (movies_sorted_by_popularity[:k])
+        print(top_k)
+        movies_with_std = top_k.annotate(ratings_std=StdDev('rating__value'))
+        print(movies_with_std.get(id=3))
+        print(movies_with_std.values('ratings_std'))
+
         return Movie.objects.all().order_by('?')[:10]
         # return Movie.objects.all()[:10]
 
-    # def get_context_data(self, *, object_list=None, **kwargs):
-    #     context = super().get_context_data(**kwargs)
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        active_user = User.objects.prefetch_related(
+            Prefetch(
+                'rating_set',
+            )).get(username=self.kwargs['username'])
+
+        # print(vars(active_user))
+        # print(active_user.rating_set.count())
+        no_of_rated_movies = active_user.rating_set.count()
+
+        context['no_of_rated_movies'] = no_of_rated_movies
+
+        return context
 
 
 def user_stats(request, username):
-
     # Get active user, use "Prefetch" to limit the number of database queries
     active_user = User.objects.prefetch_related(
         Prefetch(
@@ -251,8 +275,6 @@ def user_stats(request, username):
         url = f'{BASE_TMDB_URL}{rating.movie.tmdb_id}?api_key={API_KEY}'
         r = requests.get(url).json()
         bottom_3_poster_urls.append(f'{BASE_IMG_URL}{IMG_SIZE_SMALL}{r["poster_path"]}')
-
-
 
     # List containing the number of each rating given by the user; how many 1s, 2s, etc.
     ratings_distribution = [users_ratings.filter(value=i + 1).count() for i in range(10)]
@@ -286,11 +308,11 @@ def user_stats(request, username):
     n = 7
     top_n_genres = (genres_counter.most_common(n))
     top_n_genres_shuffled = []
-    for i in range(n//2):
+    for i in range(n // 2):
         top_n_genres_shuffled.append(top_n_genres[i])
-        top_n_genres_shuffled.append(top_n_genres[-i-1])
-    if n%2 != 0:
-        top_n_genres_shuffled.append(top_n_genres[n//2])
+        top_n_genres_shuffled.append(top_n_genres[-i - 1])
+    if n % 2 != 0:
+        top_n_genres_shuffled.append(top_n_genres[n // 2])
 
     fig = go.Figure(data=go.Scatterpolar(
         r=[i[1] for i in top_n_genres_shuffled],
@@ -328,6 +350,8 @@ def user_stats(request, username):
 
 
 def recommend(request, username):
+    # If the user hasn't got enough ratings - redirect to EstablishPreferences View
+
     # Calculate similarity between user 2 and 3
     # TODO: use prefetch
     # common_items = Movie.objects.filter(rating__who_rated=2) & Movie.objects.filter(rating__who_rated=3)

@@ -6,19 +6,25 @@
 {% endblock title %}
 
 {% block content %}
-  <!--przy losowaniu, każde 'movies' jest inne - moga byc problemy -->
-  <!--{{movies}}-->
+  <div class="preferences-container">
+          <button type="submit" class="btn btn-shiny">Rate Later</button>
 
-  {% for movie in movies %}
-    {{ movie.title }}
-    <form method="post">{% csrf_token %}
-      <input type="number" id="quantity" name="rating" min="1" max="10">
-      <button type="submit" class="btn btn-shiny">Rate</button>
-      <button class="btn btn-danger">Did not see</button>
-    </form>
 
-  {% endfor %}
+    {% if no_of_rated_movies < 60 %}
+      <form method="post">{% csrf_token %}
+        {% for movie in movies %}
+          <p>{{ movie.title }}
+            <input type="number" id="quantity" name="rating" min="1" max="10">
+            <input type="checkbox" id="movie1" name="did-not-see"><label for="movie1">Did not see</label>
+          </p>
+        {% endfor %}
+        <button type="submit" class="btn btn-shiny">Rate</button>
+      </form>
+    {% else %}
+      You have rated enough movies
+    {% endif %}
 
+  </div>
 {% endblock content %}
 
 
