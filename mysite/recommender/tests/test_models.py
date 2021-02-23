@@ -76,4 +76,11 @@ class MovieModelTest(TestCase):
         max_length = movie._meta.get_field('director').max_length
         self.assertEqual(max_length, 100)
 
+    def test_object_name_is_formatted_correctly(self):
+        movie = Movie.objects.get(id=1)
+        expected_object_name = f'MovieLens_id_{movie.movielens_id}_Movie_id_{movie.id}_{movie.title}'
+        self.assertEqual(expected_object_name, str(movie))
 
+    def test_get_absolute_url(self):
+        movie = Movie.objects.get(id=1)
+        self.assertEqual(movie.get_absolute_url(), '/movie/1/')
