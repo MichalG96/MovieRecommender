@@ -1,6 +1,7 @@
 from django.test import TestCase
 from recommender.models import Movie, Actor, Genre, Rating
 
+
 class MovieModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -84,3 +85,35 @@ class MovieModelTest(TestCase):
     def test_get_absolute_url(self):
         movie = Movie.objects.get(id=1)
         self.assertEqual(movie.get_absolute_url(), '/movie/1/')
+
+
+class GenreModelTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        Genre.objects.create(name='Adventure')
+
+    def test_name_label(self):
+        genre = Genre.objects.get(id=1)
+        field_label = genre._meta.get_field('name').verbose_name
+        self.assertEqual(field_label, 'name')
+
+    def test_object_name_is_formatted_correctly(self):
+        genre = Genre.objects.get(id=1)
+        expected_object_name = genre.name
+        self.assertEqual(expected_object_name, str(genre))
+
+
+class ActorModelTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        Actor.objects.create(name='Tom Hanks')
+
+    def test_name_label(self):
+        actor = Actor.objects.get(id=1)
+        field_label = actor._meta.get_field('name').verbose_name
+        self.assertEqual(field_label, 'name')
+
+    def test_object_name_is_formatted_correctly(self):
+        actor = Actor.objects.get(id=1)
+        expected_object_name = actor.name
+        self.assertEqual(expected_object_name, str(actor))
