@@ -66,4 +66,14 @@ class MovieModelTest(TestCase):
         field_label = movie._meta.get_field('actors').verbose_name
         self.assertEqual(field_label, 'actors')
 
+    def test_title_max_length(self):
+        movie = Movie.objects.get(id=1)
+        max_length = movie._meta.get_field('title').max_length
+        self.assertEqual(max_length, 200)
+
+    def test_director_max_length(self):
+        movie = Movie.objects.get(id=1)
+        max_length = movie._meta.get_field('director').max_length
+        self.assertEqual(max_length, 100)
+
 
