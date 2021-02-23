@@ -9,7 +9,7 @@
       <h1>User stats: {{ active_user.username }}</h1>
       <p>Number of ratings: <b>{{ no_of_ratings }}</b></p>
       <p>Average rating: <b>{{ average_rating }}</b></p>
-      <p>Standard deviation <b>{{ std_rating }}</b></p>
+      <p>Standard deviation: <b>{{ std_rating }}</b></p>
     </div>
     <div class="stats-plots">
       {% autoescape off %}
@@ -19,11 +19,13 @@
         {{ plot_div_genres }}
       {% endautoescape %}
       <div>
+        <h3>Highest rated:</h3>
         {% for poster_url in top_3_poster_urls %}
           <img src="{{ poster_url }}" alt="Movie poster">
         {% endfor %}
       </div>
       <div>
+        <h3>Lowest rated:</h3>
         {% for poster_url in bottom_3_poster_urls %}
           <img src="{{ poster_url }}" alt="Movie poster">
         {% endfor %}

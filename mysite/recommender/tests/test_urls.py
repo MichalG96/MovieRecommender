@@ -10,6 +10,18 @@ class BasicUrlsTestCase(TestCase):
         response = self.client.get('/all_movies/')
         self.assertEqual(response.status_code, 200)
 
+    def test_all_users_response_status_code(self):
+        response = self.client.get('/all_users/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_login_response_status_code(self):
+        response = self.client.get('/login/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_register_response_status_code(self):
+        response = self.client.get('/register/')
+        self.assertEqual(response.status_code, 200)
+
     # # TODO: consider logged in and logged out users
     # def test_profile_response_status_code(self):
     #     response = self.client.get('/profile/')

@@ -223,7 +223,7 @@ class EstablishPreferencesView(ListView):
         top_k = (movies_sorted_by_popularity[:k])
         print(top_k)
         movies_with_std = top_k.annotate(ratings_std=StdDev('rating__value'))
-        print(movies_with_std.get(id=3))
+        # print(movies_with_std.get(id=3))
         print(movies_with_std.values('ratings_std'))
 
         return Movie.objects.all().order_by('?')[:10]

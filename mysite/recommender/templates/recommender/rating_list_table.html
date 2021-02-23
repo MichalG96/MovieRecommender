@@ -10,7 +10,7 @@
 {% endblock title %}
 
 {% block content %}
-  <section class="user-info">
+  <section class="user-info"><a href="{% url 'preferences' profile_owner.username %}">(Preferences)</a>&nbsp
     Username:&nbsp<b>{{ profile_owner.username }}</b>.&nbsp; You can view the stats &nbsp;
     <a href="{% url 'user_stats' profile_owner.username %}">here</a>
   </section>
