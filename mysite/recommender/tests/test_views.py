@@ -52,6 +52,48 @@ class FilteredMovieListViewTest(TestCase):
         self.assertTrue(response.context['is_paginated'] == True)
         self.assertTrue(len(response.context['object_list']) == 10)
 
+    def test_search_by_title(self):
+        # Get only movies containing phrase "be"
+        response = self.client.get(reverse('all_movies') + '?title__icontains=be')
+        self.assertEqual(response.status_code, 200)
+        found_movies = response.context['object_list']
+        self.assertTrue(len(found_movies) == 3)
+        self.assertEqual(
+            set(found_movies.values_list('title', flat=True)),
+            {'Seven Years in Tibet', 'Bell, Book and Candle', 'Pallbearer, The'}
+        )
+
+    def test_filtering_by_decades(self):
+        # Assert that movies searched in each decade were in fact released in that decade
+        response = self.client.get(reverse('all_movies') + f'?year_released=1919')
+        found_movies = response.context['object_list']
+        year_list = list(found_movies.values_list('year_released', flat=True))
+        self.assertTrue(all(i <= 1919 for i in year_list))
+
+        for year in range(1929, 2030, 10):
+            response = self.client.get(reverse('all_movies') + f'?year_released={year}')
+            found_movies = response.context['object_list']
+            year_list = list(found_movies.values_list('year_released', flat=True))
+            self.assertTrue(all(i <= year for i in year_list) and all(i >= year-9 for i in year_list))
+
+    def test_table_displayed_properly(self):
+        response = self.client.get(reverse('all_movies') + '?title__icontains=Rocky+III')
+        rocky_movie = response.context['object_list'][0]
+        rocky_id = rocky_movie.id
+        rocky_movielens_id = rocky_movie.movielens_id
+        rocky_imdb_id = rocky_movie.imdb_id
+        rocky_tmdb_id = rocky_movie.tmdb_id
+        rocky_title = rocky_movie.title
+        rocky_year_released = rocky_movie.year_released
+        rocky_director = rocky_movie.director
+        print(rocky_id, rocky_movielens_id, rocky_imdb_id, rocky_tmdb_id, rocky_title, rocky_year_released, rocky_director)
+        # TODO: use BS4 to check if each field is placed in the table
+        #  in the content in the correct order
+        print(response.content)
+
+    # TODO: test sorting
+
+
 
 
 
