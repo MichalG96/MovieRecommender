@@ -44,7 +44,7 @@ def register(request):
         form = UserRegisterForm()
     return render(request, 'recommender/register.html', {'form': form})
 
-
+# TODO: display warning when 'date to' is smaller than 'date from'
 class FilteredRatingListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     table_class = RatingsTable
     model = Movie
