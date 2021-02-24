@@ -48,7 +48,7 @@ class Movie(models.Model):
 class Rating(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     who_rated = models.ForeignKey(User, on_delete=models.CASCADE)
-    value = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)], verbose_name='Rating')
+    value = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)], verbose_name='rating')
     date_rated = models.DateTimeField(default=timezone.now)
 
     class Meta:

@@ -1,4 +1,9 @@
+from datetime import timedelta
+
 from django.test import TestCase
+from django.contrib.auth.models import User
+from django.utils import timezone
+
 from recommender.models import Movie, Actor, Genre, Rating
 
 
@@ -117,3 +122,85 @@ class ActorModelTest(TestCase):
         actor = Actor.objects.get(id=1)
         expected_object_name = actor.name
         self.assertEqual(expected_object_name, str(actor))
+
+
+class RatingModelTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        genre1 = Genre(name='Adventure')
+        genre2 = Genre(name='Animation')
+        genre3 = Genre(name='Children')
+        genre4 = Genre(name='Comedy')
+        actor1 = Actor(name='Don Rickles')
+        actor2 = Actor(name='Jim Varney')
+        actor3 = Actor(name='Tim Allen')
+        actor4 = Actor(name='Tom Hanks')
+        for i in [genre1, genre2, genre3, genre4, actor1, actor2, actor3, actor4]:
+            i.save()
+        movie1 = Movie(
+            movielens_id=1,
+            imdb_id=114709,
+            tmdb_id=862,
+            title='Toy Story',
+            year_released=1995,
+            director='John Lasseter',
+        )
+        movie1.save()
+        movie1.genres.add(genre1, genre2, genre3, genre4)
+        movie1.actors.add(actor1, actor2, actor3, actor4)
+
+        user1 = User.objects.create(
+            username='test_user',
+            first_name='Test',
+            last_name='User',
+            email='mail123@test.com'
+        )
+
+        rating_for_testing = Rating(
+            movie=movie1,
+            who_rated=user1,
+            value=5,
+        )
+
+        rating_for_testing.save()
+
+    def test_movie_label(self):
+        rating = Rating.objects.get(id=1)
+        field_label = rating._meta.get_field('movie').verbose_name
+        self.assertEqual(field_label, 'movie')
+
+    def test_who_rated_label(self):
+        rating = Rating.objects.get(id=1)
+        field_label = rating._meta.get_field('who_rated').verbose_name
+        self.assertEqual(field_label, 'who rated')
+
+    def test_value_label(self):
+        rating = Rating.objects.get(id=1)
+        field_label = rating._meta.get_field('value').verbose_name
+        self.assertEqual(field_label, 'rating')
+
+    def test_date_rated_label(self):
+        rating = Rating.objects.get(id=1)
+        field_label = rating._meta.get_field('date_rated').verbose_name
+        self.assertEqual(field_label, 'date rated')
+
+    def test_default_date_is_not_in_the_future(self):
+        rating = Rating.objects.get(id=1)
+        now = timezone.now()
+        # Assert that the date of rating is never set in the future
+        self.assertTrue(rating.date_rated <= now)
+
+    def test_default_date_is_set_to_now(self):
+        rating = Rating.objects.get(id=1)
+        now = timezone.now()
+        # Assert that the default time for rating was set not more than 3 seconds ago
+        # (3 seconds are given because of potential system hickups)
+        self.assertTrue((now - rating.date_rated).seconds <= 3)
+
+    def test_object_name_is_formatted_correctly(self):
+        rating = Rating.objects.get(id=1)
+        expected_object_name = f'user_{rating.who_rated.pk}_movie_{rating.movie}_value_{rating.value}'
+        self.assertEqual(expected_object_name, str(rating))
+
+    
+
