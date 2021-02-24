@@ -1,20 +1,29 @@
 from django.test import TestCase
-from recommender.models import Movie
-from recommender.views import FilteredMovieListView
-# Testing MovieListView
+from django.contrib.auth.models import User
 
-fixtures = ['movies_test.json', 'actors.json', 'genres.json', 'ratings_test.json', 'users_test.json']
+from recommender.models import Movie, Genre, Actor, Rating
+from recommender.views import FilteredMovieListView
+
+fixtures = ['movies_test.json', 'actors.json', 'genres.json', 'users_test.json', 'ratings_test.json']
+
 
 class EloTestCase(TestCase):
     fixtures = fixtures
 
     def test_grouping_when_no_movies_exist(self):
-
+        print(Movie.objects.all())
         print(Movie.objects.all().count())
+        print(User.objects.all())
+        print(User.objects.all().count())
+        print(Rating.objects.all())
+        print(Rating.objects.all().count())
+        print(Actor.objects.all())
+        print(Actor.objects.all().count())
+        print(Genre.objects.all())
+        print(Genre.objects.all().count())
         self.assertTrue(True)
 
-
-
+# Old tests
 
 # class MovieGroupingTestCase(TestCase):
 #     fixtures = fixtures
