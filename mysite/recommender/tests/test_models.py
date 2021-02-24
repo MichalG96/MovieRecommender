@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.db import IntegrityError
 
 from recommender.models import Movie, Actor, Genre, Rating
 
@@ -202,5 +203,20 @@ class RatingModelTest(TestCase):
         expected_object_name = f'user_{rating.who_rated.pk}_movie_{rating.movie}_value_{rating.value}'
         self.assertEqual(expected_object_name, str(rating))
 
-    
+    def test_not_being_able_to_rate_movie_twice(self):
+        movie = Movie.objects.get(id=1)
+        user = User.objects.get(id=1)
+
+        another_rating_for_the_same_movie = Rating(
+            movie=movie,
+            who_rated=user,
+            value=6,
+        )
+        # Assert that the exception is thrown when there is an attempt to
+        # rate the movie by the same user twice
+        with self.assertRaises(IntegrityError):
+            another_rating_for_the_same_movie.save()
+
+
+
 
