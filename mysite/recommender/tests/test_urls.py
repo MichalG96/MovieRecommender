@@ -1,10 +1,12 @@
 from django.test import TestCase
 
+
 class BasicUrlsTestCase(TestCase):
 
     def test_homepage_response_status_code(self):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'recommender/homepage.html')
 
     def test_all_movies_response_status_code(self):
         response = self.client.get('/all_movies/')

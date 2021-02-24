@@ -374,7 +374,3 @@ def recommend(request, username):
 
 def new_user(request):
     return render(request, 'recommender/new_user.html')
-
-
-def add_user(request):
-    return render(request, 'recommender/add_user.html')

@@ -1,27 +1,59 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 from recommender.models import Movie, Genre, Actor, Rating
 from recommender.views import FilteredMovieListView
 
-fixtures = ['movies_test.json', 'actors.json', 'genres.json', 'users_test.json', 'ratings_test.json']
+# fixtures = ['movies_test.json', 'actors.json', 'genres.json', 'users_test.json', 'ratings_test.json']
 
 
-class EloTestCase(TestCase):
-    fixtures = fixtures
+class HomepageViewTest(TestCase):
+    def test_view_url_exists_at_desired_location(self):
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
 
-    def test_grouping_when_no_movies_exist(self):
-        print(Movie.objects.all())
-        print(Movie.objects.all().count())
-        print(User.objects.all())
-        print(User.objects.all().count())
-        print(Rating.objects.all())
-        print(Rating.objects.all().count())
-        print(Actor.objects.all())
-        print(Actor.objects.all().count())
-        print(Genre.objects.all())
-        print(Genre.objects.all().count())
-        self.assertTrue(True)
+    def test_view_uses_correct_template(self):
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'recommender/homepage.html')
+
+
+class FilteredMovieListViewTest(TestCase):
+    fixtures = ['actors.json', 'genres.json', 'movies_for_testing_FilteredMovieListView.json']
+
+    def test_view_url_exists_at_desired_location(self):
+        response = self.client.get('/all_movies/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        response = self.client.get(reverse('all_movies'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse('all_movies'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'recommender/movie_list_table.html')
+
+    def test_pagination_is_20(self):
+        response = self.client.get(reverse('all_movies'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('is_paginated' in response.context)
+        # Assert that the response is paginated
+        self.assertTrue(response.context['is_paginated'] == True)
+        # Assert that there are 20 objects on each page
+        self.assertTrue(len(response.context['object_list']) == 20)
+
+    def test_lists_all_movies(self):
+        # Get third page and confirm it has (exactly) remaining 10 items
+        response = self.client.get(reverse('all_movies') + '?page=3')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('is_paginated' in response.context)
+        self.assertTrue(response.context['is_paginated'] == True)
+        self.assertTrue(len(response.context['object_list']) == 10)
+
+
+
 
 # Old tests
 
