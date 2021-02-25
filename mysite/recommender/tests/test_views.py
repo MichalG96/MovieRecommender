@@ -1,6 +1,9 @@
+import datetime
+
 from django.test import TestCase, SimpleTestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.utils import timezone
 
 from recommender.models import Movie, Genre, Actor, Rating
 from recommender.views import FilteredMovieListView
@@ -19,9 +22,10 @@ class HomepageViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'recommender/homepage.html')
 
+    # TODO: use bs4 to test if logged in user's username is displayed properly
 
 class FilteredMovieListViewTest(TestCase):
-    fixtures = ['actors.json', 'genres.json', 'movies_for_testing_FilteredMovieListView.json']
+    fixtures = ['actors.json', 'genres.json', 'movies_for_testing.json']
 
     def test_view_url_exists_at_desired_location(self):
         response = self.client.get('/all_movies/')
@@ -187,6 +191,9 @@ class MovieDetailViewTest(TestCase):
         movie_for_testing.genres.add(2, 3, 4)
         movie_for_testing.actors.add(2, 3, 4)
 
+        test_user1 = User.objects.create_user(username='testuser1', password='some_password1')
+        test_user2 = User.objects.create_user(username='testuser2', password='some_password2')
+
     def test_view_url_exists_at_desired_location(self):
         response = self.client.get('/movie/1/')
         self.assertEqual(response.status_code, 200)
@@ -206,6 +213,108 @@ class MovieDetailViewTest(TestCase):
         phrase_when_not_logged_in = 'Log in to rate'
         self.assertFalse(phrase_when_logged_in in response.content.decode('utf-8'))
         self.assertTrue(phrase_when_not_logged_in in response.content.decode('utf-8'))
+
+    def test_logged_in_able_to_rate(self):
+        login = self.client.login(username='testuser1', password='some_password1')
+        response = self.client.get(reverse('movie_detail', kwargs={'pk': 1}))
+        # Check our user is logged in
+        self.assertEqual(str(response.context['user']), 'testuser1')
+        self.assertEqual(response.status_code, 200)
+        phrase_when_logged_in = 'Rate this movie'
+        phrase_when_not_logged_in = 'Log in to rate'
+        self.assertTrue(phrase_when_logged_in in response.content.decode('utf-8'))
+        self.assertFalse(phrase_when_not_logged_in in response.content.decode('utf-8'))
+
+
+class FilteredRatingListViewTest(TestCase):
+    fixtures = ['genres.json', 'actors.json', 'movies_for_testing.json']
+
+    @classmethod
+    def setUpTestData(cls):
+        test_user1 = User.objects.create_user(username='testuser1', password='some_password1')
+
+        all_movies = Movie.objects.all()
+        no_of_movies = all_movies.count()
+        movie_ids =list(all_movies.values_list('id', flat=True))
+        starting_date = datetime.datetime(2018, 5, 17, 15, 34, 44, tzinfo=timezone.utc)
+        for i in range(no_of_movies):
+            mock_rating = Rating.objects.create(
+                movie=Movie.objects.get(id=movie_ids[i]),
+                who_rated=test_user1,
+                value=i%10 + 1,
+                date_rated=starting_date + datetime.timedelta(days=5*i)
+            )
+
+    def test_redirect_if_not_logged_in(self):
+        response = self.client.get(reverse('profile', kwargs={'username': 'whitepanda599'}))
+        self.assertRedirects(response, '/login/?next=/profile/whitepanda599/')
+
+    def test_logged_in_uses_correct_template(self):
+        login = self.client.login(username='testuser1', password='some_password1')
+        response = self.client.get(reverse('profile', kwargs={'username': 'testuser1'}))
+        self.assertEqual(str(response.context['user']), 'testuser1')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'recommender/rating_list_table.html')
+
+    # TODO: use bs4 to test if the correct username is displayed
+    # TODO: use bs4 to test if the table is displayed correctly
+    # TODO: add tests to check if there is a warning saying you cannot set
+    #  'date_to' earlier than 'date_from'
+
+    def test_pagination_is_15(self):
+        login = self.client.login(username='testuser1', password='some_password1')
+        response = self.client.get(reverse('profile', kwargs={'username': 'testuser1'}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('is_paginated' in response.context)
+        # Assert that the response is paginated
+        self.assertTrue(response.context['is_paginated'] == True)
+        # Assert that there are 15 objects on each page
+        self.assertTrue(len(response.context['object_list']) == 15)
+
+    def test_lists_all_ratings(self):
+        login = self.client.login(username='testuser1', password='some_password1')
+        response = self.client.get(reverse('profile', kwargs={'username': 'testuser1'})+ '?page=4')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('is_paginated' in response.context)
+        self.assertTrue(response.context['is_paginated'] == True)
+        self.assertTrue(len(response.context['object_list']) == 5)
+
+    def test_filtering_by_decades(self):
+        login = self.client.login(username='testuser1', password='some_password1')
+        response = self.client.get(reverse('profile', kwargs={'username': 'testuser1'}) +
+                                   f'?movie__year_released=1919'
+                                   + '&date_from=&date_to=')
+        found_ratings = response.context['object_list']
+        year_list = list(found_ratings.values_list('movie__year_released', flat=True))
+        self.assertTrue(all(i <= 1919 for i in year_list))
+
+        for year in range(1929, 2030, 10):
+            response = self.client.get(reverse('profile', kwargs={'username': 'testuser1'}) +
+                                       f'?movie__year_released={year}'
+                                       + '&date_from=&date_to=')
+            found_ratings = response.context['object_list']
+            year_list = list(found_ratings.values_list('movie__year_released', flat=True))
+            self.assertTrue(all(i <= year for i in year_list) and all(i >= year - 9 for i in year_list))
+
+    def test_filtering_by_ratings(self):
+        login = self.client.login(username='testuser1', password='some_password1')
+        for value in range(1,11):
+            response = self.client.get(reverse('profile', kwargs={'username': 'testuser1'}) +
+                                       f'?value={value}'
+                                       + '&date_from=&date_to=')
+            found_ratings = response.context['object_list']
+            rating_list = list(found_ratings.values_list('value', flat=True))
+            self.assertTrue(all(i <= value for i in rating_list) and all(i >= value - 9 for i in rating_list))
+
+    def test_filtering_by_date(self):
+        login = self.client.login(username='testuser1', password='some_password1')
+        date_from = datetime.datetime(2018,9,27,10,10,10, tzinfo=timezone.utc)
+        date_to = datetime.datetime(2019,1,3,10,10,10, tzinfo=timezone.utc)
+        response = self.client.get(reverse('profile', kwargs={'username': 'testuser1'}) +
+                f"?date_from={date_from.strftime('%Y-%m-%d')}&date_to={date_to.strftime('%Y-%m-%d')}")
+        found_ratings = response.context['object_list']
+        date_list = list(found_ratings.values_list('date_rated', flat=True))
+        self.assertTrue(all(i <= date_to for i in date_list) and all(i >= date_from for i in date_list))
 
 
 class PasswordResetViewTest(SimpleTestCase):
