@@ -20,7 +20,7 @@
 
     <div class="users">
       {% for user in users %}
-        <a href="{% url 'profile' user.username %}" class="btn btn-user">{{ user.username |truncatechars:11}}</a>
+        <a href="{% url 'profile' user.username %}" class="btn btn-user">{{ user.username |truncatechars:13}}</a>
       {% endfor %}
     </div>
     <div class="mockup-pagination">

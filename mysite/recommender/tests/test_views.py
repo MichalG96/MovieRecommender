@@ -5,6 +5,7 @@ from django.urls import reverse
 from recommender.models import Movie, Genre, Actor, Rating
 from recommender.views import FilteredMovieListView
 
+
 # fixtures = ['movies_test.json', 'actors.json', 'genres.json', 'users_test.json', 'ratings_test.json']
 
 
@@ -74,7 +75,7 @@ class FilteredMovieListViewTest(TestCase):
             response = self.client.get(reverse('all_movies') + f'?year_released={year}')
             found_movies = response.context['object_list']
             year_list = list(found_movies.values_list('year_released', flat=True))
-            self.assertTrue(all(i <= year for i in year_list) and all(i >= year-9 for i in year_list))
+            self.assertTrue(all(i <= year for i in year_list) and all(i >= year - 9 for i in year_list))
 
     def test_table_displayed_properly(self):
         response = self.client.get(reverse('all_movies') + '?title__icontains=Rocky+III')
@@ -89,12 +90,56 @@ class FilteredMovieListViewTest(TestCase):
         print(rocky_id, rocky_movielens_id, rocky_imdb_id, rocky_tmdb_id, rocky_title, rocky_year_released, rocky_director)
         # TODO: use BS4 to check if each field is placed in the table
         #  in the content in the correct order
-        print(response.content)
+        # print(response.content)
 
     # TODO: test sorting
 
 
+class UserListViewTest(TestCase):
+    fixtures = ['users_for_testing_UserListView.json']
 
+    def test_view_url_exists_at_desired_location(self):
+        response = self.client.get('/all_users/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        response = self.client.get(reverse('all_users'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse('all_users'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'recommender/user_list.html')
+
+    def test_pagination_is_25(self):
+        response = self.client.get(reverse('all_users'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('is_paginated' in response.context)
+        # Assert that the response is paginated
+        self.assertTrue(response.context['is_paginated'] == True)
+        # Assert that there are 25 objects on each page
+        self.assertTrue(len(response.context['object_list']) == 25)
+
+    def test_lists_all_users(self):
+        # Get third page and confirm it has (exactly) remaining 22 items
+        response = self.client.get(reverse('all_users') + '?page=3')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('is_paginated' in response.context)
+        self.assertTrue(response.context['is_paginated'] == True)
+        self.assertTrue(len(response.context['object_list']) == 22)
+
+    def test_search_by_title(self):
+        # Get only users with usernames containing phrase "dog"
+        response = self.client.get(reverse('all_users') + '?username__icontains=dog')
+        self.assertEqual(response.status_code, 200)
+        found_users = response.context['object_list']
+        self.assertEqual(len(found_users), 2)
+        self.assertEqual(
+            set(found_users.values_list('username', flat=True)),
+            {'ticklishdog518', 'angrydog429'}
+        )
+
+    
 
 
 # Old tests
