@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, SimpleTestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
 
@@ -139,95 +139,108 @@ class UserListViewTest(TestCase):
             {'ticklishdog518', 'angrydog429'}
         )
 
-    
 
+class LoginViewTest(SimpleTestCase):
+    def test_view_url_exists_at_desired_location(self):
+        response = self.client.get('/login/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'recommender/login.html')
+
+
+class RegisterViewTest(SimpleTestCase):
+    def test_view_url_exists_at_desired_location(self):
+        response = self.client.get('/register/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        response = self.client.get(reverse('register'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse('register'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'recommender/register.html')
+
+
+class MovieDetailViewTest(TestCase):
+    fixtures = ['genres.json', 'actors.json']
+
+    @classmethod
+    def setUpTestData(cls):
+        movie_for_testing = Movie(
+            movielens_id=1,
+            imdb_id=114709,
+            tmdb_id=862,
+            title='Toy Story',
+            year_released=1995,
+            director='John Lasseter',
+        )
+        movie_for_testing.save()
+        movie_for_testing.genres.add(2, 3, 4)
+        movie_for_testing.actors.add(2, 3, 4)
+
+    def test_view_url_exists_at_desired_location(self):
+        response = self.client.get('/movie/1/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        response = self.client.get(reverse('movie_detail', kwargs={'pk': 1}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse('movie_detail', kwargs={'pk': 1}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'recommender/movie_detail.html')
+
+    def test_rating_not_visible_when_not_logged_in(self):
+        response = self.client.get(reverse('movie_detail', kwargs={'pk': 1}))
+        phrase_when_logged_in = 'Rate this movie'
+        phrase_when_not_logged_in = 'Log in to rate'
+        self.assertFalse(phrase_when_logged_in in response.content.decode('utf-8'))
+        self.assertTrue(phrase_when_not_logged_in in response.content.decode('utf-8'))
+
+
+class PasswordResetViewTest(SimpleTestCase):
+    def test_view_url_exists_at_desired_location(self):
+        response = self.client.get('/password-reset/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        response = self.client.get(reverse('password_reset'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse('password_reset'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'recommender/password_reset.html')
+
+
+class PasswordResetDoneViewTest(SimpleTestCase):
+    def test_view_url_exists_at_desired_location(self):
+        response = self.client.get('/password-reset/done/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        response = self.client.get(reverse('password_reset_done'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse('password_reset_done'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'recommender/password_reset_done.html')
 
 # Old tests
 
 # class MovieGroupingTestCase(TestCase):
 #     fixtures = fixtures
-#
-#     def test_grouping_when_no_movies_exist(self):
-#         response = self.client.get('/all_movies/?sort_by=id&group_by_decades=1909')
-#         self.assertFalse(response.context['object_list'].exists())
-#
-#     def test_grouping_movies_from_20s(self):
-#         response = self.client.get('/all_movies/?sort_by=id&group_by_decades=1929')
-#         received_movies = response.context['paginator'].object_list
-#         movies_from_this_decade = Movie.objects.filter(year_released__range=[1920, 1929])
-#         # Testing grouping only, igoring ordering
-#         self.assertEqual(set(received_movies), set(movies_from_this_decade))
-#
-#     def test_grouping_movies_from_30s(self):
-#         response = self.client.get('/all_movies/?sort_by=id&group_by_decades=1939')
-#         received_movies = response.context['paginator'].object_list
-#         movies_from_this_decade = Movie.objects.filter(year_released__range=[1930, 1939])
-#         # Testing grouping only, igoring ordering
-#         self.assertEqual(set(received_movies), set(movies_from_this_decade))
-#
-#     def test_grouping_movies_from_40s(self):
-#         response = self.client.get('/all_movies/?sort_by=id&group_by_decades=1949')
-#         received_movies = response.context['paginator'].object_list
-#         movies_from_this_decade = Movie.objects.filter(year_released__range=[1940, 1949])
-#         # Testing grouping only, igoring ordering
-#         self.assertEqual(set(received_movies), set(movies_from_this_decade))
-#
-#     def test_grouping_movies_from_50s(self):
-#         response = self.client.get('/all_movies/?sort_by=id&group_by_decades=1959')
-#         received_movies = response.context['paginator'].object_list
-#         movies_from_this_decade = Movie.objects.filter(year_released__range=[1950, 1959])
-#         # Testing grouping only, igoring ordering
-#         self.assertEqual(set(received_movies), set(movies_from_this_decade))
-#
-#     def test_grouping_movies_from_60s(self):
-#         response = self.client.get('/all_movies/?sort_by=id&group_by_decades=1969')
-#         received_movies = response.context['paginator'].object_list
-#         movies_from_this_decade = Movie.objects.filter(year_released__range=[1960, 1969])
-#         # Testing grouping only, igoring ordering
-#         self.assertEqual(set(received_movies), set(movies_from_this_decade))
-#
-#     def test_grouping_movies_from_70s(self):
-#         response = self.client.get('/all_movies/?sort_by=id&group_by_decades=1979')
-#         received_movies = response.context['paginator'].object_list
-#         movies_from_this_decade = Movie.objects.filter(year_released__range=[1970, 1979])
-#         # Testing grouping only, igoring ordering
-#         self.assertEqual(set(received_movies), set(movies_from_this_decade))
-#
-#     def test_grouping_movies_from_80s(self):
-#         response = self.client.get('/all_movies/?sort_by=id&group_by_decades=1989')
-#         received_movies = response.context['paginator'].object_list
-#         movies_from_this_decade = Movie.objects.filter(year_released__range=[1980, 1989])
-#         # Testing grouping only, igoring ordering
-#         self.assertEqual(set(received_movies), set(movies_from_this_decade))
-#
-#     def test_grouping_movies_from_90s(self):
-#         response = self.client.get('/all_movies/?sort_by=id&group_by_decades=1999')
-#         received_movies = response.context['paginator'].object_list
-#         movies_from_this_decade = Movie.objects.filter(year_released__range=[1990, 1999])
-#         # Testing grouping only, igoring ordering
-#         self.assertEqual(set(received_movies), set(movies_from_this_decade))
-#
-#     def test_grouping_movies_from_2000s(self):
-#         response = self.client.get('/all_movies/?sort_by=id&group_by_decades=2009')
-#         received_movies = response.context['paginator'].object_list
-#         movies_from_this_decade = Movie.objects.filter(year_released__range=[2000, 2009])
-#         # Testing grouping only, igoring ordering
-#         self.assertEqual(set(received_movies), set(movies_from_this_decade))
-#
-#     def test_grouping_movies_from_2010s(self):
-#         response = self.client.get('/all_movies/?sort_by=id&group_by_decades=2019')
-#         received_movies = response.context['paginator'].object_list
-#         movies_from_this_decade = Movie.objects.filter(year_released__range=[2010, 2019])
-#         # Testing grouping only, igoring ordering
-#         self.assertEqual(set(received_movies), set(movies_from_this_decade))
-#
-#     def test_grouping_movies_from_2020s(self):
-#         response = self.client.get('/all_movies/?sort_by=id&group_by_decades=2029')
-#         received_movies = response.context['paginator'].object_list
-#         movies_from_this_decade = Movie.objects.filter(year_released__range=[2020, 2029])
-#         # Testing grouping only, igoring ordering
-#         self.assertEqual(set(received_movies), set(movies_from_this_decade))
-#
 #     # TODO: group by multiple decades
 #
 # class MovieSortingTestCase(TestCase):

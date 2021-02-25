@@ -72,6 +72,7 @@ class FilteredMovieListView(SingleTableMixin, FilterView):
     model = Movie
     template_name = 'recommender/movie_list_table.html'
     paginate_by = 20
+    ordering = 'id'
     filterset_class = MovieFilter
 
 
@@ -79,6 +80,7 @@ class UserListView(FilterView):
     model = User
     context_object_name = 'users'
     paginate_by = 25
+    ordering = 'id'
     filterset_class = UserFilter
     template_name = 'recommender/user_list.html'
 
