@@ -24,6 +24,7 @@ class HomepageViewTest(TestCase):
 
     # TODO: use bs4 to test if logged in user's username is displayed properly
 
+
 class FilteredMovieListViewTest(TestCase):
     fixtures = ['actors.json', 'genres.json', 'movies_for_testing.json']
 
@@ -235,14 +236,14 @@ class FilteredRatingListViewTest(TestCase):
 
         all_movies = Movie.objects.all()
         no_of_movies = all_movies.count()
-        movie_ids =list(all_movies.values_list('id', flat=True))
+        movie_ids = list(all_movies.values_list('id', flat=True))
         starting_date = datetime.datetime(2018, 5, 17, 15, 34, 44, tzinfo=timezone.utc)
         for i in range(no_of_movies):
             mock_rating = Rating.objects.create(
                 movie=Movie.objects.get(id=movie_ids[i]),
                 who_rated=test_user1,
-                value=i%10 + 1,
-                date_rated=starting_date + datetime.timedelta(days=5*i)
+                value=i % 10 + 1,
+                date_rated=starting_date + datetime.timedelta(days=5 * i)
             )
 
     def test_redirect_if_not_logged_in(self):
@@ -273,7 +274,7 @@ class FilteredRatingListViewTest(TestCase):
 
     def test_lists_all_ratings(self):
         login = self.client.login(username='testuser1', password='some_password1')
-        response = self.client.get(reverse('profile', kwargs={'username': 'testuser1'})+ '?page=4')
+        response = self.client.get(reverse('profile', kwargs={'username': 'testuser1'}) + '?page=4')
         self.assertEqual(response.status_code, 200)
         self.assertTrue('is_paginated' in response.context)
         self.assertTrue(response.context['is_paginated'] == True)
@@ -298,7 +299,7 @@ class FilteredRatingListViewTest(TestCase):
 
     def test_filtering_by_ratings(self):
         login = self.client.login(username='testuser1', password='some_password1')
-        for value in range(1,11):
+        for value in range(1, 11):
             response = self.client.get(reverse('profile', kwargs={'username': 'testuser1'}) +
                                        f'?value={value}'
                                        + '&date_from=&date_to=')
@@ -308,13 +309,60 @@ class FilteredRatingListViewTest(TestCase):
 
     def test_filtering_by_date(self):
         login = self.client.login(username='testuser1', password='some_password1')
-        date_from = datetime.datetime(2018,9,27,10,10,10, tzinfo=timezone.utc)
-        date_to = datetime.datetime(2019,1,3,10,10,10, tzinfo=timezone.utc)
+        date_from = datetime.datetime(2018, 9, 27, 10, 10, 10, tzinfo=timezone.utc)
+        date_to = datetime.datetime(2019, 1, 3, 10, 10, 10, tzinfo=timezone.utc)
         response = self.client.get(reverse('profile', kwargs={'username': 'testuser1'}) +
-                f"?date_from={date_from.strftime('%Y-%m-%d')}&date_to={date_to.strftime('%Y-%m-%d')}")
+                                   f"?date_from={date_from.strftime('%Y-%m-%d')}&date_to={date_to.strftime('%Y-%m-%d')}")
         found_ratings = response.context['object_list']
         date_list = list(found_ratings.values_list('date_rated', flat=True))
         self.assertTrue(all(i <= date_to for i in date_list) and all(i >= date_from for i in date_list))
+
+    def test_rating_belong_to_the_user(self):
+        test_user = User.objects.first()
+        login = self.client.login(username=test_user.username, password='some_password1')
+        response = self.client.get(reverse('profile', kwargs={'username': 'testuser1'}))
+        ratings = response.context['object_list']
+        ratings_owners = list(ratings.values_list('who_rated', flat=True))
+        self.assertTrue(all(i == test_user.id for i in ratings_owners))
+
+
+class UserStatsViewTest(TestCase):
+    fixtures = ['genres.json', 'actors.json', 'movies_for_testing.json']
+
+    @classmethod
+    def setUpTestData(cls):
+        test_user1 = User.objects.create_user(username='testuser1', password='some_password1')
+
+        all_movies = Movie.objects.all()
+        no_of_movies = all_movies.count()
+        movie_ids = list(all_movies.values_list('id', flat=True))
+        starting_date = datetime.datetime(2018, 5, 17, 15, 34, 44, tzinfo=timezone.utc)
+        for i in range(no_of_movies):
+            mock_rating = Rating.objects.create(
+                movie=Movie.objects.get(id=movie_ids[i]),
+                who_rated=test_user1,
+                value=i % 10 + 1,
+                date_rated=starting_date + datetime.timedelta(days=5 * i)
+            )
+
+    def test_redirect_if_not_logged_in(self):
+        response = self.client.get(reverse('user_stats', kwargs={'username': 'testuser1'}))
+        self.assertRedirects(response, '/login/?next=/profile/testuser1/stats/')
+
+    def test_logged_in_uses_correct_template(self):
+        login = self.client.login(username='testuser1', password='some_password1')
+        response = self.client.get(reverse('user_stats', kwargs={'username': 'testuser1'}))
+        self.assertEqual(str(response.context['user']), 'testuser1')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'recommender/stats.html')
+
+
+class RecommendViewTest(TestCase):
+    pass
+
+
+class EstablishPreferencesViewTest(TestCase):
+    pass
 
 
 class PasswordResetViewTest(SimpleTestCase):

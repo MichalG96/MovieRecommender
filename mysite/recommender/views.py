@@ -5,11 +5,13 @@ from django.urls import reverse
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views import View
-from .models import Movie, Rating, Actor, Genre
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
-from .forms import UserRegisterForm, UserRatingForm, MovieSortGroupForm, MovieRatingSortGroupForm
 from django.db.models import Avg, Count, Max, Min, Prefetch, StdDev
+from django.contrib.auth.decorators import login_required
+
+from .forms import UserRegisterForm, UserRatingForm
+from .models import Movie, Rating
 
 from .filters import MovieFilter, RatingFilter, UserFilter
 from .tables import RatingsTable, MoviesTable
@@ -58,7 +60,7 @@ class FilteredRatingListView(LoginRequiredMixin, SingleTableMixin, FilterView):
                 'rating_set',
             )).get(username=self.kwargs['username'])
 
-        queryset = self.profile_owner.rating_set.all()
+        queryset = self.profile_owner.rating_set.all().order_by('date_rated')
         return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -247,7 +249,7 @@ class EstablishPreferencesView(ListView):
 
         return context
 
-
+@login_required
 def user_stats(request, username):
     # Get active user, use "Prefetch" to limit the number of database queries
     active_user = User.objects.prefetch_related(
@@ -350,7 +352,7 @@ def user_stats(request, username):
     }
     return render(request, 'recommender/stats.html', context)
 
-
+@login_required
 def recommend(request, username):
     # If the user hasn't got enough ratings - redirect to EstablishPreferences View
 
