@@ -8,11 +8,12 @@ from django.utils import timezone
 from recommender.models import Movie, Genre, Actor, Rating
 from recommender.views import FilteredMovieListView
 
+from bs4 import BeautifulSoup
 
 # fixtures = ['movies_test.json', 'actors.json', 'genres.json', 'users_test.json', 'ratings_test.json']
 
 
-class HomepageViewTest(TestCase):
+class HomepageViewTest(SimpleTestCase):
     def test_view_url_exists_at_desired_location(self):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
@@ -22,7 +23,10 @@ class HomepageViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'recommender/homepage.html')
 
-    # TODO: use bs4 to test if logged in user's username is displayed properly
+    def test_username_not_displayed_if_not_logged_in(self):
+        response = self.client.get('/')
+        soup = BeautifulSoup(response.content.decode('utf-8'), 'html.parser')
+        self.assertFalse('Logged in as' in soup.nav.get_text())
 
 
 class FilteredMovieListViewTest(TestCase):
@@ -233,6 +237,7 @@ class FilteredRatingListViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         test_user1 = User.objects.create_user(username='testuser1', password='some_password1')
+        test_user2 = User.objects.create_user(username='testuser_with_long_username', password='some_password2')
 
         all_movies = Movie.objects.all()
         no_of_movies = all_movies.count()
@@ -257,7 +262,26 @@ class FilteredRatingListViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'recommender/rating_list_table.html')
 
-    # TODO: use bs4 to test if the correct username is displayed
+    def test_username_displayed_if_logged_in(self):
+        login = self.client.login(username='testuser1', password='some_password1')
+        response = self.client.get(reverse('profile', kwargs={'username': 'testuser1'}))
+        self.assertEqual(str(response.context['user']), 'testuser1')
+        soup = BeautifulSoup(response.content.decode('utf-8'), 'html.parser')
+        self.assertTrue('Logged in as testuser1' in soup.nav.find(id='logged-in-mobile').get_text())
+        self.assertTrue('Logged in as testuser1' in soup.nav.find(id='logged-in-desktop').get_text())
+
+    def test_username_truncated_if_too_long(self):
+        login = self.client.login(username='testuser_with_long_username', password='some_password2')
+        response = self.client.get(reverse('profile', kwargs={'username': 'testuser_with_long_username'}))
+        self.assertEqual(str(response.context['user']), 'testuser_with_long_username')
+        soup = BeautifulSoup(response.content.decode('utf-8'), 'html.parser')
+        self.assertTrue('Logged in as testuser_with_long_' in soup.nav.find(id='logged-in-mobile').get_text()
+                        and 'username' not in soup.nav.find(id='logged-in-mobile').get_text())
+        self.assertTrue('Logged in as testuser' in soup.nav.find(id='logged-in-desktop').get_text()
+                        and '1' not in soup.nav.find(id='logged-in-desktop').get_text())
+
+
+
     # TODO: use bs4 to test if the table is displayed correctly
     # TODO: add tests to check if there is a warning saying you cannot set
     #  'date_to' earlier than 'date_from'
@@ -355,6 +379,14 @@ class UserStatsViewTest(TestCase):
         self.assertEqual(str(response.context['user']), 'testuser1')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'recommender/stats.html')
+
+    # TODO: use bs4 to check if frontend is displayed correctly
+    #
+    # def test_frontend(self):
+    #     response = self.client.get(reverse('all_movies'))
+    #     soup = BeautifulSoup(response.content.decode('utf-8'), 'html.parser')
+    #     # print(soup.prettify())
+    #     print(soup.table)
 
 
 class RecommendViewTest(TestCase):
