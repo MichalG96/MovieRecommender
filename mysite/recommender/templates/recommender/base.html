@@ -145,8 +145,9 @@
 <div class="container">
   {% if messages %}
     {% for message in messages %}
-      {#      TODO: add custom alerts #}
-      <div class="alert-{{ message.tags }}">
+      {#      TODO: find out why it disappeared #}
+{#      <div class="alert-{{ message.tags }}"> #}
+      <div class="alert alert-green">
         {{ message }}
       </div>
     {% endfor %}
