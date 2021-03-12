@@ -1,10 +1,11 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from selenium.webdriver.chrome.webdriver import WebDriver
+# from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from selenium.common.exceptions import TimeoutException
 from time import sleep
 
 
@@ -45,26 +46,34 @@ class MySeleniumTests(StaticLiveServerTestCase):
         password2_input.send_keys('testpassword')
         self.selenium.find_element_by_xpath('//button[@type="submit"]').click()
 
-        sleep(5)
-
         try:
-            element = WebDriverWait(self.selenium, 10).until(
-                EC.presence_of_element_located((By.ID, "//div[@class='alert']"))
+            WebDriverWait(self.selenium, 10).until(
+                EC.presence_of_element_located((By.XPATH, '//div[@class="alert"]'))
             )
-        finally:
-            print('nope')
+            # print(element.get_attribute('innerHTML'))
+        except:
+            self.assertRaises(TimeoutException)
 
 
-        # self.assertTrue('Account created for' in self.selenium.page_source)
-        sleep(5)
+        print('Account created for' in self.selenium.page_source)
+        self.assertTrue('Account created for testuser' in self.selenium.page_source)
+        # sleep(5)
 
         self.selenium.find_element_by_xpath('//a[@href="/login/"]').click()
 
-        username_input = self.selenium.find_element_by_xpath('//input[@name="username"]')
+        try:
+            username_input = WebDriverWait(self.selenium, 10).until(
+                EC.presence_of_element_located((By.XPATH, '//input[@name="username"]'))
+            )
+        except:
+            self.assertRaises(TimeoutException)
+
+        # username_input = self.selenium.find_element_by_xpath('//input[@name="username"]')
         username_input.send_keys('testuser')
         password_input = self.selenium.find_element_by_xpath('//input[@name="password"]')
         password_input.send_keys('testpassword')
-
+        self.selenium.find_element_by_xpath('//button[@type="submit"]').click()
+        #TODO: assert 'logged in' in navbar
         sleep(10)
 
     # def test_login(self):

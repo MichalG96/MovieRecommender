@@ -1,0 +1,271 @@
+1615570135072	geckodriver	INFO	Listening on 127.0.0.1:60675
+1615570138157	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofilelzLTr3"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+1615570140127	Marionette	INFO	Listening on port 60684
+1615570140174	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:60674/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:60674/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:60674/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615570190803	Marionette	INFO	Stopped listening on port 60684
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1615570219306	geckodriver	INFO	Listening on 127.0.0.1:60775
+1615570222361	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofileN1bnYQ"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+1615570223767	Marionette	INFO	Listening on port 60784
+1615570223886	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:60774/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:60774/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:60774/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615570269470	Marionette	INFO	Stopped listening on port 60784
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1615570288150	geckodriver	INFO	Listening on 127.0.0.1:60870
+1615570291184	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofilezNYY0g"
+1615570307874	geckodriver	INFO	Listening on 127.0.0.1:60932
+1615570310912	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofilePsXyCH"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1615570312874	Marionette	INFO	Listening on port 60941
+1615570312927	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:60931/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:60931/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615570332214	Marionette	INFO	Stopped listening on port 60941
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1615570363115	geckodriver	INFO	Listening on 127.0.0.1:61018
+1615570366163	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofilecHLXJl"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1615570368206	Marionette	INFO	Listening on port 61027
+1615570368287	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:61017/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:61017/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615570387642	Marionette	INFO	Stopped listening on port 61027
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1615570456073	geckodriver	INFO	Listening on 127.0.0.1:61124
+1615570459117	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofileUnqcta"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1615570461125	Marionette	INFO	Listening on port 61134
+1615570461144	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:61123/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:61123/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615570481431	Marionette	INFO	Stopped listening on port 61134
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1615570485554	geckodriver	INFO	Listening on 127.0.0.1:61198
+1615570488627	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofilesgP91y"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1615570490633	Marionette	INFO	Listening on port 61208
+1615570490659	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:61197/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:61197/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:61197/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615570525558	Marionette	INFO	Stopped listening on port 61208
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1615570566813	geckodriver	INFO	Listening on 127.0.0.1:61324
+1615570569870	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofileb1U4cK"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1615570571956	Marionette	INFO	Listening on port 61334
+1615570572001	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:61323/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:61323/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615570591916	Marionette	INFO	Stopped listening on port 61334
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1615570607353	geckodriver	INFO	Listening on 127.0.0.1:61404
+1615570610436	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofilehy5NKO"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1615570612422	Marionette	INFO	Listening on port 61413
+1615570612466	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:61403/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:61403/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:61403/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615570647449	Marionette	INFO	Stopped listening on port 61413
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1615570715363	geckodriver	INFO	Listening on 127.0.0.1:61513
+1615570718417	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofileRI8jJr"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1615570720491	Marionette	INFO	Listening on port 61522
+1615570720538	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:61512/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:61512/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:61512/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615570755443	Marionette	INFO	Stopped listening on port 61522
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1615570871733	geckodriver	INFO	Listening on 127.0.0.1:61649
+1615570874774	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofileFlQtoE"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1615570876921	Marionette	INFO	Listening on port 61658
+1615570877386	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:61648/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:61648/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:61648/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615570908043	Marionette	INFO	Stopped listening on port 61658
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1615571122108	geckodriver	INFO	Listening on 127.0.0.1:61831
+1615571125137	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofileTbMqkT"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1615571127508	Marionette	INFO	Listening on port 61840
+1615571127747	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:61830/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:61830/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:61830/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615571158354	Marionette	INFO	Stopped listening on port 61840
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1615571559776	geckodriver	INFO	Listening on 127.0.0.1:62112
+1615571562828	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofilekqiWhe"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1615571565011	Marionette	INFO	Listening on port 62122
+1615571565437	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:62111/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:62111/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:62111/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615571596305	Marionette	INFO	Stopped listening on port 62122
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1615571672601	geckodriver	INFO	Listening on 127.0.0.1:62226
+1615571675641	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofilepCyNtp"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1615571677762	Marionette	INFO	Listening on port 62235
+1615571678250	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:62225/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:62225/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:62225/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615571709361	Marionette	INFO	Stopped listening on port 62235
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1615571728065	geckodriver	INFO	Listening on 127.0.0.1:62315
+1615571731104	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofileViNXMs"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1615571733359	Marionette	INFO	Listening on port 62324
+1615571733718	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:62314/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:62314/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:62314/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615571764996	Marionette	INFO	Stopped listening on port 62324
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1615572034247	geckodriver	INFO	Listening on 127.0.0.1:62648
+1615572037297	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofilehEDcbV"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1615572039667	Marionette	INFO	Listening on port 62671
+1615572039911	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:62647/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:62647/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:62647/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:62647/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615572061003	Marionette	INFO	Stopped listening on port 62671
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1615572071394	geckodriver	INFO	Listening on 127.0.0.1:62903
+1615572074426	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofilejRYGfq"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1615572076632	Marionette	INFO	Listening on port 62912
+1615572077040	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:62902/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:62902/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:62902/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:62902/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615572108497	Marionette	INFO	Stopped listening on port 62912
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1615572128258	geckodriver	INFO	Listening on 127.0.0.1:62993
+1615572131287	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofile5lOMnM"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1615572133659	Marionette	INFO	Listening on port 63004
+1615572133898	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:62992/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:62992/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:62992/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:62992/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615572166386	Marionette	INFO	Stopped listening on port 63004
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
