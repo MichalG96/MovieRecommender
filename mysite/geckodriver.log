@@ -269,3 +269,54 @@ JavaScript error: http://localhost:62992/static/recommender/main.js, line 46: Ty
 
 ###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
 
+1615674806741	geckodriver	INFO	Listening on 127.0.0.1:51252
+1615674809809	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofile9RNM04"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1615674812712	Marionette	INFO	Listening on port 51262
+1615674812971	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:51251/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:51251/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:51251/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:51251/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615674842878	Marionette	INFO	Stopped listening on port 51262
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1615674929821	geckodriver	INFO	Listening on 127.0.0.1:51323
+1615674932891	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofilePrs5q9"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1615674934903	Marionette	INFO	Listening on port 51331
+1615674934916	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:51322/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:51322/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:51322/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:51322/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615674954901	Marionette	INFO	Stopped listening on port 51331
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+
+1615736204836	geckodriver	INFO	Listening on 127.0.0.1:52373
+1615736207945	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-foreground" "-no-remote" "-profile" "C:\\Users\\micha\\AppData\\Local\\Temp\\rust_mozprofileclpR17"
+JavaScript error: resource://gre/modules/XULStore.jsm, line 66: Error: Can't find profile directory.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1615736210605	Marionette	INFO	Listening on port 52381
+1615736211105	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: http://localhost:52372/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:52372/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:52372/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+JavaScript error: http://localhost:52372/static/recommender/main.js, line 46: TypeError: dropdown is undefined
+1615736231589	Marionette	INFO	Stopped listening on port 52381
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel::SendAndWait] Error: Channel error: cannot send/recv
+

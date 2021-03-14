@@ -73,31 +73,4 @@ class MySeleniumTests(StaticLiveServerTestCase):
         password_input = self.selenium.find_element_by_xpath('//input[@name="password"]')
         password_input.send_keys('testpassword')
         self.selenium.find_element_by_xpath('//button[@type="submit"]').click()
-        #TODO: assert 'logged in' in navbar
-        sleep(10)
-
-    # def test_login(self):
-    #     self.selenium.get(f'{self.live_server_url}')
-    #     login_link = self.selenium.find_element_by_xpath('//a[@href="/login/"]')
-    #     # login_link = self.selenium.find_element_by_xpath('//a[@href="/all_movies/"]')
-    #     login_link.click()
-    #     username_input = self.selenium.find_element_by_xpath('//input[@name="username"]')
-    #     username_input.send_keys('whitepanda599')
-    #     password_input = self.selenium.find_element_by_xpath('//input[@name="password"]')
-    #     password_input.send_keys('disney1')
-    #
-    # def test_register(self):
-    #     self.selenium.get(f'{self.live_server_url}')
-    #     self.selenium.find_element_by_xpath('//a[@href="/register/"]').click()
-    #     username_input = self.selenium.find_element_by_xpath('//input[@name="username"]')
-    #     email_input = self.selenium.find_element_by_xpath('//input[@name="email"]')
-    #     password1_input = self.selenium.find_element_by_xpath('//input[@name="password1"]')
-    #     password2_input = self.selenium.find_element_by_xpath('//input[@name="password2"]')
-    #
-    #     username_input.send_keys('testuser')
-    #     email_input.send_keys('testuser@gmail.com')
-    #     password1_input.send_keys('testpassword')
-    #     password2_input.send_keys('testpassword')
-    #
-    #     self.selenium.find_element_by_xpath('//button[@type="submit"]').click()
-    #     time.sleep(15)
+        self.assertTrue('Logged in as testuser' in self.selenium.page_source)

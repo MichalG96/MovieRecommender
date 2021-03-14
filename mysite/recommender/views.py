@@ -46,6 +46,7 @@ def register(request):
         form = UserRegisterForm()
     return render(request, 'recommender/register.html', {'form': form})
 
+
 # TODO: display warning when 'date to' is smaller than 'date from'
 class FilteredRatingListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     table_class = RatingsTable
@@ -215,27 +216,27 @@ class EstablishPreferencesView(ListView):
 
     def get_queryset(self):
         # TODO: first draw top 400 most rated movies, then out of those 400,
-        # draw n with the biggest variance in ratings
-        # For testing: ensure that user has not rated any of these movies
+        #  draw n with the biggest variance in ratings
+        #  For testing: ensure that user has not rated any of these movies
 
         movies_sorted_by_popularity = Movie.objects.all(). \
             annotate(no_of_ratings=Count('rating')). \
             order_by('-no_of_ratings')
 
-        k = 200
-        # Get k most rated movies
-        top_k = (movies_sorted_by_popularity[:k])
-        print(top_k)
-        movies_with_std = top_k.annotate(ratings_std=StdDev('rating__value'))
-        # print(movies_with_std.get(id=3))
-        print(movies_with_std.values('ratings_std'))
+        k = 400
+        n = 40
+        no_of_ratings_for_kth_movie = movies_sorted_by_popularity[k].no_of_ratings
+        movies_with_std = movies_sorted_by_popularity.annotate(
+            ratings_std=StdDev('rating__value'))
 
-        return Movie.objects.all().order_by('?')[:10]
-        # return Movie.objects.all()[:10]
+        popular_movies_with_high_std = movies_with_std.filter(
+            no_of_ratings__gte=no_of_ratings_for_kth_movie).order_by('-ratings_std')[:n]
+
+        return popular_movies_with_high_std
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-
+        print(self.get_queryset())
         active_user = User.objects.prefetch_related(
             Prefetch(
                 'rating_set',
@@ -248,6 +249,7 @@ class EstablishPreferencesView(ListView):
         context['no_of_rated_movies'] = no_of_rated_movies
 
         return context
+
 
 @login_required
 def user_stats(request, username):
@@ -351,6 +353,7 @@ def user_stats(request, username):
         'bottom_3_poster_urls': bottom_3_poster_urls
     }
     return render(request, 'recommender/stats.html', context)
+
 
 @login_required
 def recommend(request, username):
