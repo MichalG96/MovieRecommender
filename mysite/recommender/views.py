@@ -215,37 +215,56 @@ def add_rating(request, username):
     all_movies = list(serializers.deserialize('json', request.session.get('movies')))
     which_movie_currently = (request.session.get('movie_count')['count'])
     current_movie = all_movies[which_movie_currently].object
-    next_movie = all_movies[which_movie_currently+1].object
+    movies_left = request.session['movies_left']['number']
 
-    # TODO: add safety net for when which_movie is bigger than total number of sent movies
-    request.session['movie_count'] = {'count': which_movie_currently+1}
-    # TODO: change 20 to variable
-    request.session['movies_left'] = {'number': 20-which_movie_currently+1}
+    # Not all movies were yet proposed, send AJAX data with the next movie to display
+    if movies_left > 1:
+        next_movie = all_movies[which_movie_currently + 1].object
+        request.session['movie_count'] = {'count': which_movie_currently + 1}
+        tmdb_id = next_movie.tmdb_id
+        url = f'{BASE_TMDB_URL}{tmdb_id}?api_key={API_KEY}'
+        r = requests.get(url).json()
+        genres = [genre_dict['name'] for genre_dict in r['genres']]
+        overview = r['overview']
+        img_url = f'{BASE_IMG_URL}{IMG_SIZE}{r["poster_path"]}'
+        data = {
+            'pk': next_movie.pk,
+            'title': next_movie.title,
+            'genres': genres,
+            'overview': overview,
+            'img_url': img_url
+        }
+    # All movies were proposed, send AJAX data saying that the establishing prefereces process has ended
+    else:
+        data = {
+            'done_msg': "Thank you, you've rated enough movies, you can now view your recommendations"
+        }
 
-    data = {
-        'pk': next_movie.pk,
-        'title': next_movie.title,
-    }
-
-    if 'value' in request.POST.keys():
-        # Handle form
+    if 'value' in request.POST.keys():   # Handle form
         Rating.objects.create(
             movie=current_movie,
             value=request.POST['value'],
             who_rated=User.objects.get(username=username)
         )
+    movies_left = request.session['movies_left']['number']
+    request.session['movies_left'] = {'number': movies_left - 1}
 
     return JsonResponse(data)
 
 
 def establish_preferences(request, username):
-
     # Interim solution for testing purpose
-
-    print(request.session)
+    no_of_proposed_movies = 10
     no_of_movies = Movie.objects.all().count()
-    rand_indices = random.sample(range(no_of_movies), 20)
+    rand_indices = random.sample(range(no_of_movies), no_of_proposed_movies)
     sample_movies = Movie.objects.filter(id__in=rand_indices)
+    first_movie = sample_movies.first()
+    tmdb_id = first_movie.tmdb_id
+    url = f'{BASE_TMDB_URL}{tmdb_id}?api_key={API_KEY}'
+    r = requests.get(url).json()
+    genres = [genre_dict['name'] for genre_dict in r['genres']]
+    overview = r['overview']
+    img_url = f'{BASE_IMG_URL}{IMG_SIZE}{r["poster_path"]}'
 
     active_user = User.objects.prefetch_related(
         Prefetch(
@@ -255,22 +274,18 @@ def establish_preferences(request, username):
     context = {
         'form': EstablishPreferencesForm(),
         'movies': sample_movies,
-        'no_of_rated_movies': active_user.rating_set.count()
+        'no_of_rated_movies': active_user.rating_set.count(),
+        'img_url': img_url
     }
 
     # Pass movie ids to session
     request.session['movies'] = serializers.serialize("json", sample_movies)
     # This variable points to which movie is currently being rated
     request.session['movie_count'] = {'count': 0}
+    request.session['movies_left'] = {'number': no_of_proposed_movies}
+
     print(request.session.keys())
 
-    print('ESTABLISHING')
-    print(f"request.session['movie_count'] = {request.session['movie_count']}")
-
-
-
-    # for obj in serializers.deserialize("json", request.session['movies']):
-    #     print(obj.object.title)
     return render(request, 'recommender/preferences.html', context)
 
 

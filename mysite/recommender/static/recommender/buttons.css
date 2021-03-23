@@ -100,4 +100,7 @@ a.btn {
   margin: 1rem 1rem 0 1rem;
 }
 
+#rate-more a{
+  display: inline;
+}
 

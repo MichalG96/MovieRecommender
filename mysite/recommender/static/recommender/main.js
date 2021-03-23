@@ -115,7 +115,16 @@ function showNextMovie() {
     },
     success: function (response) {
       console.log(response);
-      $('#movie-title').html(response['title']);
+      if (response.hasOwnProperty('title')) {
+        $('#movie-title').html(response['title']);
+        $("#movie-poster").html(`<img src="${response['img_url']}" alt="Movie poster">`);
+      } else if (response.hasOwnProperty('done_msg')) {
+        $('#movie-title').html('');
+        $("#establish").html(response['done_msg']);
+        $("#not-seen").remove();
+        $("#rate-more").html(`<a class="btn btn-shiny btn-big" href=''>Rate more</a>`);
+        $("#movie-poster").remove();
+      }
     },
     error: function (xhr, errmsg, err) {
       $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: " + errmsg +
@@ -134,9 +143,18 @@ $("#establish").submit(function (e) {
     type: 'POST',
     data: serializedData,
     success: function (response) {
-      console.log(response);
-      $("#establish").trigger('reset');
-      $('#movie-title').html(response['title']);
+      if (response.hasOwnProperty('title')) {
+        $("#establish").trigger('reset');
+        $('#movie-title').html(response['title']);
+        $("#movie-poster").html(`<img src="${response['img_url']}" alt="Movie poster">`);
+      } else if (response.hasOwnProperty('done_msg')) {
+        $('#movie-title').html('');
+        $("#establish").html(response['done_msg']);
+        $("#not-seen").remove();
+        $("#rate-more").html(`<a class="btn btn-shiny btn-big" href=''>Rate more</a>`);
+        $("#movie-poster").remove();
+      }
+
     },
     error: function (response) {
       alert(response["responseJSON"]["error"]);

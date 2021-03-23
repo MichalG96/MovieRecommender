@@ -3,7 +3,6 @@
   /*nav {*/
   /*  padding: 0 2vw;*/
   /*}*/
-
   .filter-form {
     width: 100%;
   }
@@ -83,4 +82,7 @@
     gap: 5rem 4rem;
   }
 
+  .user-info {
+    font-size: 2rem;
+  }
 }
