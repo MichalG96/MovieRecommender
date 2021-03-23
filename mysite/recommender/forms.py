@@ -13,9 +13,11 @@ from .models import Rating
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
+
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
+
 
 class UserRatingForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -31,7 +33,8 @@ class UserRatingForm(forms.ModelForm):
             'value': '',
         }
 
-SORTING_OPTIONS= (
+
+SORTING_OPTIONS = (
     ('id', 'ID \u25B2'),
     ('-id', 'ID \u25BC'),
     ('imdb_id', 'IMDb ID \u25B2'),
@@ -46,6 +49,7 @@ SORTING_OPTIONS= (
 decades_upper = ([1889 + 10 * i for i in range(15)])
 decades_ranges = ['- 1889'] + [f'{1890 + 10 * i} - {1899 + 10 * i}' for i in range(14)]
 DECADE_CHOICES = (tuple(zip(decades_upper, decades_ranges)))
+
 
 class MovieSortGroupForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -66,8 +70,9 @@ class MovieSortGroupForm(forms.Form):
         )
 
         self.fields['sort_by'].label = 'Sort by:'
+
     sort_by = forms.ChoiceField(choices=SORTING_OPTIONS, required=False)
-                                      # widget=forms.Select(attrs={'onclick': "alert('foo !');"}))
+    # widget=forms.Select(attrs={'onclick': "alert('foo !');"}))
     group_by_decades = forms.MultipleChoiceField(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple, required=False)
 
 
@@ -77,10 +82,10 @@ class MovieRatingSortGroupForm(forms.Form):
         self.fields['sort_by'].label = 'Sort by:'
 
     SORTING_OPTIONS = SORTING_OPTIONS[:2] + SORTING_OPTIONS[6:] + (
-    ('value', 'Rating \u25B2'),
-    ('-value', 'Rating \u25BC'),
-    ('date_rated', 'Date rated \u25B2'),
-    ('-date_rated', 'Date rated \u25BC'))
+        ('value', 'Rating \u25B2'),
+        ('-value', 'Rating \u25BC'),
+        ('date_rated', 'Date rated \u25B2'),
+        ('-date_rated', 'Date rated \u25BC'))
     possible_ratings = [i for i in range(1, 11)]
     RATING_CHOICES = (tuple(zip(possible_ratings, possible_ratings)))
 
@@ -106,11 +111,12 @@ class MovieRatingSortGroupForm(forms.Form):
 
 
 class EstablishPreferencesForm(forms.ModelForm):
-    # has_not_seen = forms.BooleanField(label="Haven't seen this one")
+
+    def __init__(self, *args, **kwargs):
+        super(EstablishPreferencesForm, self).__init__(*args, **kwargs)
+        self.fields['value'].widget.attrs['min'] = 1
+        self.fields['value'].widget.attrs['max'] = 10
 
     class Meta:
         model = Rating
         fields = ('value',)
-        widgets = {
-            'value': NumberInput(attrs={'max': 10})
-        }

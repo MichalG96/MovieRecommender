@@ -50,6 +50,7 @@ class RatingFilter(FilterSet):
     movie__year_released = MultipleChoiceFilter(choices=DECADE_CHOICES, widget=forms.CheckboxSelectMultiple,
                                                 method='get_movies_from_decades')
 
+    # TODO: add validation https://stackoverflow.com/questions/36768690/django-filter-a-date-within-a-range-with-validation
     date_from = DateFilter(field_name='date_rated', lookup_expr='gte', widget=DateInput())
     date_to = DateFilter(field_name='date_rated', widget=DateInput(), method='include_end_date_day')
 

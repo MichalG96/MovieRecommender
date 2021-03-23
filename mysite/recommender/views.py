@@ -65,7 +65,7 @@ class FilteredRatingListView(LoginRequiredMixin, SingleTableMixin, FilterView):
                 'rating_set',
             )).get(username=self.kwargs['username'])
 
-        queryset = self.profile_owner.rating_set.all().order_by('date_rated')
+        queryset = self.profile_owner.rating_set.all().order_by('-date_rated')
         return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -213,24 +213,36 @@ class RatingDeleteView(UserPassesTestMixin, DeleteView):
 
 def add_rating(request, username):
     all_movies = list(serializers.deserialize('json', request.session.get('movies')))
-    which_movie = (request.session.get('movie_count')['count'])
-    current_movie = all_movies[which_movie].object
-    print(current_movie.title)
-    data = {
-        'pk': current_movie.pk,
-        'title': current_movie.title,
-    }
-    # TODO: add safety net for when which_movie is bigger than total number of sent movies
-    request.session['movie_count'] = {'count': which_movie+1}
+    which_movie_currently = (request.session.get('movie_count')['count'])
+    current_movie = all_movies[which_movie_currently].object
+    next_movie = all_movies[which_movie_currently+1].object
 
-    print(which_movie)
+    # TODO: add safety net for when which_movie is bigger than total number of sent movies
+    request.session['movie_count'] = {'count': which_movie_currently+1}
+    # TODO: change 20 to variable
+    request.session['movies_left'] = {'number': 20-which_movie_currently+1}
+
+    data = {
+        'pk': next_movie.pk,
+        'title': next_movie.title,
+    }
+
+    if 'value' in request.POST.keys():
+        # Handle form
+        Rating.objects.create(
+            movie=current_movie,
+            value=request.POST['value'],
+            who_rated=User.objects.get(username=username)
+        )
+
     return JsonResponse(data)
 
 
 def establish_preferences(request, username):
-    print('ESTABLISHING')
 
     # Interim solution for testing purpose
+
+    print(request.session)
     no_of_movies = Movie.objects.all().count()
     rand_indices = random.sample(range(no_of_movies), 20)
     sample_movies = Movie.objects.filter(id__in=rand_indices)
@@ -246,9 +258,17 @@ def establish_preferences(request, username):
         'no_of_rated_movies': active_user.rating_set.count()
     }
 
-    # pass movie ids to session
+    # Pass movie ids to session
     request.session['movies'] = serializers.serialize("json", sample_movies)
+    # This variable points to which movie is currently being rated
     request.session['movie_count'] = {'count': 0}
+    print(request.session.keys())
+
+    print('ESTABLISHING')
+    print(f"request.session['movie_count'] = {request.session['movie_count']}")
+
+
+
     # for obj in serializers.deserialize("json", request.session['movies']):
     #     print(obj.object.title)
     return render(request, 'recommender/preferences.html', context)
