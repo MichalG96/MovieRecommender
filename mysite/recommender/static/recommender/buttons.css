@@ -1,9 +1,14 @@
 .btn {
+  padding: 0 0.5rem 0 0.5rem;
   background: none;
   border-radius: 5px 0px 5px 0px;
   cursor: pointer;
   font-family: "Archivo Narrow", sans-serif;
   font-size: 13px;
+}
+
+.btn-big{
+  font-size: 2rem;
 }
 
 .btn-normal, .btn-shiny {
@@ -89,7 +94,7 @@ a.btn {
   align-items: center;
 }
 
-.search-btn-group button, .search-btn-group a{
+.search-btn-group button, .search-btn-group a {
   flex: 1 1 0;
   height: 3rem;
   margin: 1rem 1rem 0 1rem;

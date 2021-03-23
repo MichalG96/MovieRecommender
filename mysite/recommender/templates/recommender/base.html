@@ -42,6 +42,7 @@
   <link rel="stylesheet" type="text/css" href="{% static 'recommender/medium_screen.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'recommender/small_screen.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'recommender/burger.css' %}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 
   <title>
@@ -146,7 +147,7 @@
   {% if messages %}
     {% for message in messages %}
       {#      TODO: find out why it disappeared #}
-{#      <div class="alert-{{ message.tags }}"> #}
+      {#      <div class="alert-{{ message.tags }}"> #}
       <div class="alert alert-green">
         {{ message }}
       </div>

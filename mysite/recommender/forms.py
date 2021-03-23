@@ -1,12 +1,15 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Rating
 from django.core.exceptions import ValidationError
+from django.forms.widgets import NumberInput
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, HTML
 from crispy_forms.bootstrap import InlineCheckboxes
+
+from .models import Rating
+
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -100,3 +103,14 @@ class MovieRatingSortGroupForm(forms.Form):
                 raise ValidationError(
                     "'Date from' cannot be later than 'Date to"
                 )
+
+
+class EstablishPreferencesForm(forms.ModelForm):
+    # has_not_seen = forms.BooleanField(label="Haven't seen this one")
+
+    class Meta:
+        model = Rating
+        fields = ('value',)
+        widgets = {
+            'value': NumberInput(attrs={'max': 10})
+        }

@@ -7,9 +7,19 @@
 
 {% block content %}
   <div class="preferences-container">
-          <button type="submit" class="btn btn-shiny">Rate Later</button>
-
-
+    <button type="submit" class="btn btn-shiny btn-big">Rate Later</button>
+    <br>
+    <br>
+    <form method="post">{% csrf_token %}
+      {{ form.as_p }}
+    </form>
+    <button class="btn btn-danger btn-big" onclick="testFunc()">Haven't seen</button>
+    <br>
+    <br>
+    <br>
+    <br>
+    <hr>
+    <br>
     {% if no_of_rated_movies < 60 %}
       <form method="post">{% csrf_token %}
         {% for movie in movies %}

@@ -14,7 +14,8 @@ urlpatterns = [
     path('all_movies/', FilteredMovieListView.as_view(), name='all_movies'),
     path('profile/<str:username>/', FilteredRatingListView.as_view(), name='profile'),
     path('profile/<str:username>/stats/', views.user_stats, name='user_stats'),
-    path('preferences/<str:username>/', EstablishPreferencesView.as_view(), name='preferences'),
+    path('preferences/<str:username>/', views.establish_preferences, name='preferences'),
+    path('preferences/<str:username>/add_rating/', views.add_rating, name='preferences'),
     path('movie/<int:pk>/', MovieDetailDispatcherView.as_view(), name='movie_detail'),
     path('movie/<int:pk>/delete_rating/', RatingDeleteView.as_view(), name='delete_rating'),
 ]

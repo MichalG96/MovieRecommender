@@ -1,3 +1,5 @@
+import random
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -9,8 +11,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Avg, Count, Max, Min, Prefetch, StdDev
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.core import serializers
 
-from .forms import UserRegisterForm, UserRatingForm
+from .forms import UserRegisterForm, UserRatingForm, EstablishPreferencesForm
 from .models import Movie, Rating
 
 from .filters import MovieFilter, RatingFilter, UserFilter
@@ -207,6 +211,49 @@ class RatingDeleteView(UserPassesTestMixin, DeleteView):
         return reverse('movie_detail', kwargs={'pk': self.kwargs['pk']})
 
 
+def add_rating(request, username):
+    all_movies = list(serializers.deserialize('json', request.session.get('movies')))
+    which_movie = (request.session.get('movie_count')['count'])
+    current_movie = all_movies[which_movie].object
+    print(current_movie.title)
+    data = {
+        'pk': current_movie.pk,
+        'title': current_movie.title,
+    }
+    # TODO: add safety net for when which_movie is bigger than total number of sent movies
+    request.session['movie_count'] = {'count': which_movie+1}
+
+    print(which_movie)
+    return JsonResponse(data)
+
+
+def establish_preferences(request, username):
+    print('ESTABLISHING')
+
+    # Interim solution for testing purpose
+    no_of_movies = Movie.objects.all().count()
+    rand_indices = random.sample(range(no_of_movies), 20)
+    sample_movies = Movie.objects.filter(id__in=rand_indices)
+
+    active_user = User.objects.prefetch_related(
+        Prefetch(
+            'rating_set',
+        )).get(username=username)
+
+    context = {
+        'form': EstablishPreferencesForm(),
+        'movies': sample_movies,
+        'no_of_rated_movies': active_user.rating_set.count()
+    }
+
+    # pass movie ids to session
+    request.session['movies'] = serializers.serialize("json", sample_movies)
+    request.session['movie_count'] = {'count': 0}
+    # for obj in serializers.deserialize("json", request.session['movies']):
+    #     print(obj.object.title)
+    return render(request, 'recommender/preferences.html', context)
+
+
 class EstablishPreferencesView(ListView):
     # After user is created, select n(20? 30? 40?) movies to provide initial
     # recommendations for him
@@ -219,35 +266,43 @@ class EstablishPreferencesView(ListView):
         #  draw n with the biggest variance in ratings
         #  For testing: ensure that user has not rated any of these movies
 
-        movies_sorted_by_popularity = Movie.objects.all(). \
-            annotate(no_of_ratings=Count('rating')). \
-            order_by('-no_of_ratings')
+        # TODO: uncomment
+        # movies_sorted_by_popularity = Movie.objects.all(). \
+        #     annotate(no_of_ratings=Count('rating')). \
+        #     order_by('-no_of_ratings')
+        #
+        # k = 400
+        # n = 40
+        # no_of_ratings_for_kth_movie = movies_sorted_by_popularity[k].no_of_ratings
+        # movies_with_std = movies_sorted_by_popularity.annotate(
+        #     ratings_std=StdDev('rating__value'))
+        #
+        # popular_movies_with_high_std = movies_with_std.filter(
+        #     no_of_ratings__gte=no_of_ratings_for_kth_movie).order_by('-ratings_std')[:n]
+        #
+        # return popular_movies_with_high_std
 
-        k = 400
-        n = 40
-        no_of_ratings_for_kth_movie = movies_sorted_by_popularity[k].no_of_ratings
-        movies_with_std = movies_sorted_by_popularity.annotate(
-            ratings_std=StdDev('rating__value'))
+        # Interim solution for testing purpose
+        no_of_movies = Movie.objects.all().count()
+        rand_indices = random.sample(range(no_of_movies), 20)
+        sample_movies = Movie.objects.filter(id__in=rand_indices)
 
-        popular_movies_with_high_std = movies_with_std.filter(
-            no_of_ratings__gte=no_of_ratings_for_kth_movie).order_by('-ratings_std')[:n]
+        # pass movie ids to session
+        self.request.session['movies'] = sample_movies.values_list('pk', flat=True)
 
-        return popular_movies_with_high_std
+        return sample_movies
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(self.get_queryset())
+
         active_user = User.objects.prefetch_related(
             Prefetch(
                 'rating_set',
             )).get(username=self.kwargs['username'])
 
-        # print(vars(active_user))
-        # print(active_user.rating_set.count())
-        no_of_rated_movies = active_user.rating_set.count()
-
-        context['no_of_rated_movies'] = no_of_rated_movies
-
+        context['no_of_rated_movies'] = active_user.rating_set.count()
+        form = EstablishPreferencesForm()
+        context['form'] = form
         return context
 
 
