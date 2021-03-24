@@ -42,6 +42,11 @@
   color: red;
 }
 
+
+.btn-danger:focus {
+  outline:none
+}
+
 .btn-info {
   padding: 0 0.5rem 0 0.5rem;
   border: 0.2rem solid #fffde9;
@@ -103,4 +108,6 @@ a.btn {
 #rate-more a{
   display: inline;
 }
+
+
 

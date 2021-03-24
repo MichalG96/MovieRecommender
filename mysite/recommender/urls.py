@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 from .views import (MovieDetailDispatcherView, UserListView, RatingDeleteView,
-                    EstablishPreferencesView, FilteredMovieListView, FilteredRatingListView)
+                    FilteredMovieListView, FilteredRatingListView)
 from django.views.generic import TemplateView
 
 urlpatterns = [

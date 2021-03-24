@@ -124,6 +124,7 @@ function showNextMovie() {
         $("#not-seen").remove();
         $("#rate-more").html(`<a class="btn btn-shiny btn-big" href=''>Rate more</a>`);
         $("#movie-poster").remove();
+        $("#overview").remove();
       }
     },
     error: function (xhr, errmsg, err) {
@@ -153,6 +154,7 @@ $("#establish").submit(function (e) {
         $("#not-seen").remove();
         $("#rate-more").html(`<a class="btn btn-shiny btn-big" href=''>Rate more</a>`);
         $("#movie-poster").remove();
+        $("#overview").remove();
       }
 
     },

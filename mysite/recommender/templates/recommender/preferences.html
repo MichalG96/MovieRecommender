@@ -7,23 +7,26 @@
 
 {% block content %}
   <div class="preferences-container">
-    <div id="movie-poster">
-      <img src="{{ img_url }}" alt="Movie poster">
+    <div class="rate-new-movies">
+      <div id="movie-poster">
+        <img src="{{ img_url }}" alt="Movie poster">
+      </div>
+      <div id="movie-title">
+        {% with movies|first as first_movie %}
+          {{ first_movie.title }}
+        {% endwith %}
+      </div>
+      <div id="overview">
+        {{ overview }}
+      </div>
+      <form method="post" id="establish">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-shiny btn-big">Rate</button>
+
+      </form>
+      <button class="btn btn-danger btn-big" onclick="showNextMovie()" id="not-seen">Haven't seen</button>
+      <div id="rate-more"></div>
     </div>
-    <div id="movie-title">
-      {% with movies|first as first_movie %}
-        {{ first_movie.title }}
-      {% endwith %}
-    </div>
-    <form method="post" id="establish">{% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit" class="btn btn-shiny btn-big">Rate</button>
-
-    </form>
-    <button class="btn btn-danger btn-big" onclick="showNextMovie()" id="not-seen">Haven't seen</button>
-    <div id="rate-more"></div>
-
-
   </div>
 {% endblock content %}
 

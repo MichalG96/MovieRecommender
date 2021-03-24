@@ -833,6 +833,20 @@ form h1 {
 }
 
 
-.preferences-container{
+.preferences-container {
   font-size: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+
+#movie-poster {
+  display: flex;
+  justify-content: center;
+}
+
+#overview{
+  font-size: 2rem;
 }
