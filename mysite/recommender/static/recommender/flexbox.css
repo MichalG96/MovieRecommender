@@ -836,10 +836,20 @@ form h1 {
 .preferences-container {
   font-size: 3rem;
   display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.rate-new-movies {
+  width: 70%;
+  display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 100%;
+}
+.rate-new-movies button{
+  margin: 0.5rem 0;
+  width: 12rem;
 }
 
 #movie-poster {
@@ -847,6 +857,34 @@ form h1 {
   justify-content: center;
 }
 
-#overview{
+#overview {
   font-size: 2rem;
+}
+
+#establish {
+  display: flex;
+  flex-direction: column;
+}
+
+#movie-title {
+  font-size: 5rem;
+  font-weight: bold;
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+#establish input{
+  margin: 1.2rem 0;
+  width: 50%;
+}
+
+#establish div>div {
+  display: flex;
+  justify-content: center;
+}
+
+#info-text{
+  margin-top: 2rem;
 }

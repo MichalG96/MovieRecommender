@@ -118,6 +118,9 @@ function showNextMovie() {
       if (response.hasOwnProperty('title')) {
         $('#movie-title').html(response['title']);
         $("#movie-poster").html(`<img src="${response['img_url']}" alt="Movie poster">`);
+        $("#overview").html(response['overview']);
+        $("#establish")[0].reset();
+
       } else if (response.hasOwnProperty('done_msg')) {
         $('#movie-title').html('');
         $("#establish").html(response['done_msg']);
@@ -125,6 +128,7 @@ function showNextMovie() {
         $("#rate-more").html(`<a class="btn btn-shiny btn-big" href=''>Rate more</a>`);
         $("#movie-poster").remove();
         $("#overview").remove();
+        $("#info-text").remove();
       }
     },
     error: function (xhr, errmsg, err) {
@@ -148,6 +152,7 @@ $("#establish").submit(function (e) {
         $("#establish").trigger('reset');
         $('#movie-title').html(response['title']);
         $("#movie-poster").html(`<img src="${response['img_url']}" alt="Movie poster">`);
+        $("#overview").html(response['overview']);
       } else if (response.hasOwnProperty('done_msg')) {
         $('#movie-title').html('');
         $("#establish").html(response['done_msg']);
@@ -155,6 +160,7 @@ $("#establish").submit(function (e) {
         $("#rate-more").html(`<a class="btn btn-shiny btn-big" href=''>Rate more</a>`);
         $("#movie-poster").remove();
         $("#overview").remove();
+        $("#info-text").remove();
       }
 
     },

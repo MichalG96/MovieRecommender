@@ -120,3 +120,6 @@ class EstablishPreferencesForm(forms.ModelForm):
     class Meta:
         model = Rating
         fields = ('value',)
+        labels = {
+                "value": False
+            }

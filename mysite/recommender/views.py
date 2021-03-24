@@ -267,30 +267,30 @@ def establish_preferences(request, username):
         )).get(username=username)
 
     # TODO: optimize this process, it can't be this slow
-    #Get movies not rated by the user:
-    rated_movies_id = list(active_user.rating_set.all().values_list('movie', flat=True))
-    not_rated_movies = Movie.objects.all().exclude(id__in=rated_movies_id)
+    # Get movies not rated by the user:
+    # rated_movies_id = list(active_user.rating_set.all().values_list('movie', flat=True))
+    # not_rated_movies = Movie.objects.all().exclude(id__in=rated_movies_id)
+    # movies_sorted_by_popularity = not_rated_movies. \
+    #     annotate(no_of_ratings=Count('rating'), ratings_std=StdDev('rating__value')). \
+    #     order_by('-no_of_ratings')
+    # no_of_most_popular = 500
+    # no_of_movies_with_std = 100
+    # no_of_proposed_movies = 40
+    # no_of_ratings_for_kth_movie = movies_sorted_by_popularity[no_of_most_popular].no_of_ratings
+    # most_popular_movies = movies_sorted_by_popularity.filter(
+    #     no_of_ratings__gte=no_of_ratings_for_kth_movie).order_by('-ratings_std')
+    # std_dev_of_nth_movie = most_popular_movies[no_of_movies_with_std].ratings_std
+    # popular_movies_with_high_std = most_popular_movies.filter(
+    #     ratings_std__gte=std_dev_of_nth_movie)
+    # rand_indices = random.sample(list(popular_movies_with_high_std.values_list('id', flat=True)), no_of_proposed_movies)
+    # proposed_movies = popular_movies_with_high_std.filter(id__in=rand_indices)
 
-    movies_sorted_by_popularity = not_rated_movies. \
-        annotate(no_of_ratings=Count('rating'), ratings_std=StdDev('rating__value')). \
-        order_by('-no_of_ratings')
+    no_of_proposed_movies = 10
+    no_of_movies = Movie.objects.all().count()
+    rand_indices = random.sample(range(no_of_movies), no_of_proposed_movies)
+    proposed_movies = Movie.objects.filter(id__in=rand_indices)
 
-    no_of_most_popular = 500
-    no_of_movies_with_std = 100
-    no_of_proposed_movies = 40
-
-    no_of_ratings_for_kth_movie = movies_sorted_by_popularity[no_of_most_popular].no_of_ratings
-    most_popular_movies = movies_sorted_by_popularity.filter(
-        no_of_ratings__gte=no_of_ratings_for_kth_movie).order_by('-ratings_std')
-
-    std_dev_of_nth_movie = most_popular_movies[no_of_movies_with_std].ratings_std
-    popular_movies_with_high_std = most_popular_movies.filter(
-        ratings_std__gte=std_dev_of_nth_movie)
-
-    rand_indices = random.sample(list(popular_movies_with_high_std.values_list('id', flat=True)), no_of_proposed_movies)
-    proposed_movies = popular_movies_with_high_std.filter(id__in=rand_indices)
     first_movie = proposed_movies.first()
-
     tmdb_id = first_movie.tmdb_id
     url = f'{BASE_TMDB_URL}{tmdb_id}?api_key={API_KEY}'
     r = requests.get(url).json()
