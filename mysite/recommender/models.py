@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.urls import reverse
 
+
 # TODO: assign movielens Id automatically on registration
 # https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html
 class Profile(models.Model):
@@ -20,13 +21,13 @@ class Genre(models.Model):
     def __str__(self):
         return self.name
 
-# https://docs.djangoproject.com/en/3.1/topics/db/examples/many_to_many/
-# TODO: when using Postgres, try List field, or JSON field
+
 class Actor(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
+
 
 class Movie(models.Model):
     movielens_id = models.IntegerField(verbose_name='movielens ID')
@@ -72,4 +73,3 @@ class TopMovie(models.Model):
 
     def __str__(self):
         return f'user_{self.user.pk}_movie_{self.movie}_predicted_value_{self.predicted_value}'
-

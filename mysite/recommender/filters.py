@@ -10,7 +10,6 @@ from .models import Movie
 
 # upper limits of decades: 1919, 1929, ..., 2029
 decades_upper = ([1919 + 10 * i for i in range(12)])
-# TODO: change text
 decades_ranges = ['To 1919'] + [f"{1920 + 10 * i}'s" for i in range(11)]
 DECADE_CHOICES = (tuple(zip(decades_upper, decades_ranges)))
 

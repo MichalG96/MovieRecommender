@@ -263,12 +263,13 @@ def add_rating(request, username):
             'done_msg': "Thank you, you've rated enough movies, you can now view your recommendations"
         }
     if 'value' in request.POST.keys():  # Handle form
-        # TODO: make sure only this user can rate
-        Rating.objects.create(
-            movie=current_movie,
-            value=request.POST['value'],
-            who_rated=User.objects.get(username=username)
-        )
+        # Make sure that the username from the url matches the username who's making a request
+        if username == request.user.username:
+            Rating.objects.create(
+                movie=current_movie,
+                value=request.POST['value'],
+                who_rated=User.objects.get(username=username)
+            )
     movies_left = request.session['movies_left']['number']
     request.session['movies_left'] = {'number': movies_left - 1}
     return JsonResponse(data)
@@ -285,22 +286,22 @@ def establish_preferences(request, username):
 
         # TODO: optimize this process, it can't be this slow
         # Get movies not rated by the user:
-        # rated_movies_id = list(modified_user.rating_set.all().values_list('movie', flat=True))
-        # not_rated_movies = Movie.objects.all().exclude(id__in=rated_movies_id)
-        # movies_sorted_by_popularity = not_rated_movies. \
-        #     annotate(no_of_ratings=Count('rating'), ratings_std=StdDev('rating__value')). \
-        #     order_by('-no_of_ratings')
-        # no_of_most_popular = 500
-        # no_of_movies_with_std = 100
-        # no_of_proposed_movies = 40
-        # no_of_ratings_for_kth_movie = movies_sorted_by_popularity[no_of_most_popular].no_of_ratings
-        # most_popular_movies = movies_sorted_by_popularity.filter(
-        #     no_of_ratings__gte=no_of_ratings_for_kth_movie).order_by('-ratings_std')
-        # std_dev_of_nth_movie = most_popular_movies[no_of_movies_with_std].ratings_std
-        # popular_movies_with_high_std = most_popular_movies.filter(
-        #     ratings_std__gte=std_dev_of_nth_movie)
-        # rand_indices = random.sample(list(popular_movies_with_high_std.values_list('id', flat=True)), no_of_proposed_movies)
-        # proposed_movies = popular_movies_with_high_std.filter(id__in=rand_indices)
+        rated_movies_id = list(modified_user.rating_set.all().values_list('movie', flat=True))
+        not_rated_movies = Movie.objects.all().exclude(id__in=rated_movies_id)
+        movies_sorted_by_popularity = not_rated_movies. \
+            annotate(no_of_ratings=Count('rating'), ratings_std=StdDev('rating__value')). \
+            order_by('-no_of_ratings')
+        no_of_most_popular = 500
+        no_of_movies_with_std = 100
+        no_of_proposed_movies = 40
+        no_of_ratings_for_kth_movie = movies_sorted_by_popularity[no_of_most_popular].no_of_ratings
+        most_popular_movies = movies_sorted_by_popularity.filter(
+            no_of_ratings__gte=no_of_ratings_for_kth_movie).order_by('-ratings_std')
+        std_dev_of_nth_movie = most_popular_movies[no_of_movies_with_std].ratings_std
+        popular_movies_with_high_std = most_popular_movies.filter(
+            ratings_std__gte=std_dev_of_nth_movie)
+        rand_indices = random.sample(list(popular_movies_with_high_std.values_list('id', flat=True)), no_of_proposed_movies)
+        proposed_movies = popular_movies_with_high_std.filter(id__in=rand_indices)
 
         no_of_proposed_movies = 10
         no_of_movies = Movie.objects.all().count()
@@ -314,12 +315,19 @@ def establish_preferences(request, username):
         overview = r['overview']
         img_url = f'{BASE_IMG_URL}{IMG_SIZE}{r["poster_path"]}'
 
+        if request.session.get('first_login'):
+            welcome_text = "Welcome! We present you a set of movies. Please rate the ones you've seen to help us establish your preferences"
+            del(request.session['first_login'])
+        else:
+            welcome_text = ''
+
         context = {
             'form': EstablishPreferencesForm(),
-            'movies': proposed_movies,
+            'movie': first_movie,
             'no_of_rated_movies': modified_user.rating_set.count(),
             'img_url': img_url,
             'overview': overview,
+            'welcome_text': welcome_text,
         }
 
         # Pass movie ids to session

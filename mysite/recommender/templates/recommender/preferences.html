@@ -8,13 +8,12 @@
 {% block content %}
   <div class="preferences-container">
     <div class="rate-new-movies">
+      <h3 id="welcome-text"> {{ welcome_text }} </h3>
       <div id="movie-poster">
         <img src="{{ img_url }}" alt="Movie poster">
       </div>
       <div id="movie-title" class="title">
-        {% with movies|first as first_movie %}
-          {{ first_movie.title }}
-        {% endwith %}
+        {{ movie.title }}
       </div>
       <div id="overview">
         {{ overview }}

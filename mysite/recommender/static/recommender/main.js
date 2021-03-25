@@ -120,6 +120,7 @@ function showNextMovie() {
         $("#movie-poster").html(`<img src="${response['img_url']}" alt="Movie poster">`);
         $("#overview").html(response['overview']);
         $("#establish")[0].reset();
+        $("#welcome-text").remove();
 
       } else if (response.hasOwnProperty('done_msg')) {
         $('#movie-title').html('');
@@ -129,6 +130,7 @@ function showNextMovie() {
         $("#movie-poster").remove();
         $("#overview").remove();
         $("#info-text").remove();
+        $("#welcome-text").remove();
       }
     },
     error: function (xhr, errmsg, err) {
@@ -153,6 +155,7 @@ $("#establish").submit(function (e) {
         $('#movie-title').html(response['title']);
         $("#movie-poster").html(`<img src="${response['img_url']}" alt="Movie poster">`);
         $("#overview").html(response['overview']);
+        $("#welcome-text").remove();
       } else if (response.hasOwnProperty('done_msg')) {
         $('#movie-title').html('');
         $("#establish").html(response['done_msg']);
@@ -161,6 +164,7 @@ $("#establish").submit(function (e) {
         $("#movie-poster").remove();
         $("#overview").remove();
         $("#info-text").remove();
+        $("#welcome-text").remove();
       }
 
     },
