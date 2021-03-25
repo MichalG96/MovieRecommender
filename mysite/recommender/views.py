@@ -14,6 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.core import serializers
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.views import LoginView
 
 from .forms import UserRegisterForm, UserRatingForm, EstablishPreferencesForm
 from .models import Movie, Rating
@@ -47,10 +48,32 @@ def register(request):
             username = form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}')
             return redirect('homepage')
-            # return redirect(reverse('preferences', kwargs={'username': username}))
     else:
         form = UserRegisterForm()
     return render(request, 'recommender/register.html', {'form': form})
+
+
+class CustomLoginView(LoginView):
+
+    def dispatch(self, request, *args, **kwargs):
+        active_user_queryset = User.objects.filter(username=self.request.POST.get('username'))
+        if active_user_queryset.exists():
+            active_user = active_user_queryset.first()
+            if active_user.last_login is None:
+                self.request.session['first_login'] = True
+            else:
+                self.request.session['first_login'] = False
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        success_url = super().get_success_url()
+        active_user_queryset = User.objects.filter(username=self.request.POST.get('username'))
+        if active_user_queryset.exists():
+            active_user = active_user_queryset.first()
+            if self.request.session['first_login']:
+                return reverse('preferences', kwargs={'username': active_user.username})
+            else:
+                return success_url
 
 
 # TODO: display warning when 'date to' is smaller than 'date from'

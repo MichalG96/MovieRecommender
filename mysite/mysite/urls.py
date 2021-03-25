@@ -9,8 +9,7 @@ urlpatterns = [
     # TODO: change this path before deploying
     path('admin/', admin.site.urls),
     path('', include('recommender.urls')),
-    # TODO: login page should redirect the user if he's already logged in
-    path('login/', auth_views.LoginView.as_view(template_name='recommender/login.html'), name='login'),
+    path('login/', user_views.CustomLoginView.as_view(template_name='recommender/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='recommender/logout.html'), name='logout'),
     path('register/', user_views.register, name='register'),
     path('password-reset/', auth_views.PasswordResetView.as_view(template_name='recommender/password_reset.html'),
