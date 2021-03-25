@@ -67,13 +67,11 @@ class CustomLoginView(LoginView):
 
     def get_success_url(self):
         success_url = super().get_success_url()
-        active_user_queryset = User.objects.filter(username=self.request.POST.get('username'))
-        if active_user_queryset.exists():
-            active_user = active_user_queryset.first()
-            if self.request.session['first_login']:
-                return reverse('preferences', kwargs={'username': active_user.username})
-            else:
-                return success_url
+        active_user = self.request.user
+        if self.request.session['first_login']:
+            return reverse('preferences', kwargs={'username': active_user.username})
+        else:
+            return success_url
 
 
 # TODO: display warning when 'date to' is smaller than 'date from'
