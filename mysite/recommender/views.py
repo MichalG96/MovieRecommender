@@ -274,65 +274,64 @@ def add_rating(request, username):
     return JsonResponse(data)
 
 
-# TODO: Allow only current user to rate his movies
-def correct_user_rates(user):
-    return True
-
-
-@user_passes_test(correct_user_rates)
 @login_required
 def establish_preferences(request, username):
-    active_user = User.objects.prefetch_related(
+    modified_user = User.objects.prefetch_related(
         Prefetch(
             'rating_set',
         )).get(username=username)
+    active_user_username = request.user.username
+    if modified_user.username == active_user_username:
 
-    # TODO: optimize this process, it can't be this slow
-    # Get movies not rated by the user:
-    # rated_movies_id = list(active_user.rating_set.all().values_list('movie', flat=True))
-    # not_rated_movies = Movie.objects.all().exclude(id__in=rated_movies_id)
-    # movies_sorted_by_popularity = not_rated_movies. \
-    #     annotate(no_of_ratings=Count('rating'), ratings_std=StdDev('rating__value')). \
-    #     order_by('-no_of_ratings')
-    # no_of_most_popular = 500
-    # no_of_movies_with_std = 100
-    # no_of_proposed_movies = 40
-    # no_of_ratings_for_kth_movie = movies_sorted_by_popularity[no_of_most_popular].no_of_ratings
-    # most_popular_movies = movies_sorted_by_popularity.filter(
-    #     no_of_ratings__gte=no_of_ratings_for_kth_movie).order_by('-ratings_std')
-    # std_dev_of_nth_movie = most_popular_movies[no_of_movies_with_std].ratings_std
-    # popular_movies_with_high_std = most_popular_movies.filter(
-    #     ratings_std__gte=std_dev_of_nth_movie)
-    # rand_indices = random.sample(list(popular_movies_with_high_std.values_list('id', flat=True)), no_of_proposed_movies)
-    # proposed_movies = popular_movies_with_high_std.filter(id__in=rand_indices)
+        # TODO: optimize this process, it can't be this slow
+        # Get movies not rated by the user:
+        # rated_movies_id = list(modified_user.rating_set.all().values_list('movie', flat=True))
+        # not_rated_movies = Movie.objects.all().exclude(id__in=rated_movies_id)
+        # movies_sorted_by_popularity = not_rated_movies. \
+        #     annotate(no_of_ratings=Count('rating'), ratings_std=StdDev('rating__value')). \
+        #     order_by('-no_of_ratings')
+        # no_of_most_popular = 500
+        # no_of_movies_with_std = 100
+        # no_of_proposed_movies = 40
+        # no_of_ratings_for_kth_movie = movies_sorted_by_popularity[no_of_most_popular].no_of_ratings
+        # most_popular_movies = movies_sorted_by_popularity.filter(
+        #     no_of_ratings__gte=no_of_ratings_for_kth_movie).order_by('-ratings_std')
+        # std_dev_of_nth_movie = most_popular_movies[no_of_movies_with_std].ratings_std
+        # popular_movies_with_high_std = most_popular_movies.filter(
+        #     ratings_std__gte=std_dev_of_nth_movie)
+        # rand_indices = random.sample(list(popular_movies_with_high_std.values_list('id', flat=True)), no_of_proposed_movies)
+        # proposed_movies = popular_movies_with_high_std.filter(id__in=rand_indices)
 
-    no_of_proposed_movies = 10
-    no_of_movies = Movie.objects.all().count()
-    rand_indices = random.sample(range(no_of_movies), no_of_proposed_movies)
-    proposed_movies = Movie.objects.filter(id__in=rand_indices)
+        no_of_proposed_movies = 10
+        no_of_movies = Movie.objects.all().count()
+        rand_indices = random.sample(range(no_of_movies), no_of_proposed_movies)
+        proposed_movies = Movie.objects.filter(id__in=rand_indices)
 
-    first_movie = proposed_movies.first()
-    tmdb_id = first_movie.tmdb_id
-    url = f'{BASE_TMDB_URL}{tmdb_id}?api_key={API_KEY}'
-    r = requests.get(url).json()
-    overview = r['overview']
-    img_url = f'{BASE_IMG_URL}{IMG_SIZE}{r["poster_path"]}'
+        first_movie = proposed_movies.first()
+        tmdb_id = first_movie.tmdb_id
+        url = f'{BASE_TMDB_URL}{tmdb_id}?api_key={API_KEY}'
+        r = requests.get(url).json()
+        overview = r['overview']
+        img_url = f'{BASE_IMG_URL}{IMG_SIZE}{r["poster_path"]}'
 
-    context = {
-        'form': EstablishPreferencesForm(),
-        'movies': proposed_movies,
-        'no_of_rated_movies': active_user.rating_set.count(),
-        'img_url': img_url,
-        'overview': overview,
-    }
+        context = {
+            'form': EstablishPreferencesForm(),
+            'movies': proposed_movies,
+            'no_of_rated_movies': modified_user.rating_set.count(),
+            'img_url': img_url,
+            'overview': overview,
+        }
 
-    # Pass movie ids to session
-    request.session['movies'] = serializers.serialize("json", proposed_movies)
-    # This variable points to which movie is currently being rated
-    request.session['movie_count'] = {'count': 0}
-    request.session['movies_left'] = {'number': no_of_proposed_movies}
+        # Pass movie ids to session
+        request.session['movies'] = serializers.serialize("json", proposed_movies)
+        # This variable points to which movie is currently being rated
+        request.session['movie_count'] = {'count': 0}
+        request.session['movies_left'] = {'number': no_of_proposed_movies}
 
-    return render(request, 'recommender/preferences.html', context)
+        return render(request, 'recommender/preferences.html', context)
+
+    else:
+        return render(request, 'recommender/preferences_no_access.html', {'username': active_user_username})
 
 
 @login_required

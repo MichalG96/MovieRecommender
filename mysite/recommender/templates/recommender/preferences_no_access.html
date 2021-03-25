@@ -1,0 +1,18 @@
+{% extends 'recommender/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+  Permission denied
+{% endblock title %}
+
+{% block content %}
+  <div class="preferences-container">
+    <div class="rate-new-movies ">
+      <h2>You can't rate someone else's movies!</h2>
+      <h2>You can establish your preferences <a href="{% url 'preferences' username %}">here</a></h2>
+    </div>
+  </div>
+{% endblock content %}
+
+
+

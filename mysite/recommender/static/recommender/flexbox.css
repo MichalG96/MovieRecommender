@@ -847,7 +847,8 @@ form h1 {
   align-items: center;
   flex-direction: column;
 }
-.rate-new-movies button{
+
+.rate-new-movies button {
   margin: 0.5rem 0;
   width: 12rem;
 }
@@ -875,16 +876,24 @@ form h1 {
   justify-content: center;
 }
 
-#establish input{
+#establish input {
   margin: 1.2rem 0;
   width: 50%;
 }
 
-#establish div>div {
+#establish div > div {
   display: flex;
   justify-content: center;
 }
 
-#info-text{
+#info-text {
   margin-top: 2rem;
+}
+
+.rate-new-movies > h2 > a {
+  text-decoration: none;
+  color: gold;
+}
+.rate-new-movies > h2 > a:hover{
+    text-decoration: underline;
 }
