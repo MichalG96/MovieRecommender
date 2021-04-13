@@ -13,7 +13,6 @@ from django.db.models import Avg, Count, Max, Min, Prefetch, StdDev
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.core import serializers
-from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.views import LoginView
 
 from .forms import UserRegisterForm, UserRatingForm, EstablishPreferencesForm
@@ -303,10 +302,10 @@ def establish_preferences(request, username):
         rand_indices = random.sample(list(popular_movies_with_high_std.values_list('id', flat=True)), no_of_proposed_movies)
         proposed_movies = popular_movies_with_high_std.filter(id__in=rand_indices)
 
-        no_of_proposed_movies = 10
-        no_of_movies = Movie.objects.all().count()
-        rand_indices = random.sample(range(no_of_movies), no_of_proposed_movies)
-        proposed_movies = Movie.objects.filter(id__in=rand_indices)
+        # no_of_proposed_movies = 10
+        # no_of_movies = Movie.objects.all().count()
+        # rand_indices = random.sample(range(no_of_movies), no_of_proposed_movies)
+        # proposed_movies = Movie.objects.filter(id__in=rand_indices)
 
         first_movie = proposed_movies.first()
         tmdb_id = first_movie.tmdb_id

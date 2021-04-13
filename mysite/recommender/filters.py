@@ -68,10 +68,10 @@ class RatingFilter(FilterSet):
         return movies_from_decades
 
     # class Meta:
-
     #     model = Movie
+    #
     #     fields = {
-    #         'movie__title': ['icontains']
+    #         'title': ['icontains']
     #     }
 
 
