@@ -11,7 +11,7 @@ The idea for this project came from my master's thesis, which focused on movie r
 * NumPy
 ## Installation
 1. Inside *mysite/static/* directory, create new folder, called 'private'. Inside this newly created folder, create a new file, called 'passes.json'. This file should be structured like: 
-{"key":*\<key>*,"email":*\<email>*:,"password":*\<password>*}, where:
+{"key":"*\<key>*","email":"*\<email>*":,"password":"*\<password>*"}, where:
 * *\<key>* is Django's [secret key](https://docs.djangoproject.com/en/3.1/ref/settings/#std:setting-SECRET_KEY)
 * *\<email>* is your email address
 * *\<password>* is your email password (or your [application password](https://support.google.com/accounts/answer/185833?hl=pl)).
