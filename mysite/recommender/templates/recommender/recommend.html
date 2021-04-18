@@ -4,11 +4,15 @@
 {% endblock title %}
 
 {% block content %}
-  <ul>
-    <h1>{{ username }}, your top recommendations are:</h1>
-    {% for movie, rating in recommended_movies %}
-      <li><h2><a href="{% url 'movie_detail' movie.id %}">{{ movie.title }}</a> - there's {{ rating }}% chance you'll like it
-      </h2></li>
-    {% endfor %}
-  </ul>
+  <div class="recommedations-container">
+    <ul>
+      <h1>{{ username }}, your top recommendations are:</h1>
+      {% for movie, rating in recommended_movies %}
+        <li><h2><a
+                href="{% url 'movie_detail' movie.id %}">{{ movie.title }}</a>
+          - there's {{ rating }}% chance you'll like it
+        </h2></li>
+      {% endfor %}
+    </ul>
+  </div>
 {% endblock content %}

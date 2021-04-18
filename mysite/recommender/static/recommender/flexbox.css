@@ -833,6 +833,28 @@ form h1 {
 }
 
 
+.recommedations-container {
+  font-size: 1.6rem;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.recommedations-container li {
+  list-style: none;
+  text-decoration: none;
+}
+
+.recommedations-container li a {
+  color: gold;
+  text-decoration: none;
+}
+
+.recommedations-container li a:hover {
+  color: gold;
+  text-decoration: underline;
+}
+
 .preferences-container {
   font-size: 3rem;
   display: flex;
@@ -894,6 +916,7 @@ form h1 {
   text-decoration: none;
   color: gold;
 }
-.rate-new-movies > h2 > a:hover{
-    text-decoration: underline;
+
+.rate-new-movies > h2 > a:hover {
+  text-decoration: underline;
 }
