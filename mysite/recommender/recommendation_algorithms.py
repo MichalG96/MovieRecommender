@@ -5,7 +5,8 @@ from scipy import sparse
 from django.contrib.auth.models import User
 from .models import Movie
 
-class ContentBased():
+
+class ContentBased:
     def __init__(self, username):
 
         lam = 0.01

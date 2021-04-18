@@ -53,7 +53,6 @@ def register(request):
 
 
 class CustomLoginView(LoginView):
-
     def dispatch(self, request, *args, **kwargs):
         active_user_queryset = User.objects.filter(username=self.request.POST.get('username'))
         if active_user_queryset.exists():
