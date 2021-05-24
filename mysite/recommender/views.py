@@ -1,6 +1,12 @@
 import random
+from collections import Counter
 
-from django.shortcuts import render, redirect, get_object_or_404
+from plotly.offline import plot
+import plotly.graph_objects as go
+import requests
+import pandas as pd
+
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.urls import reverse
@@ -15,21 +21,15 @@ from django.http import JsonResponse
 from django.core import serializers
 from django.contrib.auth.views import LoginView
 
-from .forms import UserRegisterForm, UserRatingForm, EstablishPreferencesForm
-from .models import Movie, Rating
-
-from .filters import MovieFilter, RatingFilter, UserFilter
-from .tables import RatingsTable, MoviesTable
-from .recommendation_algorithms import ContentBased
-
 # Third - party Django modules
 from django_tables2.views import SingleTableMixin
 from django_filters.views import FilterView
 
-from plotly.offline import plot
-import plotly.graph_objects as go
-import requests
-from collections import Counter
+from .forms import UserRegisterForm, UserRatingForm, EstablishPreferencesForm
+from .models import Movie, Rating, TopMovie
+from .filters import MovieFilter, RatingFilter, UserFilter
+from .tables import RatingsTable, MoviesTable
+from .recommendation_algorithms import ContentBased
 
 BASE_TMDB_URL = 'https://api.themoviedb.org/3/movie/'
 API_KEY = 'bef647566a5b4968a35cd34a79dc3dce'
@@ -54,7 +54,8 @@ def register(request):
 
 class CustomLoginView(LoginView):
     def dispatch(self, request, *args, **kwargs):
-        active_user_queryset = User.objects.filter(username=self.request.POST.get('username'))
+        active_user_queryset = User.objects.filter(
+            username=self.request.POST.get('username'))
         if active_user_queryset.exists():
             active_user = active_user_queryset.first()
             if active_user.last_login is None:
@@ -124,15 +125,19 @@ class MovieDetailView(DetailView):
         url = f'{BASE_TMDB_URL}{tmdb_id}?api_key={API_KEY}'
         url_credits = f'{BASE_TMDB_URL}{tmdb_id}/credits?api_key={API_KEY}'
         r = requests.get(url).json()
-        genres = [genre_dict['name'] for genre_dict in r['genres']]
-        overview = r['overview']
-        img_url = f'{BASE_IMG_URL}{IMG_SIZE}{r["poster_path"]}'
+        if r.get('success') == False:
+            return context
+        genres = [genre_dict['name'] for genre_dict in r.get('genres')]
+        overview = r.get('overview')
+        img_url = f'{BASE_IMG_URL}{IMG_SIZE}{r.get("poster_path")}'
         r_credits = requests.get(url_credits).json()
-        cast = [{'name': person['name'], 'character': person['character']} for person in r_credits['cast'][:8]]
+        cast = [{'name': person['name'], 'character': person['character']} for person in
+                r_credits['cast'][:8]]
         context['actors'] = self.object.actors.all()
         context['genres'] = self.object.genres.all()
         try:
-            context['rating'] = self.object.rating_set.all().get(who_rated=self.request.user.id)
+            context['rating'] = self.object.rating_set.all().get(
+                who_rated=self.request.user.id)
         except ObjectDoesNotExist:
             context['rating'] = None
         context['genres_tmdb'] = genres
@@ -157,7 +162,8 @@ class MovieDetailDispatcherView(View):
 
     # Do this if you received POST request
     def post(self, request, *args, **kwargs):
-        if Rating.objects.filter(who_rated=self.request.user.id, movie_id=self.kwargs['pk']).exists():
+        if Rating.objects.filter(who_rated=self.request.user.id,
+                                 movie_id=self.kwargs['pk']).exists():
             # Update view
             view = RatingUpdateView.as_view()
         else:
@@ -284,7 +290,8 @@ def establish_preferences(request, username):
 
         # TODO: optimize this process, it can't be this slow
         # Get movies not rated by the user:
-        rated_movies_id = list(modified_user.rating_set.all().values_list('movie', flat=True))
+        rated_movies_id = list(
+            modified_user.rating_set.all().values_list('movie', flat=True))
         not_rated_movies = Movie.objects.all().exclude(id__in=rated_movies_id)
         movies_sorted_by_popularity = not_rated_movies. \
             annotate(no_of_ratings=Count('rating'), ratings_std=StdDev('rating__value')). \
@@ -292,13 +299,16 @@ def establish_preferences(request, username):
         no_of_most_popular = 500
         no_of_movies_with_std = 100
         no_of_proposed_movies = 40
-        no_of_ratings_for_kth_movie = movies_sorted_by_popularity[no_of_most_popular].no_of_ratings
+        no_of_ratings_for_kth_movie = movies_sorted_by_popularity[
+            no_of_most_popular].no_of_ratings
         most_popular_movies = movies_sorted_by_popularity.filter(
             no_of_ratings__gte=no_of_ratings_for_kth_movie).order_by('-ratings_std')
         std_dev_of_nth_movie = most_popular_movies[no_of_movies_with_std].ratings_std
         popular_movies_with_high_std = most_popular_movies.filter(
             ratings_std__gte=std_dev_of_nth_movie)
-        rand_indices = random.sample(list(popular_movies_with_high_std.values_list('id', flat=True)), no_of_proposed_movies)
+        rand_indices = random.sample(
+            list(popular_movies_with_high_std.values_list('id', flat=True)),
+            no_of_proposed_movies)
         proposed_movies = popular_movies_with_high_std.filter(id__in=rand_indices)
 
         # no_of_proposed_movies = 10
@@ -315,7 +325,7 @@ def establish_preferences(request, username):
 
         if request.session.get('first_login'):
             welcome_text = "Welcome! We present you a set of movies. Please rate the ones you've seen to help us establish your preferences"
-            del(request.session['first_login'])
+            del (request.session['first_login'])
         else:
             welcome_text = ''
 
@@ -337,7 +347,8 @@ def establish_preferences(request, username):
         return render(request, 'recommender/preferences.html', context)
 
     else:
-        return render(request, 'recommender/preferences_no_access.html', {'username': active_user_username})
+        return render(request, 'recommender/preferences_no_access.html',
+                      {'username': active_user_username})
 
 
 @login_required
@@ -380,7 +391,8 @@ def user_stats(request, username):
                          y=ratings_distribution,
                          text=ratings_distribution,
                          textposition='auto',
-                         hovertext=[f'Number of movies rated: {i + 1}' for i in range(10)]))
+                         hovertext=[f'Number of movies rated: {i + 1}' for i in
+                                    range(10)]))
     fig.update_layout(
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
@@ -391,9 +403,11 @@ def user_stats(request, username):
     )
 
     # Generate HTML and JS for the plot
-    plot_div_ratings_distribution = plot(fig, output_type='div', show_link=False, link_text="")
+    plot_div_ratings_distribution = plot(fig, output_type='div', show_link=False,
+                                         link_text="")
 
-    rated_movies = Movie.objects.filter(rating__who_rated=active_user.id).prefetch_related('genres')
+    rated_movies = Movie.objects.filter(
+        rating__who_rated=active_user.id).prefetch_related('genres')
     all_genres = []
     for movie in rated_movies:
         # TODO: probably too slow, find way to make this more efficient
@@ -458,9 +472,25 @@ def recommend(request, username):
 
     # TODO: after recommending, add movies to the database.
     # If there are recommended movies in the database - display them. If not - perform recommendation
-
+    #
     content_based_recommendations = ContentBased(username)
-    recommended_movies, predicted_ratings = content_based_recommendations.recommend_n_movies(20)
+    recommended_movies, predicted_ratings = content_based_recommendations.recommend_n_movies(
+        20)
+
+    # ratings_df = pd.DataFrame(columns=['user', 'item', 'rating'])
+    # all_ratings = Rating.objects.all()
+    # for rating in all_ratings:
+    #     ratings_df = ratings_df.append({
+    #         'user': rating.who_rated_id,
+    #         'item': rating.movie_id,
+    #         'rating': rating.value,
+    #     }, ignore_index=True)
+    #
+    # ratings_df.to_csv('static/ratings.csv')
+
+    # for movie, rating in zip(recommended_movies, predicted_ratings):
+    #     TopMovie.objects.create(user=request.user, movie=movie, predicted_value=rating)
+
     context = {
         'username': username,
         'recommended_movies': zip(recommended_movies, predicted_ratings)
