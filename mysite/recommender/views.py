@@ -125,6 +125,7 @@ class MovieDetailView(DetailView):
         url = f'{BASE_TMDB_URL}{tmdb_id}?api_key={API_KEY}'
         url_credits = f'{BASE_TMDB_URL}{tmdb_id}/credits?api_key={API_KEY}'
         r = requests.get(url).json()
+        print(r)
         if r.get('success') == False:
             return context
         genres = [genre_dict['name'] for genre_dict in r.get('genres')]
@@ -192,12 +193,14 @@ class RatingUpdateView(UserPassesTestMixin, UpdateView):
     template_name = 'recommender/movie_detail.html'
     form_class = UserRatingForm
 
-    # Tell the view, that you do not want to modify the Movie object, but rather Rating object related to this movie
+    # Tell the view, that you do not want to modify the Movie object, but rather Rating
+    # object related to this movie
     def get_object(self, *args, **kwargs):
         obj = super().get_object()
-        # This should not throw MultipleObjectsReturned error, because there is UniqueConstraint
-        # asserting that there is only one rating per movie-user pair,
-        # nor should it throw ObjectDoesNotExist because this view is executed only when the Rating object exists
+        # This should not throw MultipleObjectsReturned error, because there is
+        # UniqueConstraint asserting that there is only one rating per movie-user pair,
+        # nor should it throw ObjectDoesNotExist because this view is executed only when
+        # the Rating object exists
         new_obj = obj.rating_set.get(who_rated=self.request.user.id)
         return new_obj
 
